@@ -13,24 +13,26 @@
     include('../../db-connection.php');
     
     /* TODO maybe add error checking here, I don't like returning this info to the user though */
-    $mysqllink = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
-    if ($mysqllink->connect_errno) {
-        echo "Failed to connect to MySQL: (" . $mysqllink->connect_errno . ") " . $mysqllink->connect_error;
+    $mysqlLink = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
+    if (!$mysqlLink) {
+        echo "Failed to connect to MySQL: (" . mysqli_connect_errno() . ") " . mysqli_connect_error();
     }
 
     /* Fetch Question */
-    $questionresult = mysqli_query($mysqllink, "SELECT * FROM questions LIMIT 0,1");
-    $questions      = mysqli_fetch_assoc($questionresult);
-    $question       = $questions['question'];
+    $questionResult = mysqli_query($mysqlLink, "SELECT * FROM questions ORDER BY RAND() LIMIT 0,1");
+    $questions      = mysqli_fetch_assoc($questionResult);
 
     /* Fetch Answer */
-    $answerresult = mysqli_query($mysqllink, "SELECT * FROM answers LIMIT 0,1");
-    $answers      = mysqli_fetch_assoc($answerresult);
-    $answer       = $answers['answer'];
+    $answerResult = mysqli_query($mysqlLink, "SELECT * FROM answers ORDER BY RAND() LIMIT 0,1");
+    $answers      = mysqli_fetch_assoc($answerResult);
+    
+    $permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/?Q=" . dechex($questions['id']) . "&A=" . dechex($answers['id']);
 ?>
 
-<body>  
-    <p class="question"><?php echo $question; ?></p>
-    <p class="answer"><?php echo $answer ?></p>
+<body>
+    <h1>Cards vs Humans</h1>
+    <p class="question"><?php echo $questions['question']; ?></p>
+    <p class="answer"><?php   echo $answers['answer']; ?></p>
+    <p>'Permanent' URL: <a href="<?php echo $permURL ?>" ><?php echo $permURL ?></a></p>
 </body>
 </html>
