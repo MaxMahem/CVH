@@ -1,0 +1,28 @@
+/* 
+    Document   : cvh
+    Created on : Aug 2, 2012, 8:37:44 PM
+    Author     : MaxMahem
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.question {
+	border: solid 2px white;
+	color: white;
+	background-color: black;
+	width: 200px;
+	height: 250px;
+	font: bold 20px helvetica;
+	padding: 30px 15px;
+}
+
+.answer {
+	border: solid 2px black;
+	color: black;
+	background-color: white;
+	width: 200px;
+	height: 250px;
+	font: bold 20px helvetica;
+	padding: 30px 15px;
+}
+
