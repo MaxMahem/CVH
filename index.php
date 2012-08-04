@@ -19,20 +19,39 @@
     }
 
     /* Fetch Question */
-    $questionResult = mysqli_query($mysqlLink, "SELECT * FROM questions ORDER BY RAND() LIMIT 0,1");
+    $questionResult = mysqli_query($mysqlLink, "SELECT questions.id, questions.question, sources.source, sources.url " .  
+                                               "FROM questions INNER JOIN sources ON questions.source_id = sources.id " . 
+                                               "ORDER BY RAND() LIMIT 0,1");
     $questions      = mysqli_fetch_assoc($questionResult);
 
     /* Fetch Answer */
-    $answerResult = mysqli_query($mysqlLink, "SELECT * FROM answers ORDER BY RAND() LIMIT 0,1");
-    $answers      = mysqli_fetch_assoc($answerResult);
-    
-    $permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/?Q=" . dechex($questions['id']) . "&A=" . dechex($answers['id']);
+    $answerResult   = mysqli_query($mysqlLink,"SELECT answers.id,    answers.answer,     sources.source, sources.url " . 
+                                              "FROM answers    INNER JOIN sources ON answers.source_id   = sources.id " .
+                                              "ORDER BY RAND() LIMIT 0,1");
+    $answers        = mysqli_fetch_assoc($answerResult);
+	
+    $permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/?Q=" . strtoupper(dechex($questions['id'])) . "&A=" . strtoupper(dechex($answers['id']));
 ?>
 
 <body>
-    <h1>Cards vs Humans</h1>
-    <p class="question"><?php echo $questions['question']; ?></p>
-    <p class="answer"><?php   echo $answers['answer']; ?></p>
+	<div id="header">
+		<h1>Cards vs Humans</h1>
+	</div>
+	
+    <div class="card question">
+		<p><?php echo $questions['question']; ?></p>
+		<p class="source">
+			<?php if ($questions['source'] == 'Cards Against Humanity') { echo '<img src="CAH-Cards-Black.svg">' . PHP_EOL; } ?>
+			<a href="<?php echo $questions['url']; ?>"><?php echo $questions['source']; ?></a>
+		</p>
+	</div>
+	<div class="card answer">
+		<p><?php echo $answers['answer']; ?></p>
+		<p class="source">
+			<?php if ($answers['source']   == 'Cards Against Humanity') { echo '<img src="CAH-Cards-White.svg">' . PHP_EOL; } ?>
+			<a href="<?php echo $answers['url'];   ?>"><?php echo $answers['source'];   ?></a>
+		</p>
+	</div>
     <p>'Permanent' URL: <a href="<?php echo $permURL ?>" ><?php echo $permURL ?></a></p>
 </body>
 </html>
