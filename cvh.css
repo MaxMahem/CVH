@@ -9,48 +9,79 @@
 
 /* CSS RESET */
 * { 
-	margin:0; 
-	padding:0;
+    margin:0; 
+    padding:0;
+}
+
+/* clear floats. Technicaly we should be able to do without this,
+   but this is an easy way to handle it */
+.clear {
+    clear: both;
 }
 
 div#header {
-	width: 100%;
-	background-color: black;
-	padding: 1em;
+    width: 100%;
+    background-color: black;
+    padding: 1em;
 }
 
 #header h1 {
-	font: bold xx-large helvetica;
-	color: white;
+    font: bold xx-large helvetica;
+    color: white;
+}
+
+#header h1 a {
+    font:  inherit;
+    color: inherit;
+    text-decoration: none;  
+}
+
+.NSFW {
+    color: red;
 }
 
 .card {
-	width: 10em;
-	height: 12em;
-	font: bold x-large helvetica;
-	padding: 1em;
-	margin: .5em;
-	border-radius: .5em;
-	position: relative;
+    font: bold x-large helvetica;
+    width:         10em;
+    height:        12em;
+    padding:        1em;
+    margin:        .5em;
+    border-radius: .5em;
+    position: relative;
+    float:    left;
 }
 
-.source {
-	font: bold medium helvetica;
-	position: absolute;
-	bottom: 1em;
-	left: 1em;
+
+.card .source {
+    font: bold medium helvetica;
+    position: absolute;
+    bottom: 1em;
+    left:   1em;
+    z-index: 1;
 }
 
-.source a {
+.card a {
 	font: inherit;
 	color: inherit;
 	text-decoration: none;
 }
 
-.source img {
+.card .source img {
 	height: 2em;
 	vertical-align: text-bottom;
 	padding-right: .2em;
+}
+
+/* border is there to ensure exact spacing */
+.instructions {
+    font:    bold x-large helvetica;
+    width:   23em;
+    height:  12em;
+    padding:  1em;
+    margin:  .5em;
+    border:  solid 2px white;
+    float:   left;
+    text-align: center;
 }
 
 .question {
@@ -59,9 +90,56 @@ div#header {
 	background-color: black;
 }
 
+/* Answers float left */
 .answer {
-	border: solid 2px black;
-	color: black;
-	background-color: white;
+    border: solid 2px black;
+    color: black;
+    background-color: white;
+    float: left;
 }
 
+/* This anchor tag is absolutely positioned on top of the containing div
+   it is designed to sit on the bottom layer so that the source link can
+   which is also absolutely positioned can sit on top of it, allowing the
+   to links to effectively be nested, which is normally not allowed */
+.answerlink {
+    position: absolute;
+    left:     0;
+    top:      0;
+    width:   10em;
+    height:  12em;
+    padding:  1em;
+    z-index:  0;
+}
+
+/* turn grey on hover to indicate it's a link */
+.answer:hover {
+    background-color: grey;
+}
+
+.answer input {
+/* hide this later, on for testing now
+    display: hidden; */
+}
+
+/* this is turned on with jQuery */
+.selected {
+    background-color: grey;
+}
+
+/* permalink border is there to ensure exact spacing */
+.permalink {
+    width: 10em;
+    padding: 0  1em;
+    margin:  0 .5em;
+    text-align: center;
+    font-size: x-large;
+    float: left;
+    border: solid 2px white;
+}
+
+.permalink a {
+    font: bold medium helvetica;
+    color: black;
+    text-decoration: none;  
+}
