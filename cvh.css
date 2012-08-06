@@ -51,7 +51,6 @@ div#header {
     float:    left;
 }
 
-
 .card .source {
     font: bold medium helvetica;
     position: absolute;
@@ -67,21 +66,26 @@ div#header {
 }
 
 .card .source img {
-	height: 2em;
-	vertical-align: text-bottom;
-	padding-right: .2em;
+    height: 2em;
+    vertical-align: text-bottom;
+    padding-right: .2em;
+    border: 0;
 }
 
 /* border is there to ensure exact spacing */
 .instructions {
     font:    bold x-large helvetica;
     width:   23em;
-    height:  12em;
-    padding:  1em;
+    height:  10em;
+    padding:  2em;
     margin:  .5em;
     border:  solid 2px white;
     float:   left;
     text-align: center;
+}
+/* votes section 6x normal size */
+.votes {
+    font-size: 6em;
 }
 
 .question {
