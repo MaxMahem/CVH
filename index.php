@@ -6,8 +6,6 @@
     <meta charset="utf-8" />
     <title>Cards vs Humans</title>
     <link rel="stylesheet" type="text/css" href="cvh.css" />
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> 
-    <script type="text/javascript" src="cvh.js"></script>
 </head>
 
 <?php
@@ -82,6 +80,9 @@
     </div>
 <?php } ?>
     
+    <div class="card answer bad">
+        <a class="answerlink" href="/CVH">THESE ALL SUCK!</a>
+    </div>
     <div class="clear"></div>
 
 <?php foreach ($answers as $answer) { ?>

@@ -42,7 +42,7 @@ div#header {
 
 .card {
     font: bold x-large helvetica;
-    width:         10em;
+    width:          9em;
     height:        12em;
     padding:        1em;
     margin:        .5em;
@@ -75,7 +75,7 @@ div#header {
 /* border is there to ensure exact spacing */
 .instructions {
     font:    bold x-large helvetica;
-    width:   23em;
+    width:   31em;
     height:  10em;
     padding:  2em;
     margin:  .5em;
@@ -102,6 +102,12 @@ div#header {
     float: left;
 }
 
+.bad {
+    background-color: red;
+    text-align: center;
+    line-height: 12em;
+}
+
 /* This anchor tag is absolutely positioned on top of the containing div
    it is designed to sit on the bottom layer so that the source link can
    which is also absolutely positioned can sit on top of it, allowing the
@@ -110,7 +116,7 @@ div#header {
     position: absolute;
     left:     0;
     top:      0;
-    width:   10em;
+    width:    9em;
     height:  12em;
     padding:  1em;
     z-index:  0;
@@ -133,7 +139,7 @@ div#header {
 
 /* permalink border is there to ensure exact spacing */
 .permalink {
-    width: 10em;
+    width:   9em;
     padding: 0  1em;
     margin:  0 .5em;
     text-align: center;
