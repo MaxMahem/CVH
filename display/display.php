@@ -1,8 +1,9 @@
 <?php
     /* retrieve the get info from the url. Pages are sent in the format:
      * /CVH/display/QUESTIONID-ANSWERID, and transformed via the .htaccess to:
-     * /CVH/display.php?Q=QUESTIONID&A=ANSWERID 
-     * filter_input is probably not necessary but we use it just to be safe */
+     * /CVH/display.php?Q=QUESTIONID&A=ANSWERID */
+
+    /* filter_input is probably not necessary but we use it just to be safe */
     $getQuestionId = filter_input(INPUT_GET, 'Q', FILTER_SANITIZE_STRING);
     $getAnswerId   = filter_input(INPUT_GET, 'A', FILTER_SANITIZE_STRING);
     
@@ -10,6 +11,7 @@
     
     /* the db-connection file is should define DBHOST, DBUSER, DBPASS, and DBNAME */
     include('../../../db-connection.php');
+    include('../card.php');
     
     /* Connect to the DB. */
     $mysqlLink = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
@@ -90,7 +92,7 @@
     if (is_null($vote)) {
         /* we returned no rows, which means there is no record and no votes */
         $voteTally = '0';
-        $voteWord = 'vote.';
+        $voteWord = 'votes.';
     } else {
         $voteTally = $vote['vote_tally'];                       
         /* check if vote should be plural */
@@ -123,17 +125,7 @@
         <h1><a href="/CVH">Cards vs Humans</a></h1>
     </div>
 	
-    <div class="card question">
-        <?php echo $question['question']; ?>
-        <a href="<?php echo $question['url']; ?>" class="source">
-<?php 
-    if ($question['source'] == 'Cards Against Humanity') {
-        echo '<img src="/CVH/CAH-Cards-White.svg" alt="Cards Against Humanity" />'; 
-    }
-    echo $question['source'] . PHP_EOL;
-?>
-        </a>
-    </div>
+    <?= displayCard($question, 'question'); ?>
     
     <div class="instructions">
         This combination has received <br />
@@ -143,17 +135,7 @@
     
     <div class="clear"></div>
     
-    <div class="card answer">
-        <?php echo $answer['answer']; ?>
-        <a href="<?php echo $answer['url']; ?>" class="source">
-<?php 
-    if ($answer['source'] == 'Cards Against Humanity') {
-        echo '<img src="/CVH/CAH-Cards-White.svg" alt="Cards Against Humanity" />';
-    }
-    echo $answer['source'] . PHP_EOL;
-?>
-        </a>
-    </div>
+    <?= displayCard($answer, 'answer'); ?>
     
     <div class="clear"></div>
 

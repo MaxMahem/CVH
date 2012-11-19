@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">  
@@ -14,6 +15,9 @@
      * which we assume is one level up */
     include('../../db-connection.php');
     
+    /* contians the dispalyCard function used to create the cards */
+    include('card.php');
+    
     /* TODO maybe add more error checking here, I don't like returning this info to the user though */
     $mysqlLink = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
     if (!$mysqlLink) {
@@ -25,7 +29,7 @@
                                                "FROM questions INNER JOIN sources ON questions.source_id = sources.id " . 
                                                "WHERE questions.number_of_answers = 1 " .
                                                "ORDER BY RAND() LIMIT 0,1");
-    $questions      = mysqli_fetch_assoc($questionResult);
+    $question       = mysqli_fetch_assoc($questionResult);
 
     /* Fetch Answer - Currently we return 3 answers */
     $answerResult   = mysqli_query($mysqlLink,"SELECT answers.id,    answers.answer,     sources.source, sources.url " . 
@@ -37,8 +41,8 @@
         $answers[] = $row;
     }
 
-    $permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/" .  strtoupper(dechex($questions['id'])) . "-";
-    $voteURL = "/CVH/vote/" .  strtoupper(dechex($questions['id'])) . "-";
+    $permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/" .  strtoupper(dechex($question['id'])) . "-";
+    $voteURL = "/CVH/vote/" .  strtoupper(dechex($question['id'])) . "-";
 ?>
 
 <body>
@@ -46,17 +50,7 @@
         <h1><a href="/CVH">Cards vs Humans</a></h1>
     </div>
 	
-    <div class="card question">
-        <p><?php echo $questions['question']; ?></p>
-        <a href="<?php echo $questions['url']; ?>" class="source">
-<?php 
-                if ($questions['source'] == 'Cards Against Humanity') {
-                    echo '<img src="CAH-Cards-White.svg" alt="Cards Against Humanity" />'; 
-                }
-                echo $questions['source'] . PHP_EOL;
-?>
-        </a>
-    </div>
+    <?= displayCard($question, 'question'); ?>
     
     <div class="instructions">
         Pick the card you like the best!
@@ -65,19 +59,7 @@
     <div class="clear"></div>
     
 <?php foreach ($answers as $answer) { ?>
-    <div class="card answer">
-        <a class="answerlink" href="<?php echo $voteURL . strtoupper(dechex($answer['id'])); ?>">
-            <?php echo $answer['answer']; ?>
-        </a>
-        <a href="<?php echo $answer['url']; ?>" class="source">
-<?php 
-                if ($answer['source'] == 'Cards Against Humanity') {
-                    echo '<img src="CAH-Cards-White.svg" alt="Cards Against Humanity" />';
-                }
-                echo $answer['source'] . PHP_EOL;
-?>
-        </a>
-    </div>
+    <?= displayCard($answer, 'answer', $voteURL); ?>
 <?php } ?>
     
     <div class="card answer bad">
