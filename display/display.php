@@ -4,8 +4,8 @@
      * /CVH/display.php?Q=QUESTIONID&A=ANSWERID */
 
     /* filter_input is probably not necessary but we use it just to be safe */
-    $getQuestionId = filter_input(INPUT_GET, 'Q', FILTER_SANITIZE_STRING);
-    $getAnswerId   = filter_input(INPUT_GET, 'A', FILTER_SANITIZE_STRING);
+    $questionId = hexdec(filter_input(INPUT_GET, 'Q', FILTER_SANITIZE_STRING));
+    $answerId   = hexdec(filter_input(INPUT_GET, 'A', FILTER_SANITIZE_STRING));
     
     /* we got some variables, process them. */
     
@@ -25,66 +25,29 @@
     /* DB link is good. */
 
     /* check if the question id is set */
-    if (!empty($getQuestionId) || isset($redirectDest)) {
-        /* Query question id */
-        $questionId     = hexdec($getQuestionId);
-        $questionResult = mysqli_query($mysqlLink, "SELECT questions.id, questions.question, sources.source, sources.url " .  
-                                                   "FROM questions INNER JOIN sources ON questions.source_id = sources.id " . 
-                                                   "WHERE questions.id = $questionId ");    
+    if (!empty($questionId)) {
+        /* get that card */
+        $question = new Card($mysqlLink, Card::QUESTION, $questionId);
     } else {
         /* Query random question */
-        $questionResult = mysqli_query($mysqlLink, "SELECT questions.id, questions.question, sources.source, sources.url " .  
-                                                   "FROM questions INNER JOIN sources ON questions.source_id = sources.id " . 
-                                                   "ORDER BY RAND() LIMIT 0,1");
+        $question = new Card($mysqlLink, Card::ANSWER, Card::RANDOM_CARD, TRUE);
     }
             
     /* check if the answer id is empty */
-    if (!empty($getAnswerId)) {
+    if (!empty($answerId)) {
         /* Query answer id */
-        $answerId       = hexdec($getAnswerId);
-        $answerResult   = mysqli_query($mysqlLink,"SELECT answers.id,    answers.answer,     sources.source, sources.url " . 
-                                                  "FROM answers    INNER JOIN sources ON answers.source_id   = sources.id " .
-                                                  "WHERE answers.id    = $answerId ");
-        } else {
+        $answer = new Card($mysqlLink, Card::ANSWER, $answerId);
+    } else {
         /* Query random answer */
-        $answerResult   = mysqli_query($mysqlLink,"SELECT answers.id,    answers.answer,     sources.source, sources.url " . 
-                                                  "FROM answers    INNER JOIN sources ON answers.source_id   = sources.id " .
-                                                  "ORDER BY RAND() LIMIT 0,1");
-    }
-
-    /* check the results of those queries */
-    if (!($questionResult && $answerResult)) {
-        /* query failed */
-        $redirectDest = "/CVH/bad/queryFailed";
-        $redirectURL = "http://" . $_SERVER['HTTP_HOST'] . $redirectDest;
-        header('Location: ' . $redirectURL, 303);
-        die();
-    }
-     
-    /* query succeded, fetch the results */
-    $question = mysqli_fetch_assoc($questionResult);
-    $answer   = mysqli_fetch_assoc($answerResult);
-                
-    /* check if we got an answer, if for some reason we returned no rows this would be null
-     * the only reason this should be is bad info passed in the URL. */
-    if (is_null($question) || is_null($answer)) {
-        $redirectDest = "/CVH/bad/dontknowthat";
-        $redirectURL = "http://" . $_SERVER['HTTP_HOST'] . $redirectDest;
-        header('Location: ' . $redirectURL, 303);
-        die();
+        $answer = new Card($mysqlLink, Card::ANSWER, Card::RANDOM_CARD, TRUE);
     }
     
     /* Query Vote Totals - We might get a random question which already 
      * has a vote total, so we use the query results instead of the id's */
-    $voteResult  = mysqli_query($mysqlLink, "SELECT * FROM questions_answers_votes " .
-                                            "WHERE question_id = " . $question['id'] .
-                                            " AND  answer_id   = " . $answer['id']);
-                    
-    /* check the vote query */
-    if (!($voteResult)) {
-        /* query failed */
-        $redirectDest = "/CVH/bad/queryFailed";
-    }
+    $voteQuery  = "SELECT * FROM questions_answers_votes" . ' ' .
+                  "WHERE question_id = " . $question->getId(card::DECIMAL) . ' ' .
+                  "AND answer_id = " . $answer->getId(card::DECIMAL);
+    $voteResult = mysqli_query($mysqlLink, $voteQuery);
     
     $vote = mysqli_fetch_assoc($voteResult);
                         
@@ -105,8 +68,8 @@
                         
     /* set the perm URL */
     $permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/" .
-                strtoupper(dechex($question['id'])) . "-" .
-                strtoupper(dechex($answer['id']));
+                $question->getId(Card::HEX) . "-" .
+                $answer->getId(Card::HEX);
 ?>
 <!DOCTYPE html>
 
@@ -125,7 +88,7 @@
         <h1><a href="/CVH">Cards vs Humans</a></h1>
     </div>
 	
-    <?= displayCard($question, 'question'); ?>
+    <?= $question->displayCard(); ?>
     
     <div class="instructions">
         This combination has received <br />
@@ -135,7 +98,7 @@
     
     <div class="clear"></div>
     
-    <?= displayCard($answer, 'answer'); ?>
+    <?= $answer->displayCard(); ?>
     
     <div class="clear"></div>
 

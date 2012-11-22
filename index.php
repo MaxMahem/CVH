@@ -15,7 +15,7 @@
      * which we assume is one level up */
     include('../../db-connection.php');
     
-    /* contians the dispalyCard function used to create the cards */
+    /* contians the card class used to create the cards */
     include('card.php');
     
     /* TODO maybe add more error checking here, I don't like returning this info to the user though */
@@ -24,33 +24,25 @@
         echo "Failed to connect to MySQL: (" . mysqli_connect_errno() . ") " . mysqli_connect_error();
     }
 
-    /* Fetch Question - Only return one answer, so */
-    $questionResult = mysqli_query($mysqlLink, "SELECT questions.id, questions.question, sources.source, sources.url " .  
-                                               "FROM questions INNER JOIN sources ON questions.source_id = sources.id " . 
-                                               "WHERE questions.number_of_answers = 1 " .
-                                               "ORDER BY RAND() LIMIT 0,1");
-    $question       = mysqli_fetch_assoc($questionResult);
-
-    /* Fetch Answer - Currently we return 3 answers */
-    $answerResult   = mysqli_query($mysqlLink,"SELECT answers.id,    answers.answer,     sources.source, sources.url " . 
-                                              "FROM answers    INNER JOIN sources ON answers.source_id   = sources.id " .
-                                              "WHERE answers.NSFW = 0 " .
-                                              "ORDER BY RAND() LIMIT 0,3");
-    /* itterate though the results, put them into an array */
-    while ($row = mysqli_fetch_assoc($answerResult)) {
-        $answers[] = $row;
+    /* Get the question cards */
+    $question = new Card($mysqlLink, Card::QUESTION, Card::RANDOM_CARD, TRUE, 1);
+    
+    /* Get the Answer cards, currently we get 3 */
+    /* @todo: Consider a better way of getting multiple cards? 3 DB Calls is inefficent/don't work right */
+    for ($i = 0; $i < 3; $i++) {
+        $answers[] = new Card($mysqlLink, Card::ANSWER, Card::RANDOM_CARD, TRUE);
     }
 
-    $permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/" .  strtoupper(dechex($question['id'])) . "-";
-    $voteURL = "/CVH/vote/" .  strtoupper(dechex($question['id'])) . "-";
+    $permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/" .  $question->getID(Card::HEX) . "-";
+    $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
 ?>
 
 <body>
     <div id="header">
         <h1><a href="/CVH">Cards vs Humans</a></h1>
     </div>
-	
-    <?= displayCard($question, 'question'); ?>
+    
+    <?= $question->displayCard(); ?>
     
     <div class="instructions">
         Pick the card you like the best!
@@ -59,7 +51,7 @@
     <div class="clear"></div>
     
 <?php foreach ($answers as $answer) { ?>
-    <?= displayCard($answer, 'answer', $voteURL); ?>
+    <?= $answer->displayCard($voteURL) . PHP_EOL; ?>
 <?php } ?>
     
     <div class="card answer bad">
@@ -69,7 +61,7 @@
 
 <?php foreach ($answers as $answer) { ?>
     <div class="permalink">
-        <p><a href="<?php echo $permURL . strtoupper(dechex($answer['id'])); ?>" >Permalink</a></p>
+        <p><a href="<?php echo $permURL . $answer->getId(Card::HEX); ?>" >Permalink</a></p>
     </div>
 <?php } ?>
 </body>

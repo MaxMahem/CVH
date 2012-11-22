@@ -36,8 +36,13 @@ div#header {
     text-decoration: none;  
 }
 
-.NSFW {
+.NSFWtag {
     color: red;
+    top:   .75em;
+    right: .75em;
+    position: absolute;
+    z-index: 1;
+    font: bold small helvetica;
 }
 
 .card {
@@ -75,7 +80,7 @@ div#header {
 /* border is there to ensure exact spacing */
 .instructions {
     font:    bold x-large helvetica;
-    width:   31em;
+    width:   23em;
     height:  10em;
     padding:  2em;
     margin:  .5em;
@@ -123,7 +128,7 @@ div#header {
 }
 
 /* turn grey on hover to indicate it's a link */
-.answer:hover {
+.vote:hover {
     background-color: grey;
 }
 
