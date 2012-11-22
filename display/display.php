@@ -16,21 +16,13 @@
     /* Connect to the DB. */
     $mysqlLink = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
 
-    /* check the status of the db link */
-    if (!$mysqlLink) {
-        /* if mysqlLink is false, we had a problem. Handle it. */
-        $redirectDest = "/CVH/bad/dbError";
-    }
-    
-    /* DB link is good. */
-
     /* check if the question id is set */
     if (!empty($questionId)) {
         /* get that card */
         $question = new Card($mysqlLink, Card::QUESTION, $questionId);
     } else {
         /* Query random question */
-        $question = new Card($mysqlLink, Card::ANSWER, Card::RANDOM_CARD, TRUE);
+        $question = new Card($mysqlLink, Card::QUESTION, Card::RANDOM_CARD, TRUE);
     }
             
     /* check if the answer id is empty */
