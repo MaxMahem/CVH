@@ -59,9 +59,6 @@
     }
                         
     /* set the perm URL */
-    $permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/" .
-                $question->getId(Card::HEX) . "-" .
-                $answer->getId(Card::HEX);
 ?>
 <!DOCTYPE html>
 
@@ -94,7 +91,7 @@
     
     <div class="cardbox">
         <?= $answer->displayCard(); ?>
-        <div class="permalink"><a href="<?php echo $permURL; ?>" >Permalink</a></div>
+        <div class="permalink"><a href="<?= Card::permURL($question, $answer); ?>" >Permalink</a></div>
     </div>
 </body>
 </html>

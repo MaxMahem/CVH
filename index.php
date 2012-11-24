@@ -32,7 +32,6 @@
         $answers[] = new Card($mysqlLink, Card::ANSWER, Card::RANDOM_CARD, TRUE);
     }
 
-    $permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/" .  $question->getID(Card::HEX) . "-";
     $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
 ?>
 
@@ -57,8 +56,7 @@
 <?php foreach ($answers as $answer) { ?>
     <div class="cardbox">
         <?= $answer->displayCard($voteURL) . PHP_EOL; ?>
-        <div class="permalink"><a href="<?php echo $permURL . $answer->getId(Card::HEX); ?>" >Permalink</a></div>
-    </div>
+        <div class="permalink"><a href="<?= Card::permURL($question, $answer); ?>" >Permalink</a></div>
     </div>
 <?php } ?>
 

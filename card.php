@@ -132,6 +132,13 @@ class Card {
         return $result;
     }
 
+    public static function permURL($question, $answer) {
+        $permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/" .
+                   $question->getID(Card::HEX) . "-" . $answer->getID(Card::HEX);
+
+        return $permURL;
+    }
+    
     public function getId($format = self::DECIMAL) {
         if ($format == self::DECIMAL) {
             $id = $this->id;
