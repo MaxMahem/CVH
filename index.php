@@ -59,6 +59,6 @@
         <div class="permalink"><a href="<?= Card::permURL($question, $answer); ?>" >Permalink</a></div>
     </div>
 <?php } ?>
-
+    </div>
 </body>
 </html>

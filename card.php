@@ -139,6 +139,24 @@ class Card {
         return $permURL;
     }
     
+    public static function numVotes($question, $answer, $mysqlLink) {
+        $voteQuery  = "SELECT * FROM questions_answers_votes" . ' ' .
+                      "WHERE question_id = " . $question->getId(card::DECIMAL) . ' ' .
+                      "AND answer_id = " . $answer->getId(card::DECIMAL);
+        $result = mysqli_query($mysqlLink, $voteQuery);
+        $data   = mysqli_fetch_assoc($result);
+                        
+        /* get the number of votes */
+        if (is_null($data)) {
+            /* we returned no rows, which means there is no record and no votes */
+            $votes = 0;
+        } else {
+            $votes = $data['vote_tally'];
+        }
+                
+        return $votes;
+    }
+    
     public function getId($format = self::DECIMAL) {
         if ($format == self::DECIMAL) {
             $id = $this->id;

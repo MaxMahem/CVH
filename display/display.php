@@ -34,31 +34,14 @@
         $answer = new Card($mysqlLink, Card::ANSWER, Card::RANDOM_CARD, TRUE);
     }
     
-    /* Query Vote Totals - We might get a random question which already 
-     * has a vote total, so we use the query results instead of the id's */
-    $voteQuery  = "SELECT * FROM questions_answers_votes" . ' ' .
-                  "WHERE question_id = " . $question->getId(card::DECIMAL) . ' ' .
-                  "AND answer_id = " . $answer->getId(card::DECIMAL);
-    $voteResult = mysqli_query($mysqlLink, $voteQuery);
-    
-    $vote = mysqli_fetch_assoc($voteResult);
-                        
-    /* get the number of votes */
-    if (is_null($vote)) {
-        /* we returned no rows, which means there is no record and no votes */
-        $voteTally = '0';
-        $voteWord = 'votes.';
+    /* Query Vote Totals */
+    $votes = Card::numVotes($question, $answer, $mysqlLink);
+
+    if ($votes == 1) {
+        $voteWord = 'vote.';
     } else {
-        $voteTally = $vote['vote_tally'];                       
-        /* check if vote should be plural */
-        if ($voteTally == 1) {
-            $voteWord = 'vote.';
-        } else {
-            $voteWord = 'votes.';
-        }
+        $voteWord = 'votes.';
     }
-                        
-    /* set the perm URL */
 ?>
 <!DOCTYPE html>
 
@@ -83,7 +66,7 @@
     
     <div class="instructions">
         <p>This combination has received <br />
-        <span class="votes"><?php echo $voteTally; ?></span><br />
+        <span class="votes"><?php echo $votes; ?></span><br />
         <?php echo $voteWord . PHP_EOL; ?></p>
     </div>
     
