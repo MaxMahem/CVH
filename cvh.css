@@ -13,6 +13,13 @@
     padding:0;
 }
 
+/* a RESET */
+a {
+    font:            inherit;
+    color:           inherit;
+    text-decoration: inherit;
+}
+
 /* clear floats. Technicaly we should be able to do without this,
    but this is an easy way to handle it */
 .clear {
@@ -20,9 +27,8 @@
 }
 
 div#header {
-    width: 100%;
     background-color: black;
-    padding: 1em;
+    padding: .5em 1em;
 }
 
 #header h1 {
@@ -30,14 +36,15 @@ div#header {
     color: white;
 }
 
-#header h1 a {
-    font:  inherit;
-    color: inherit;
-    text-decoration: none;  
+.NSFW {
+    color: red;
+}
+
+.SFW {
+    color: white;
 }
 
 .NSFWtag {
-    color: red;
     top:   .75em;
     right: .75em;
     position: absolute;
@@ -45,15 +52,18 @@ div#header {
     font: bold small helvetica;
 }
 
+.cardbox {
+    float: left;
+}
+
 .card {
     font: bold x-large helvetica;
-    width:          9em;
-    height:        12em;
+    width:          8em;
+    height:        11em;
     padding:        1em;
-    margin:        .5em;
+    margin:        .5em .5em 0 .5em;
     border-radius: .5em;
     position: relative;
-    float:    left;
 }
 
 .card .source {
@@ -64,12 +74,6 @@ div#header {
     z-index: 1;
 }
 
-.card a {
-	font: inherit;
-	color: inherit;
-	text-decoration: none;
-}
-
 .card .source img {
     height: 2em;
     vertical-align: text-bottom;
@@ -77,26 +81,52 @@ div#header {
     border: 0;
 }
 
+.card input {
+    font:       inherit;
+    color:      inherit;
+    background: inherit;
+    border: 0px; 
+}
+.card textarea {
+    font:       inherit;
+    color:      inherit;
+    background: inherit;
+    border:  0;
+    width:   9em;
+    height: 10em;
+    resize: none;
+}
+
+.card select {
+    font:       inherit;
+    color:      inherit;
+    background: inherit;
+    border:  0;
+    
+}
+
 /* border is there to ensure exact spacing */
 .instructions {
     font:    bold x-large helvetica;
-    width:   23em;
-    height:  10em;
-    padding:  2em;
-    margin:  .5em;
-    border:  solid 2px white;
     float:   left;
     text-align: center;
 }
+
+.instructions p {
+    width:   17em;
+    padding:  1em 2em 0 2em;
+    margin:  .5em;
+}
+
 /* votes section 6x normal size */
 .votes {
     font-size: 6em;
 }
 
 .question {
-	border: solid 2px white;
-	color: white;
-	background-color: black;
+    border: solid 2px white;
+    color: white;
+    background-color: black;
 }
 
 /* Answers float left */
@@ -104,13 +134,6 @@ div#header {
     border: solid 2px black;
     color: black;
     background-color: white;
-    float: left;
-}
-
-.bad {
-    background-color: red;
-    text-align: center;
-    line-height: 12em;
 }
 
 /* This anchor tag is absolutely positioned on top of the containing div
@@ -121,8 +144,8 @@ div#header {
     position: absolute;
     left:     0;
     top:      0;
-    width:    9em;
-    height:  12em;
+    width:    8em;
+    height:  11em;
     padding:  1em;
     z-index:  0;
 }
@@ -132,29 +155,28 @@ div#header {
     background-color: grey;
 }
 
-.answer input {
-/* hide this later, on for testing now
-    display: hidden; */
-}
-
-/* this is turned on with jQuery */
-.selected {
-    background-color: grey;
-}
-
 /* permalink border is there to ensure exact spacing */
 .permalink {
-    width:   9em;
+    width:   8em;
     padding: 0  1em;
     margin:  0 .5em;
     text-align: center;
     font-size: x-large;
     float: left;
+    clear: left;
     border: solid 2px white;
 }
 
 .permalink a {
     font: bold medium helvetica;
     color: black;
-    text-decoration: none;  
+}
+
+input[type=submit] {
+    width:   10em;
+    padding:  0  1em;
+    margin:   0 .5em;
+    border-radius: .5em;
+    float: left;
+    font: bold x-large helvetica;
 }

@@ -80,22 +80,21 @@
         <h1><a href="/CVH">Cards vs Humans</a></h1>
     </div>
 	
-    <?= $question->displayCard(); ?>
+    <div class="cardbox">
+        <?= $question->displayCard(); ?>
+    </div>
     
     <div class="instructions">
-        This combination has received <br />
+        <p>This combination has received <br />
         <span class="votes"><?php echo $voteTally; ?></span><br />
-        <?php echo $voteWord . PHP_EOL; ?>
+        <?php echo $voteWord . PHP_EOL; ?></p>
     </div>
     
     <div class="clear"></div>
     
-    <?= $answer->displayCard(); ?>
-    
-    <div class="clear"></div>
-
-    <div class="permalink">
-        <p><a href="<?php echo $permURL; ?>" >Permalink</a></p>
+    <div class="cardbox">
+        <?= $answer->displayCard(); ?>
+        <div class="permalink"><a href="<?php echo $permURL; ?>" >Permalink</a></div>
     </div>
 </body>
 </html>
