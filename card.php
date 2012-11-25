@@ -16,8 +16,12 @@ class Card {
     const ANSWER = 'answer';
     const HEX = 'hex';
     const DECIMAL = 'decimal';
-
-    function Card($type, $id = self::RANDOM_CARD, $NSFW = FALSE, $maxAnswers = 1) {
+    
+    function Card($type) {
+        $this->type = $type;
+    }
+    
+    private function retrieveCard() {
         /* the db-connection file is assumed to define DBHOST, DBUSER, DBPASS, and DBNAME
          * with their appropriate values, and should be located outside of the webroot  */
         include_once($_SERVER['DOCUMENT_ROOT'] . '/../db-connection.php');
@@ -25,49 +29,44 @@ class Card {
         /** @todo: maybe add more error checking here, I don't like returning this info to the user though */
         $mysqliLink = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
         if (!$mysqliLink) {
-            echo "Failed to connect to MySQL: (" . mysqli_connect_errno() . ") " . mysqli_connect_error();
+            echo "Failed to connect to MySQL: (" . mysqli_connect_errno() . ") " . mysqli_connect_error() . PHP_EOL;
+            return false;
         }
-        
-        $this->type = $type;
 
         /* the DB we query (questions or answers) is plural. So it should be
          * equal to the type (question or answer) variable plus an s. */
-        $table = $type . 's';
+        $table = $this->type . 's';
 
         /**
          *  Note that $db.$type should be equal to 'questions.question' or
          * or 'answers.answer'
          * @todo Consider merging to a single table?
          */
-        $select = "SELECT $table.id, $table.$type, $table.NSFW, sources.source, sources.url";
-        $from   = "FROM   $table INNER JOIN sources ON $table.source_id = sources.id";
+        $selectClauses[] = "$table.id";
+        $selectClauses[] = "$table.text";
+        $selectClauses[] = "$table.NSFW";
+        $selectClauses[] = "sources.source";
+        $selectClauses[] = "sources.url";
+                
+        /* build select from selectClauses array */
+        $select = "SELECT" . ' ' . implode(', ', $selectClauses);
+        
+        $from = "FROM $table INNER JOIN sources ON $table.source_id = sources.id";
 
         /* having a do nothing whereClause makes later logic easier. We don't have to evaluate
          * for empty whereClauses, we can implode them all. */
         $whereClauses[] = 'TRUE';
-
-        /* If we are asked for a question, limit the number of answers to maxAnswers */
-        if ($type == self::QUESTION) {
-            $whereClauses[] = "$table.number_of_answers <= $maxAnswers";
-        }
-
-        /* If NSFW is true, and we didn't get a specific card, then want to
-         * include NSFW entries, and we nothing needs to be done. Otherwise we
-         * need to add this clause. Applies to both questions and answers. */
-        if (($NSFW == FALSE) AND ($id == self::RANDOM_CARD)) {
-            $whereClauses[] = "$table.NSFW = FALSE";
-        }
-
+        
         /* if we got a specific id, we want to return that row specifically. */
-        if ($id != self::RANDOM_CARD) {
-            $whereClauses[] = "$table.id = $id";
+        if ($this->id != self::RANDOM_CARD) {
+            $whereClauses[] = "$table.id = $this->id";
         }
 
         /* build the where of the query. The different clauses get linked by AND */
-        $where = "WHERE " . implode(' AND ', $whereClauses);
+        $where = "WHERE" . ' ' . implode(' AND ', $whereClauses);
 
         /* if we get a id of 0, we want a random result, do this with an order by rand() statment. */
-        if ($id == self::RANDOM_CARD) {
+        if ($this->id == self::RANDOM_CARD) {
             $order = "ORDER BY RAND() LIMIT 0,1";   /* random result */
         } else {
             $order = "";
@@ -78,16 +77,41 @@ class Card {
 
         /* get the data */
         $result = mysqli_query($mysqliLink, $query);
+        
+        /* check for query errors */
+        if (!$result) {
+            echo "QUERY:" . ' ' . $query . PHP_EOL;
+            echo "Errormessage: " . mysqli_error($mysqliLink) . PHP_EOL;
+            return false;
+        }
         $data   = mysqli_fetch_assoc($result);
 
         /* Assign the data to class varaibles. Technically we could use the
          * array instead as is (which was the orginial implementation), but
          * decided this way was cleaner. */
         $this->id        = $data['id'];
-        $this->text      = $data[$type];
+        $this->text      = $data['text'];
         $this->NSFW      = $data['NSFW'];
         $this->source    = $data['source'];
         $this->sourceURL = $data['url'];
+    }
+    
+    public function getCard($id) {
+        if (empty($id)) { return FALSE; }
+        
+        /* set the details */
+        $this->id   = $id;
+        
+        return $this->retrieveCard();
+    }
+    
+    public function randomCard($NSFW = FALSE, $maxAnswers = 1) {
+        
+        /* set the details */
+        $this->NSFW = $NSFW;
+        $this->id   = self::RANDOM_CARD;
+        
+        return $this->retrieveCard();
     }
 
     /** displayCard

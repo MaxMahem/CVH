@@ -13,12 +13,14 @@
     include_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/card.php');
 
     /* Get the question cards */
-    $question = new Card(Card::QUESTION, Card::RANDOM_CARD, TRUE, 1);
+    $question = new Card(Card::QUESTION);
+    $question->randomCard(TRUE, 1);
 
     /* Get the Answer cards, currently we get 3 */
     /* @todo: Consider a better way of getting multiple cards? 3 DB Calls is inefficent/don't work right */
     for ($i = 0; $i < 3; $i++) {
-        $answers[] = new Card(Card::ANSWER, Card::RANDOM_CARD, TRUE);
+        $answers[$i] = new Card(Card::ANSWER);
+        $answers[$i]->randomCard(TRUE, 1);
     }
 
     $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
@@ -36,7 +38,7 @@
     <div class="instructions">
         <p>Pick the card you like the best!</p>
         <p>Or <a href="/CVH">RELOAD</a> this page to get new questions.</p>
-        <p>Or <a href="add.php">Suggest something better?</a></p>
+        <p>Or <a href="suggest.php">Suggest something better?</a></p>
     </div>
     
     <div class="clear"></div>
