@@ -1,8 +1,3 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 $(document).ready(function(){
     
 // This function is not currently necessary, but preserved in case we move to

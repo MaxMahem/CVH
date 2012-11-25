@@ -17,7 +17,17 @@ class Card {
     const HEX = 'hex';
     const DECIMAL = 'decimal';
 
-    function Card($mysqlLink, $type, $id = self::RANDOM_CARD, $NSFW = FALSE, $maxAnswers = 1) {
+    function Card($type, $id = self::RANDOM_CARD, $NSFW = FALSE, $maxAnswers = 1) {
+        /* the db-connection file is assumed to define DBHOST, DBUSER, DBPASS, and DBNAME
+         * with their appropriate values, and should be located outside of the webroot  */
+        include_once($_SERVER['DOCUMENT_ROOT'] . '/../db-connection.php');
+        
+        /** @todo: maybe add more error checking here, I don't like returning this info to the user though */
+        $mysqliLink = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
+        if (!$mysqliLink) {
+            echo "Failed to connect to MySQL: (" . mysqli_connect_errno() . ") " . mysqli_connect_error();
+        }
+        
         $this->type = $type;
 
         /* the DB we query (questions or answers) is plural. So it should be
@@ -67,7 +77,7 @@ class Card {
         $query = $select . ' ' . $from . ' ' . $where . ' ' . $order;
 
         /* get the data */
-        $result = mysqli_query($mysqlLink, $query);
+        $result = mysqli_query($mysqliLink, $query);
         $data   = mysqli_fetch_assoc($result);
 
         /* Assign the data to class varaibles. Technically we could use the
@@ -139,11 +149,21 @@ class Card {
         return $permURL;
     }
     
-    public static function numVotes($question, $answer, $mysqlLink) {
+    public static function numVotes($question, $answer) {
+        /* the db-connection file is assumed to define DBHOST, DBUSER, DBPASS, and DBNAME
+         * with their appropriate values, and should be located outside of the webroot  */
+        include_once($_SERVER['DOCUMENT_ROOT'] . '/../db-connection.php');
+        
+        /** @todo: maybe add more error checking here, I don't like returning this info to the user though */
+        $mysqliLink = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
+        if (!$mysqliLink) {
+            echo "Failed to connect to MySQL: (" . mysqli_connect_errno() . ") " . mysqli_connect_error();
+        }
+        
         $voteQuery  = "SELECT * FROM questions_answers_votes" . ' ' .
                       "WHERE question_id = " . $question->getId(card::DECIMAL) . ' ' .
                       "AND answer_id = " . $answer->getId(card::DECIMAL);
-        $result = mysqli_query($mysqlLink, $voteQuery);
+        $result = mysqli_query($mysqliLink, $voteQuery);
         $data   = mysqli_fetch_assoc($result);
                         
         /* get the number of votes */
