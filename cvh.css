@@ -20,20 +20,38 @@ a {
     text-decoration: inherit;
 }
 
+a:hover {
+    color: grey;
+}
+
 /* clear floats. Technicaly we should be able to do without this,
    but this is an easy way to handle it */
 .clear {
     clear: both;
 }
 
-div#header {
+html, body, #wrapper {
+    height: 100%;
+    font:   bold medium helvetica;
+}
+
+body > #container {
+    height:     auto;
+    min-height: 100%;
+}
+
+#header, #footer {
     background-color: black;
+    color:            white;
     padding: .5em 1em;
 }
 
 #header h1 {
     font: bold xx-large helvetica;
-    color: white;
+}
+
+#main {
+    padding-bottom: 1em;
 }
 
 .NSFW {
@@ -71,36 +89,42 @@ div#header {
     position: absolute;
     bottom: 1em;
     left:   1em;
+    wdith: 13em;
     z-index: 1;
 }
 
 .card .source img {
-    height: 2em;
+    height:         2em;
+    width:          2em;
     vertical-align: text-bottom;
     padding-right: .2em;
-    border: 0;
+    border:         0;
 }
 
+/* there is currently a bug in IE which causes background color not to inherit
+ * properly, so we set it transparent instead */
 .card input {
     font:       inherit;
     color:      inherit;
-    background: inherit;
+    background: transparent;
     border: 0px; 
 }
 .card textarea {
     font:       inherit;
     color:      inherit;
-    background: inherit;
+    background: transparent;
     border:  0;
     width:   9em;
     height: 10em;
-    resize: none;
+    resize:   none;
+    /* IE again. If we don't set this, it displays scroll bars by default */
+    overflow: auto;
 }
 
 .card select {
     font:       inherit;
     color:      inherit;
-    background: inherit;
+    background: transparent;
     border:  0;
     
 }
@@ -155,6 +179,11 @@ div#header {
     background-color: grey;
 }
 
+/* prevents our text from turning gray when we hover though */
+.vote:hover a {
+    color: black;
+}
+
 /* permalink border is there to ensure exact spacing */
 .permalink {
     width:   8em;
@@ -169,7 +198,6 @@ div#header {
 
 .permalink a {
     font: bold medium helvetica;
-    color: black;
 }
 
 input[type=submit] {
@@ -179,4 +207,8 @@ input[type=submit] {
     border-radius: .5em;
     float: left;
     font: bold x-large helvetica;
+}
+
+#footer {
+    clear: both;
 }

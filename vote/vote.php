@@ -58,4 +58,3 @@
     $redirectURL = "http://" . $_SERVER['HTTP_HOST'] . $redirectDest;
     header('Location: ' . $redirectURL, 303);
     die();
-?>
