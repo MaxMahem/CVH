@@ -9,7 +9,13 @@
     
     /* we got some variables, process them. */
     
+    /* contains the card class used to create the cards */
     include_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/card.php');
+    /* contains the view class used for view elements. */
+    include_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/view.php');
+
+    /* create View for page */
+    $display = new View();
     
     /* check if the question id is set */
     if (!empty($questionId)) {
@@ -46,18 +52,14 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">  
 
-<head>
-    <meta charset="utf-8" />
-    <title>Cards vs Humans - Display</title>
-    <link rel="stylesheet" type="text/css" href="/CVH/cvh.css" />
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> 
-    <script type="text/javascript" src="/CVH/cvh.js"></script>
-</head>
+<?= $display->displayHead(); ?>
 
 <body>
-    <div id="header">
-        <h1><a href="/CVH">Cards vs Humans</a></h1>
-    </div>
+    <div id="wrapper">
+    
+    <?= $display->displayHeader(); ?>
+    
+    <div id="main">
 	
     <div class="cardbox">
         <?= $question->displayCard(); ?>
@@ -65,7 +67,7 @@
     
     <div class="instructions">
         <p>This combination has received <br />
-        <span class="votes"><?php echo $votes; ?></span><br />
+        <span class="votes"><?= $votes; ?></span><br />
         <?php echo $voteWord . PHP_EOL; ?></p>
     </div>
     
@@ -75,5 +77,13 @@
         <?= $answer->displayCard(); ?>
         <div class="permalink"><a href="<?= Card::permURL($question, $answer); ?>" >Permalink</a></div>
     </div>
+    
+    <div class="clear"></div>
+    
+    </div> <!-- End of #main -->
+    
+    </div> <!-- End of #wrapper -->
+    
+    <?= $display->displayFooter(); ?>  
 </body>
 </html>

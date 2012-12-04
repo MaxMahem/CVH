@@ -1,18 +1,22 @@
+<?php
+    /* contains the view class used for view elements. */
+    include_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/view.php');
+
+    /* create View for page */
+    $suggest = new View('Add Card');
+?>
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">  
 
-<head>  
-    <meta charset="utf-8" />
-    <title>Cards vs Humans - Add Question</title>
-    <link rel="stylesheet" type="text/css" href="cvh.css" />
-</head>
+<?= $suggest->displayHead(); ?>
    
 <body>
-
-    <div id="header">
-        <h1><a href="/CVH">Cards vs Humans</a></h1>
-    </div>
+    <div id="wrapper">
+    
+    <?= $suggest->displayHeader(); ?>
+    
+    <div id="main">
     
     <div class="cardbox">
         <form action="add.php" method="post">
@@ -66,5 +70,13 @@
         <p>Questions should be in a form which can be answered by a single noun.</p>
         <p>Please mark your question Safe For Work (SFW) or <span class="NSFW">Not Safe For Work (NSFW)</span> as appropriate.</p>
     </div>
+    
+    <div class="clear"></div>
+    
+    </div> <!-- End of #main -->
+    
+    </div> <!-- End of #wrapper -->
+    
+    <?= $suggest->displayFooter(); ?>
 </body>
 </html>
