@@ -1,8 +1,8 @@
 <?php
     /* contains the card class used to create the cards */
-    include_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/card.php');
+    include_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/Card.php');
     /* contains the view class used for view elements. */
-    include_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/view.php');
+    include_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/View.php');
 
     /* create View for page */
     $index = new View();
@@ -49,7 +49,7 @@
     <div class="answers">
 <?php foreach ($answers as $answer) { ?>
         <div class="cardbox">
-            <?= $answer->displayCard($voteURL) . PHP_EOL; ?>
+            <?= $answer->displayCard($voteURL . $answer->getId(Card::HEX)); ?>
         <div class="permalink"><a href="<?php echo $permURL . $answer->getId(Card::HEX); ?>" >Permalink</a></div>
     </div>
 <?php } ?>

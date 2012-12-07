@@ -1,6 +1,6 @@
 <?php
     /* contains the view class used for view elements. */
-    include_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/view.php');
+    include_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/View.php');
 
     /* create View for page */
     $suggest = new View('Add Card');

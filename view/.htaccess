@@ -1,0 +1,43 @@
+# Document   : .htaccess
+# Created on : Dec 4, 2012, 8:37:44 PM
+# Author     : MaxMahem
+# Description:
+#
+# Rewrite requests in the CVH/View subdirectory as appropriate
+
+RewriteEngine On
+
+# Rewrite to display all questions
+# Request: question/all
+# Rewrite: viewAll.php?type=question
+RewriteRule question/all viewAll.php?type=question [L]
+
+# Rewrite to display all answers
+# Request: answer/all
+# Rewrite: viewAll.php?type=question
+RewriteRule answer/all viewAll.php?type=answer [L]
+
+# Rewrite to display questions
+# Request: question/ID
+# Rewrite: viewCard.php?type=question&id=ID
+RewriteRule question/(.*) viewCard.php?type=question&id=$1 [L]
+
+# Rewrite to display answers
+# Request: answer/ID
+# Rewrite: viewCard.php?type=answer&id=ID
+RewriteRule answer/(.*) viewCard.php?type=answer&id=$1 [L]
+
+# Rewrite to display all answers/questions
+# Request: all/TYPE
+# Rewrite: viewAll.php?type=question
+RewriteRule all/(.*) viewAll.php?type=$1 [L]
+
+# Rewrite if we don't match a directory
+RewriteCond %{REQUEST_FILENAME} !-d 
+
+# Rewrite if the request is a php file
+RewriteCond %{REQUEST_FILENAME}\.php -f 
+
+# Request: /CVH/view/file.php
+# Rewrite: /CVH/view/file
+RewriteRule ^(.*)$ $1.php

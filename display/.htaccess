@@ -1,0 +1,13 @@
+# Document   : .htaccess
+# Created on : Aug 4, 2012, 8:37:44 PM
+# Author     : MaxMahem
+# Description:
+#
+# Rewrite requests in the CVH/subdirectories to proper get format.
+# I'm not to good at .htaccess just yet, so I'm kind of winging this currently.
+
+RewriteEngine On
+
+# Request: /QUESTIONID-ANSWERID to
+# Rewrite: /display.php?Q=QUESTIONID&A=ANSWERID
+RewriteRule /display/([^-]*)-([^-]*)$ /display/display.php?Q=$1&A=$2 [L, R]

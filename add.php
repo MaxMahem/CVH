@@ -1,6 +1,6 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/card.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/Card.php');
 
 $filterConditions = array(
     'type'   => FILTER_SANITIZE_STRING,

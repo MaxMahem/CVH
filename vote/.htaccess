@@ -3,13 +3,17 @@
 # Author     : MaxMahem
 # Description:
 #
-# Rewrite requests in the CVH director to remove the php extension from
-# file names.
+# Rewrite requests in the CVH/Vote subdirectory as appropriate
 
 RewriteEngine On
 
+# Request: QUESTIONID-ANSWERID to
+# Rewrite: vote.php?Q=QUESTIONID&A=ANSWERID
+RewriteRule ([^-]*)-([^-]*)$ /CVH/vote/vote.php?Q=$1&A=$2 [L]
+
 # Rewrite if we don't match a directory
 RewriteCond %{REQUEST_FILENAME} !-d 
+
 # Rewrite if the request is a php file
 RewriteCond %{REQUEST_FILENAME}\.php -f 
 
