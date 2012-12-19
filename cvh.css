@@ -40,13 +40,14 @@ body > #container {
     min-height: 100%;
 }
 
-#header, #footer {
+header, 
+footer {
     background-color: black;
     color:            white;
     padding: .5em 1em;
 }
 
-#header h1 {
+header h1 {
     font: bold xx-large helvetica;
 }
 
@@ -209,7 +210,7 @@ input[type=submit] {
     font: bold x-large helvetica;
 }
 
-#footer {
+footer {
     clear:      both;
     height:      1em;
     margin-top: -2em;

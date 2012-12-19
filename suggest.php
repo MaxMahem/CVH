@@ -5,18 +5,13 @@
     /* create View for page */
     $suggest = new View('Add Card');
 ?>
-<!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">  
-
 <?= $suggest->displayHead(); ?>
-   
-<body>
-    <div id="wrapper">
+
+<div id="wrapper">
+
+<?= $suggest->displayHeader(); ?>
     
-    <?= $suggest->displayHeader(); ?>
-    
-    <div id="main">
+<div id="main">
     
     <div class="cardbox">
         <form action="add.php" method="post">
@@ -73,10 +68,8 @@
     
     <div class="clear"></div>
     
-    </div> <!-- End of #main -->
+</div> <!-- End of #main -->
     
-    </div> <!-- End of #wrapper -->
+</div> <!-- End of #wrapper -->
     
-    <?= $suggest->displayFooter(); ?>
-</body>
-</html>
+<?= $suggest->displayFooter(); ?>

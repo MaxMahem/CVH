@@ -21,18 +21,13 @@
     $permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/" .  $question->getID(Card::HEX) . "-";
     $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
 ?>
-<!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-
 <?= $index->displayHead(); ?>
 
-<body>
-    <div id="wrapper">
+<div id="wrapper">
     
-    <?= $index->displayHeader(); ?>
+<?= $index->displayHeader(); ?>
     
-    <div id="main">
+<div id="main">
     
     <div class="cardbox">
         <?= $question->displayCard(); ?>
@@ -57,11 +52,8 @@
     
     <div class="clear"></div>
     
-    </div> <!-- End of #main -->
+</div> <!-- End of #main -->
     
-    </div> <!-- End of #wrapper -->
+</div> <!-- End of #wrapper -->
     
-    <?= $index->displayFooter(); ?>
-    
-</body>
-</html>
+<?= $index->displayFooter(); ?>

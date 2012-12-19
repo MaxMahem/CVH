@@ -46,9 +46,12 @@ class CardSet {
     public function getAllCards() {        
         $mysqliLink = $this->dbConnect();
         
+        /* tables are plural, so add an s */
+        $table = $this->type . 's';
+
         /* this query will get all the cards of the selected type */
-        $select = "SELECT {$this->type}s.id";      
-        $from   = "FROM   {$this->type}s";
+        $select = "SELECT $table.id";      
+        $from   = "FROM $table";
 
         /* build the query */
         $query = $select . ' ' . $from;
@@ -80,7 +83,7 @@ class CardSet {
         
         $mysqliLink = $this->dbConnect();
         
-        $select = "SELECT `questions_answers_votes`.`$this->type" . "_id` AS `id`";
+        $select = "SELECT `questions_answers_votes`.`$this->type" . "_id`";
         $from   = "FROM   `questions_answers_votes`";
 
         $whereClauses[] = "`questions_answers_votes`.`$pairType" . "_id`=$pairId";
@@ -113,10 +116,13 @@ class CardSet {
     public function getSourceCards($sourceId) {
         $mysqliLink = $this->dbConnect();
         
+        /* tables are plural, so add an s */
+        $table = $this->type . 's';
+
         /* this query will get all the cards of the selected type */
-        $select = "SELECT `{$this->type}s`.`id`";      
-        $from   = "FROM   `{$this->type}`";
-        $where  = "WHERE  `{$this->type}`.`source_id`=$sourceId";
+        $select = "SELECT `$table`.`id`";      
+        $from   = "FROM `$table`";
+        $where  = "WHERE `$table`.`source_id`=$sourceId";
 
         /* build the query */
         $query = $select . ' ' . $from . ' ' . $where;
@@ -139,7 +145,7 @@ class CardSet {
     }
     
     public function displayAllCards() {
-        $display  = "<div class=\"{$this->type}s\">";
+        $display  = "<div class=\"$this->type\">";
         
         foreach ($this->cards as $card) {
             $display .= '<div class="cardbox">';
