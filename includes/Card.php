@@ -17,10 +17,23 @@ class Card {
     const HEX = 'hex';
     const DECIMAL = 'decimal';
     
+    /** Card($type) constructor
+     * Creates a new card. Type is required, must be either 'question' or 'answer'
+     * 
+     * @param string $type
+     */
     function Card($type) {
+        if (($type != self::QUESTION) && ($type != self::ANSWER)) {
+            throw new InvalidArgumentException("Invalid type: $type passed to new Card");
+        }
         $this->type = $type;
     }
     
+    /** dbConnect()
+     * Makes a connection to the Card database
+     *
+     * @return mysqli
+     */
     private function dbConnect() {
         /* the db-connection file is assumed to define DBHOST, DBUSER, DBPASS, and DBNAME
          * with their appropriate values, and should be located outside of the webroot  */
@@ -36,6 +49,14 @@ class Card {
         return $mysqliLink;
     }
     
+    /** retrieveCard()
+     * retrieve's data about a card from the DB.
+     * 
+     * If a card id isn't set, it gets a random card.
+     * @todo consider removing random card functionality into seperate function.
+     * 
+     * @return boolean  returns true on success, false on failure.
+     */
     private function retrieveCard() {
         $mysqliLink = $this->dbConnect();
         
@@ -43,11 +64,7 @@ class Card {
          * equal to the type (question or answer) variable plus an s. */
         $table = $this->type . 's';
 
-        /**
-         *  Note that $db.$type should be equal to 'questions.question' or
-         * or 'answers.answer'
-         * @todo Consider merging to a single table?
-         */
+        /* fields to be selected */
         $selectClauses[] = "$table.id";
         $selectClauses[] = "$table.text";
         $selectClauses[] = "$table.NSFW";
@@ -90,18 +107,30 @@ class Card {
             echo "Errormessage: " . mysqli_error($mysqliLink) . PHP_EOL;
             return false;
         }
-        $data   = mysqli_fetch_assoc($result);
+        $data = mysqli_fetch_assoc($result);
 
-        /* Assign the data to class varaibles. Technically we could use the
-         * array instead as is (which was the orginial implementation), but
-         * decided this way was cleaner. */
+        /* Assign the data to class varaibles. */
         $this->id        = $data['id'];
         $this->text      = $data['text'];
         $this->NSFW      = $data['NSFW'];
         $this->source    = $data['source'];
         $this->sourceURL = $data['url'];
+        
+        return true;
     }
     
+    /** insertCard()
+     * inserts the current card into the DB.
+     * 
+     * Inserts the current card into the DB, as well as the source if not
+     * present. Currently does not validate a cards data to make sure its good.
+     * Sources are checked for uniqueness, cards are not, yet.
+     * 
+     * @todo Add validation of data, probably seperate function.
+     * @todo Add checking for card uniqueness.
+     * 
+     * @return int id of card after insert, false on failure.
+     */
     private function insertCard() {
         /* get connection to DB */
         $mysqliLink = $this->dbConnect();
@@ -114,10 +143,10 @@ class Card {
                       . "VALUES                ('$this->source', '$this->sourceURL')" . ' '
                       . "ON DUPLICATE KEY UPDATE `id` = LAST_INSERT_ID(`id`)";
         
-        $result = mysqli_query($mysqliLink, $sourceInsert);
+        $sourceResult = mysqli_query($mysqliLink, $sourceInsert);
         
         /* check for query errors */
-        if (!$result) {
+        if (!$sourceResult) {
             echo "QUERY:" . ' ' . $sourceInsert . PHP_EOL;
             echo "Errormessage: " . mysqli_error($mysqliLink) . PHP_EOL;
             return false;
@@ -131,9 +160,9 @@ class Card {
         $cardInsert = "INSERT INTO `$table` (`text`,        `NSFW`,        `source_id`)" . ' '
                     . "VALUES               ('$this->text', '$this->NSFW', '$sourceId' )";
         
-        $result = mysqli_query($mysqliLink, $cardInsert);
+        $cardResult = mysqli_query($mysqliLink, $cardInsert);
         
-        if (!$result) {
+        if (!$cardResult) {
             echo "QUERY:" . ' ' . $cardInsert . PHP_EOL;
             echo "Errormessage: " . mysqli_error($mysqliLink) . PHP_EOL;
             return false;
@@ -145,6 +174,13 @@ class Card {
         return $cardId;
     }
     
+    /** getCard($id)
+     * Gets the current cards data. Id must be set for this to work. For a 
+     * random card see randomCard()
+     * 
+     * @param   type $id
+     * @return  boolean true on success, false on failure.
+     */
     public function getCard($id) {
         if (empty($id)) { return FALSE; }
 
@@ -154,6 +190,12 @@ class Card {
         return $this->retrieveCard();
     }
     
+    /** randomCard($NSFW)
+     * Gets a random card. NSFW by defalt.
+     * 
+     * @param type $NSFW
+     * @return boolean true on succes, false on failure.
+     */
     public function randomCard($NSFW = FALSE) {
         /* set the details */
         $this->NSFW = $NSFW;
@@ -162,6 +204,17 @@ class Card {
         return $this->retrieveCard();
     }
     
+    /**addCard
+     * adds data for current card, and adds it to the database.
+     * 
+     * @todo   add more card validation
+     * 
+     * @param  boolean $NSFW      true if the card is NSFW, false if not.
+     * @param  string  $text      text of the card
+     * @param  string  $source    source of the card
+     * @param  string  $sourceURL URL of the card source
+     * @return int id of new card.
+     */
     public function addCard($NSFW, $text, $source, $sourceURL) {
         
         if ($NSFW == 'NSFW') {
@@ -186,16 +239,15 @@ class Card {
     /** displayCard
     * Returns a properly formated card for display.
     *
-    * @param   string  $voteURL    the first part of the URL that should be
-    *  used for voting, if desired. The id of the card will be appended to it.
+    * @param   string  $linkURL     the link the card should go to, if any.
     * @return  string  HTML code for the card.
     */
-    public function displayCard($voteURL = NULL) {
+    public function displayCard($linkURL = NULL) {
         $classes[] = 'card';
         $classes[] = $this->type;
 
         if ($this->NSFW)      { $classes[] = 'NSFW'; }
-        if ($voteURL != NULL) { $classes[] = 'vote'; }
+        if ($linkURL != NULL) { $classes[] = 'vote'; }
 
         $class = implode(' ', $classes);
         $result .= "<div class=\"$class\" id=\"" . $this->getId(self::DECIMAL) . "\">";
@@ -208,9 +260,9 @@ class Card {
         /**
         * @todo Possibly add code for handling voting on questions?
         */
-        if ($voteURL != NULL) {
+        if ($linkURL != NULL) {
             /* if we recieved a vote URL, embeded the card text inside a voting link */
-            $result .= "<a class='answerlink' href='" . $voteURL . $this->getId(self::HEX) . "'>";
+            $result .= "<a class='answerlink' href='" . $linkURL . "'>";
             $result .= $this->text;
             $result .= "</a>";
         } else {
@@ -230,28 +282,41 @@ class Card {
         }
 
         $result .= $this->source . '</a>';
-        $result .= '</div>';
+        $result .= '</div>' . PHP_EOL;
 
         return $result;
     }
-
-    public static function permURL($question, $answer) {
-        $permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/" .
-                   $question->getID(Card::HEX) . "-" . $answer->getID(Card::HEX);
-
-        return $permURL;
-    }
-    
-    public static function numVotes($question, $answer) {
+   
+    /** numVotes()
+     * Returns the number of votes this card has recieved.
+     *
+     * @return  int the number of votes this card has recieved.
+     */
+    public function numVotes() {
         /* get connection to DB */
         $mysqliLink = self::dbConnect();
         
-        $voteQuery  = "SELECT * FROM questions_answers_votes" . ' ' .
-                      "WHERE question_id = " . $question->getId(card::DECIMAL) . ' ' .
-                      "AND answer_id = " . $answer->getId(card::DECIMAL);
-        $result = mysqli_query($mysqliLink, $voteQuery);
+        /* $typeId is the type + _id, which should be the id row name we want */
+        $typeId = $this->type . '_id';
+    
+        $select  = "SELECT   `questions_answers_votes`.`$typeId`, SUM(`questions_answers_votes`.`vote_tally`) as `vote_tally`";
+        $from    = "FROM     `questions_answers_votes`";
+        $where   = "WHERE    `questions_answers_votes`.`$typeId`=$this->id";
+        $groupBy = "GROUP BY `questions_answers_votes`.`$typeId`";
+        
+        /* build the query */
+        $query   = $select . ' ' . $from . ' ' . $where . ' ' . $groupBy;
+        
+        $result = mysqli_query($mysqliLink, $query);
+        
+        /* check for query errors */
+        if (!$result) {
+            echo "QUERY:" . ' ' . $query . PHP_EOL;
+            echo "Errormessage: " . mysqli_error($mysqliLink) . PHP_EOL;
+            return false;
+        }
         $data   = mysqli_fetch_assoc($result);
-                        
+        
         /* get the number of votes */
         if (is_null($data)) {
             /* we returned no rows, which means there is no record and no votes */
@@ -263,18 +328,39 @@ class Card {
         return $votes;
     }
     
+    /** getId
+     * Returns the current id in either HEX or DECIMAL format. Default is decimal.
+     * 
+     * @param  string $format either 'hex' or 'decimal' default is decimal.
+     * @return string/int id of card asked for in hex or decimal.
+     */
     public function getId($format = self::DECIMAL) {
-        if ($format == self::DECIMAL) {
-            $id = $this->id;
+        /* check input format */
+        if (($format != self::DECIMAL) && ($format != self::HEX)) {
+            throw new InvalidArgumentException("Invalid format: $format passed to Card->getId");
         }
-
-        if ($format == self::HEX) {
-            $id = strtoupper(dechex($this->id));
+        
+        /* check card id */
+        if ((!isset($this->id)) || ($this->id == self::RANDOM_CARD)) {
+            if (!isset($this->id)) {
+                throw new LogicException("Card->getId called on card without id");
+            }
+            if ($this->id == self::RANDOM_CARD) {
+                throw new LogicException("Card->getId called on card set to a RANDOM_CARD");
+            }
         }
+                    
+        if ($format == self::DECIMAL) { $id = $this->id; }
+        if ($format == self::HEX)     { $id = strtoupper(dechex($this->id)); }
 
         return $id;
     }
     
+    /** getType
+     * Returns the card type.
+     * 
+     * @return string the card type, either 'question' or 'answer'
+     */
     public function getType() {
         return $this->type;
     }

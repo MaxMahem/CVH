@@ -1,8 +1,8 @@
 <?php
     /* contains the card class used to create the cards */
-    include_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/Card.php');
+    require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
     /* contains the view class used for view elements. */
-    include_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/View.php');
+    require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/View.php');
 
     /* create View for page */
     $index = new View();
