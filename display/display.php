@@ -48,18 +48,13 @@
         $voteWord = 'votes.';
     }
 ?>
-<!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">  
-
 <?= $display->displayHead(); ?>
 
-<body>
-    <div id="wrapper">
+<div id="wrapper">
     
-    <?= $display->displayHeader(); ?>
+<?= $display->displayHeader(); ?>
     
-    <div id="main">
+<div id="main">
 	
     <div class="cardbox">
         <?= $question->displayCard(); ?>
@@ -75,15 +70,12 @@
     
     <div class="cardbox">
         <?= $answer->displayCard(); ?>
-        <div class="permalink"><a href="<?= Card::permURL($question, $answer); ?>" >Permalink</a></div>
     </div>
     
     <div class="clear"></div>
     
-    </div> <!-- End of #main -->
+</div> <!-- End of #main -->
     
-    </div> <!-- End of #wrapper -->
+</div> <!-- End of #wrapper -->
     
-    <?= $display->displayFooter(); ?>  
-</body>
-</html>
+<?= $display->displayFooter(); ?>
