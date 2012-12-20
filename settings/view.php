@@ -1,6 +1,6 @@
 <?php
 /* contains the view class used for view elements. */
-require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/View.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/View.php');
 
 /* create View for page */
 $view = new View();
