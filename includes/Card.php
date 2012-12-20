@@ -84,6 +84,13 @@ class Card {
         if ($this->id != self::RANDOM_CARD) {
             $whereClauses[] = "$table.id = $this->id";
         }
+        
+        /* reverse logic here. If NSFW is TRUE, then we want to exclude this query,
+         * which will return SFW and NSFW results. Otherwise we want to include this
+         * query which will exclude NSFW results. */
+        if (!$this->NSFW) {
+            $whereClauses[] = "$table.NSFW = FALSE";
+        }
 
         /* build the where of the query. The different clauses get linked by AND */
         $where = "WHERE" . ' ' . implode(' AND ', $whereClauses);
