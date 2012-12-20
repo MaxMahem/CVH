@@ -1,25 +1,31 @@
 <?php
-    /* contains the card class used to create the cards */
-    require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
-    /* contains the view class used for view elements. */
-    require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/View.php');
+/* contains the card class used to create the cards */
+require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
+/* contains the view class used for view elements. */
+require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/View.php');
 
-    /* create View for page */
-    $index = new View();
+/* create View for page */
+$index = new View();
 
-    /* Get the question cards */
-    $question = new Card(Card::QUESTION);
-    $question->randomCard(TRUE);
+/* get Cookie for NSFW/Unvalidated Settings */
+$NSFWCookie = filter_input(INPUT_COOKIE, 'NSFW');
+// $unvalidatedCookie = filter_input(INPUT_COOKIE, 'Unvalidated');
 
-    /* Get the Answer cards, currently we get 3 */
-    /* @todo: Consider a better way of getting multiple cards? 3 DB Calls is inefficent/don't work right */
-    for ($i = 0; $i < 3; $i++) {
-        $answers[$i] = new Card(Card::ANSWER);
-        $answers[$i]->randomCard(TRUE);
-    }
+$NSFW = ($NSFWCookie == 'true') ? TRUE : FALSE;
+    
+/* Get the question cards */
+$question = new Card(Card::QUESTION);
+$question->randomCard($NSFW);
 
-    $permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/" .  $question->getID(Card::HEX) . "-";
-    $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
+/* Get the Answer cards, currently we get 3 */
+/* @todo: Consider a better way of getting multiple cards? 3 DB Calls is inefficent/don't work right */
+for ($i = 0; $i < 3; $i++) {
+    $answers[$i] = new Card(Card::ANSWER);
+    $answers[$i]->randomCard($NSFW);
+}
+
+$permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/" .  $question->getID(Card::HEX) . "-";
+$voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
 ?>
 <?= $index->displayHead(); ?>
 
