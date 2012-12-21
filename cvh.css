@@ -51,6 +51,11 @@ header h1 {
     font: bold xx-large helvetica;
 }
 
+nav li,
+nav ul {
+    display: inline;
+}
+
 #main {
     padding-bottom: 1em;
 }

@@ -10,16 +10,20 @@
  *
  * @author MaxMahem
  */
-class CardSet {
+class CardSet implements IteratorAggregate {
     private $type;
     private $cards;
     
-    function CardSet($type) {
+    public function CardSet($type) {
         if (($type != Card::QUESTION) && ($type != Card::ANSWER)) {
             throw new InvalidArgumentException("Invalid type: $type passed to new CardSet");
         }
-    
+        
         $this->type = $type;
+    }
+    
+    public function getIterator() {
+        return new ArrayIterator($this->cards);
     }
     
     /** dbConnect()
@@ -30,46 +34,50 @@ class CardSet {
     private function dbConnect() {
         /* the db-connection file is assumed to define DBHOST, DBUSER, DBPASS, and DBNAME
          * with their appropriate values, and should be located outside of the webroot  */
-        include_once($_SERVER['DOCUMENT_ROOT'] . '/../db-connection.php');
+        require($_SERVER['DOCUMENT_ROOT'] . '/../db-connection.php');
         
         /** @todo: maybe add more error checking here, I don't like returning this info to the user though */
-        $mysqliLink = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
-        if (!$mysqliLink) {
-            echo "Failed to connect to MySQL: (" . mysqli_connect_errno() . ") " . mysqli_connect_error() . PHP_EOL;
+        $mysqli = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
+        if ($mysqli->connect_errno) {
+            echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error . PHP_EOL;
             return false;
         }
 
-        return $mysqliLink;
+        return $mysqli;
     }
 
+    public function getType() {
+        return $this->type;
+    }
     
     public function getAllCards() {        
-        $mysqliLink = $this->dbConnect();
+        $mysqli = $this->dbConnect();
         
         /* tables are plural, so add an s */
         $table = $this->type . 's';
 
         /* this query will get all the cards of the selected type */
-        $select = "SELECT $table.id";      
-        $from   = "FROM $table";
+        $select = "SELECT `$table`.`id`";      
+        $from   = "FROM `$table`";
 
         /* build the query */
         $query = $select . ' ' . $from;
 
         /* get the data */
-        $result = mysqli_query($mysqliLink, $query);
+        $result = $mysqli->query($query);
         
         /* check for query errors */
         if (!$result) {
             echo "QUERY:" . ' ' . $query . PHP_EOL;
             echo "Errormessage: " . mysqli_error($mysqliLink) . PHP_EOL;
-            return exit;
+            return;
         }
-
+        
         /* get all the cards's */
         while ($row = mysqli_fetch_assoc($result)) {
-            $this->cards[$row['id']] = new Card($this->type);
-            $this->cards[$row['id']]->getCard($row['id']);
+            $id = $row['id'];
+            $this->cards[$id] = new Card($this->type);
+            $this->cards[$id]->getCard($id);
         }
     }
     
@@ -139,24 +147,8 @@ class CardSet {
 
         /* get all the cards's */
         while ($row = mysqli_fetch_assoc($result)) {
-            $this->cards[$row['id']] = new Card($this->type);
-            $this->cards[$row['id']]->getCard($row['id']);
+            $this->cards[] = new Card($this->type, $row['id']);
         }
     }
     
-    public function displayAllCards() {
-        $display  = "<div class=\"$this->type\">";
-        
-        foreach ($this->cards as $card) {
-            $display .= '<div class="cardbox">';
-            $display .= $card->displayCard();
-            $display .= '</div>';
-        }
-        
-        $display .= '</div>';
-            
-        return $display;
-    }
 }
-
-?>

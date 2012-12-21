@@ -25,28 +25,27 @@ $viewAll = new View('View All' . ' '. ucfirst($type) . 's');
     
 $cards = new CardSet($type);
 $cards->getAllCards();
-
-$displayURL = "/CVH/view/$type/";
     
 ?>
-<!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">  
-
 <?= $viewAll->displayHead(); ?>
 
-<body>
-    <div id="wrapper">
+<div id="wrapper">
     
-    <?= $viewAll->displayHeader(); ?>
+<?= $viewAll->displayHeader(); ?>
     
-    <div id="main">
+<div id="main">
 	
-    <?= $cards->displayAllCards(); ?>
+    <div class="<?=$cards->getType(); ?>">
+<?php foreach ($cards as $card) { ?>
+        <div class="cardbox">
+            <?= $card->displayCard() ?>
+        </div>
+<?php } ?>
+    </div>
 
     <div class="clear"></div>
     
-    </div> <!-- End of #main -->
+</div> <!-- End of #main -->
     
     </div> <!-- End of #wrapper -->
     

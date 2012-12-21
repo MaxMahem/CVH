@@ -29,7 +29,7 @@
      *
      * @return string
      */
-    Function displayHeader() {
+    public function displayHeader() {
         $headerTitle = '';
         
         if (isset($this->title)) {
@@ -37,10 +37,28 @@
         }
         
         $header  = '<header>';
-        $header .= '<h1><a href="/CVH">Cards vs Humans</a>' . $headerTitle . '</h1>';
+        $header .= "<h1><a href='/CVH'>Cards vs Humans</a>$headerTitle</h1>";
+        $header .= self::displayNav();
         $header .= '</header>' . PHP_EOL;
         
         return $header;
+    }
+    
+    public function displayNav() {
+        $nav .= "<nav>";
+        $nav .= "<ul>";
+        $nav .= "   <li><a href='/CVH/settings/view.php'>Settings</a>";
+        $nav .= "   <li>View All";
+        $nav .= "       <ul>";
+        $nav .= "           <li><a href='/CVH/view/answer/all'>Answers</a>";
+        $nav .= "           <li><a href='/CVH/view/question/all'>Questions</a>";
+        $nav .= "       </ul>";
+        $nav .= "   </li>";
+        $nav .= "   <li><a href='/CVH/suggest.php'>Add New</a>";
+        $nav .= "</ul>";
+        $nav .= "</nav>";
+        
+        return $nav;   
     }
     
     /**
@@ -49,6 +67,7 @@
      * @return string
      */
      Function displayHead() {
+        /* if we are an ajax request we want to abort, and not set a header */
         if ($this->ajax) { die(); }
         
         $headTitle = '';
@@ -60,7 +79,7 @@
         $head .= '<!DOCTYPE html>' . PHP_EOL;
         $head .= '<meta charset="utf-8" />' . PHP_EOL;
         $head .= '<title>Cards vs Humans' . $headTitle . '</title>' . PHP_EOL;
-        $head .= '<link rel="stylesheet" type="text/css" href="/CVH/cvh.css" />' . PHP_EOL;
+        $head .= '<link rel="stylesheet" href="/CVH/cvh.css" />' . PHP_EOL;
         
         return $head;
     }

@@ -22,11 +22,16 @@ class Card {
      * 
      * @param string $type
      */
-    function Card($type) {
+    function Card($type, $id = NULL) {
         if (($type != self::QUESTION) && ($type != self::ANSWER)) {
             throw new InvalidArgumentException("Invalid type: $type passed to new Card");
         }
         $this->type = $type;
+        
+        if (isset($id)) {
+            $this->id = $id;
+            $this->retrieveCard();
+        }
     }
     
     /** dbConnect()
@@ -85,10 +90,11 @@ class Card {
             $whereClauses[] = "$table.id = $this->id";
         }
         
-        /* reverse logic here. If NSFW is TRUE, then we want to exclude this query,
-         * which will return SFW and NSFW results. Otherwise we want to include this
-         * query which will exclude NSFW results. */
-        if (!$this->NSFW) {
+        /* If we are getting a RANDOM card, and NSFW is TRUE we want to exclude this clause
+         * If we are getting a RANDOM card, and NSFW is FALSE we want to include this clause
+         * If we aren't getting a RANDOM card, we want to exclude this clause.
+         * Including this clause will exclude NSFW entries. */
+         if (($this->id == self::RANDOM_CARD) && ($this->NSFW == FALSE)) {
             $whereClauses[] = "$table.NSFW = FALSE";
         }
 
@@ -372,4 +378,3 @@ class Card {
         return $this->type;
     }
 }
-?>
