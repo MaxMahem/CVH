@@ -21,17 +21,17 @@ if (($type != Card::QUESTION) && ($type != Card::ANSWER)) {
 }
 
 /* create View for page */
-$viewAll = new View('View All' . ' '. ucfirst($type) . 's');
+$view = new View('View All' . ' '. ucfirst($type) . 's');
     
-$cards = new CardSet($type);
+$cards = new CardSet($type, $view->NSFW);
 $cards->getAll();
     
 ?>
-<?= $viewAll->displayHead(); ?>
+<?= $view->displayHead(); ?>
 
 <div id="wrapper">
     
-<?= $viewAll->displayHeader(); ?>
+<?= $view->displayHeader(); ?>
     
 <div id="main">
 	
@@ -47,8 +47,6 @@ $cards->getAll();
     
 </div> <!-- End of #main -->
     
-    </div> <!-- End of #wrapper -->
+</div> <!-- End of #wrapper -->
     
-    <?= $viewAll->displayFooter(); ?>  
-</body>
-</html>
+<?= $view->displayFooter(); ?>  

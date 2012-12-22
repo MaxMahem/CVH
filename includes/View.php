@@ -8,6 +8,8 @@
     private $title;
     private $ajax;
     
+    public $NSFW;
+    
     /**
      * Constructor sets the title.
      *
@@ -17,11 +19,12 @@
         $this->title = $title;
         
         /* AJAX check  */
-        if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
-            $this->ajax = TRUE;
-        } else {
-            $this->ajax = FALSE;
-        }
+        $this->ajax = ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') ? TRUE : FALSE;
+        
+        /* get Cookie for NSFW Settings */
+        $NSFWCookie = filter_input(INPUT_COOKIE, 'NSFW');
+        
+        $this->NSFW = ($NSFWCookie == 'true') ? TRUE : FALSE;
     }
     
     /**

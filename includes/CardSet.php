@@ -1,10 +1,4 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * a set of cards.
  *
@@ -13,12 +7,17 @@
 class CardSet implements IteratorAggregate {
     private $type;
     private $cards;
+    private $NSFW;
     
-    public function CardSet($type) {
+    public function CardSet($type, $NSFW = FALSE) {
         if (($type != Card::QUESTION) && ($type != Card::ANSWER)) {
             throw new InvalidArgumentException("Invalid type: $type passed to new CardSet");
         }
+        if (!is_bool($NSFW)) {
+            throw new InvalidArgumentException("Non bool NSFW: $NSFW passed to new CardSet");
+        }
         
+        $this->NSFW = $NSFW;
         $this->type = $type;
     }
     
@@ -37,21 +36,23 @@ class CardSet implements IteratorAggregate {
         /* this query will get all the cards of the selected type */
         $select = "SELECT `$table`.`id`";      
         $from   = "FROM `$table`";
+        $where  = ($this->NSFW == FALSE) ? "WHERE $table.NSFW = FALSE" : '';
+        $limit  = "LIMIT $start, $number";
 
         /* build the query */
-        $query = $select . ' ' . $from;
+        $query = $select . ' ' . $from . ' ' . $where . ' ' . $limit;
 
         $this->getData($query);
     }
     
-    public function getRandom($number = '3', $NSFW = FALSE) {
+    public function getRandom($number = '3') {
         /* tables are plural, so add an s */
         $table = $this->type . 's';
 
         /* this query will get all the cards of the selected type */
         $select = "SELECT `$table`.`id`";      
         $from   = "FROM `$table`";
-        $where  = ($NSFW == FALSE) ? "WHERE $table.NSFW = FALSE" : '';
+        $where  = ($this->NSFW == FALSE) ? "WHERE $table.NSFW = FALSE" : '';
         $order  = "ORDER BY RAND()";
         $limit  = "LIMIT 0, $number";
 

@@ -8,19 +8,13 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/View.php');
 
 /* create View for page */
 $index = new View();
-
-/* get Cookie for NSFW/Unvalidated Settings */
-$NSFWCookie = filter_input(INPUT_COOKIE, 'NSFW');
-// $unvalidatedCookie = filter_input(INPUT_COOKIE, 'Unvalidated');
-
-$NSFW = ($NSFWCookie == 'true') ? TRUE : FALSE;
     
 /* Get the question cards */
-$question = new Card(Card::QUESTION, Card::RANDOM_CARD, $NSFW);
+$question = new Card(Card::QUESTION, Card::RANDOM_CARD, $index->NSFW);
 
 /* Get the Answer cards, currently we get 3 */
-$answers = new CardSet(Card::ANSWER);
-$answers->getRandom(3, $NSFW);
+$answers = new CardSet(Card::ANSWER, $index->NSFW);
+$answers->getRandom(3);
 
 $permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/" .  $question->getID(Card::HEX) . "-";
 $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
