@@ -40,11 +40,8 @@
         }
         
         $header  = '<header>';
-        $header .= "<h1>";
-        $header .= "<a href='/CVH'>Cards vs Humans</a>";
-        $header .= $headerTitle;
-        $header .= ($this->NSFW) ? " - <span class='NSFW'>NSFW</span>" : '';
-        $header .= "</h1>";
+        $header .= "<h1><a href='/CVH'>Cards vs Humans</a></h1>";
+        $header .= ($this->NSFW) ? "<h2 class='NSFW'>NSFW</h2>" : '';
         $header .= self::displayNav();
         $header .= '</header>' . PHP_EOL;
         
