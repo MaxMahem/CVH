@@ -49,6 +49,17 @@ footer {
 
 header h1 {
     font: bold xx-large helvetica;
+    float: left;
+}
+
+header h2 {
+    float: left;
+    font-size: xx-large;
+    padding-left: .5em;
+}
+
+nav {
+    clear: left;
 }
 
 nav li,
