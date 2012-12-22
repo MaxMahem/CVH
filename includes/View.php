@@ -9,7 +9,8 @@
     private $ajax;
     
     public $NSFW;
-    
+    public $unvalidated;
+
     /**
      * Constructor sets the title.
      *
@@ -21,10 +22,12 @@
         /* AJAX check  */
         $this->ajax = ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') ? TRUE : FALSE;
         
-        /* get Cookie for NSFW Settings */
-        $NSFWCookie = filter_input(INPUT_COOKIE, 'NSFW');
+        /* get Cookie settings */
+        $NSFWCookie        = filter_input(INPUT_COOKIE, 'NSFW');
+        $unvalidatedCookie = filter_input(INPUT_COOKIE, 'Unvalidated');
         
-        $this->NSFW = ($NSFWCookie == 'true') ? TRUE : FALSE;
+        $this->unvalidated = ($unvalidatedCookie) ? TRUE : FALSE;               
+        $this->NSFW        = ($NSFWCookie)        ? TRUE : FALSE;
     }
     
     /**
@@ -40,7 +43,7 @@
         }
         
         $header  = '<header>';
-        $header .= "<h1><a href='/CVH'>Cards vs Humans</a></h1>";
+        $header .= "<h1><a href='/CVH'>Cards vs Humans</a>$headerTitle</h1>";
         $header .= ($this->NSFW) ? "<h2 class='NSFW'>NSFW</h2>" : '';
         $header .= self::displayNav();
         $header .= '</header>' . PHP_EOL;

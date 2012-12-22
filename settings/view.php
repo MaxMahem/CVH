@@ -5,11 +5,8 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/View.php');
 /* create View for page */
 $view = new View('Settings');
 
-$NSFWCookie        = filter_input(INPUT_COOKIE, 'NSFW');
-$unvalidatedCookie = filter_input(INPUT_COOKIE, 'Unvalidated');
-
-$NSFWChecked        = ($NSFWCookie        == 'true') ? 'checked' : '';
-$unvalidatedChecked = ($unvalidatedCookie == 'true') ? 'checked' : '';
+$NSFWChecked        = ($view->NSFW)        ? 'checked' : '';
+$unvalidatedChecked = ($view->unvalidated) ? 'checked' : '';
 
 ?>    
 <?= $view->displayHead(); ?>
@@ -24,7 +21,7 @@ $unvalidatedChecked = ($unvalidatedCookie == 'true') ? 'checked' : '';
     <legend>CVH Options</legend>
     <form action='set.php' method='post'>
         <label for='NSFWCheckbox'        title='Display NSFW Content'>
-            <input id='NSFWCheckbox'        name='NSFW'        value='true' type='checkbox' <?=$NSFWChecked      ?>>NSFW Cards
+            <input id='NSFWCheckbox'        name='NSFW'        value='true' type='checkbox' <?=$NSFWChecked        ?>>NSFW Cards
         </label>
         <label for='UnvalidatedCheckbox' title='Display Unvalidated Cards'>
             <input id='UnvalidatedCheckbox' name='Unvalidated' value='true' type='checkbox' <?=$unvalidatedChecked ?>>Unvalidated Cards
