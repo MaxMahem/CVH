@@ -20,7 +20,7 @@ $question = new Card(Card::QUESTION, Card::RANDOM_CARD, $NSFW);
 
 /* Get the Answer cards, currently we get 3 */
 $answers = new CardSet(Card::ANSWER);
-$answers->getRandom(3);
+$answers->getRandom(3, $NSFW);
 
 $permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/" .  $question->getID(Card::HEX) . "-";
 $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";

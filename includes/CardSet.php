@@ -44,18 +44,19 @@ class CardSet implements IteratorAggregate {
         $this->getData($query);
     }
     
-    public function getRandom($number = '3') {
+    public function getRandom($number = '3', $NSFW = FALSE) {
         /* tables are plural, so add an s */
         $table = $this->type . 's';
 
         /* this query will get all the cards of the selected type */
         $select = "SELECT `$table`.`id`";      
         $from   = "FROM `$table`";
+        $where  = ($NSFW == FALSE) ? "WHERE $table.NSFW = FALSE" : '';
         $order  = "ORDER BY RAND()";
         $limit  = "LIMIT 0, $number";
 
         /* build the query */
-        $query = $select . ' ' . $from . ' ' . $order . ' ' . $limit;
+        $query = $select . ' ' . $from . ' ' . $where . ' ' . $order . ' ' . $limit;
 
         $this->getData($query);
     }
