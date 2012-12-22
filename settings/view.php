@@ -3,7 +3,7 @@
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/View.php');
 
 /* create View for page */
-$view = new View();
+$view = new View('Settings');
 
 $NSFWCookie        = filter_input(INPUT_COOKIE, 'NSFW');
 $unvalidatedCookie = filter_input(INPUT_COOKIE, 'Unvalidated');
