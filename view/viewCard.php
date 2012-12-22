@@ -23,8 +23,7 @@ if (empty($type) || empty($id)) {
 }
 
 /* get the card */
-$card = new Card($type);
-$card->getCard($id);
+$card = new Card($type, $id);
 
 if ($type == Card::QUESTION) { $setType = Card::ANSWER; }
 if ($type == Card::ANSWER)   { $setType = Card::QUESTION; }

@@ -20,23 +20,19 @@
     /* check if the question id is set */
     if (!empty($questionId)) {
         /* get that card */
-        $question = new Card(Card::QUESTION);
-        $question->getCard($questionId);
+        $question = new Card(Card::QUESTION, $questionId);
     } else {
         /* Query random question */
-        $question = new Card(Card::QUESTION);
-        $question->randomCard(TRUE);
+        $question = new Card(Card::QUESTION, Card::RANDOM_CARD);
     }
             
     /* check if the answer id is empty */
     if (!empty($answerId)) {
         /* Query answer id */
-        $answer = new Card(Card::ANSWER);
-        $answer->getCard($answerId);
+        $answer = new Card(Card::ANSWER, $answerId);
     } else {
         /* Query random answer */
-        $answer = new Card(Card::ANSWER);
-        $answer->randomCard(TRUE);
+        $answer = new Card(Card::ANSWER, Card::RANDOM_CARD);
     }
     
     /* Query Vote Totals */

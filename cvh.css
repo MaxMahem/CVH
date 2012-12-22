@@ -90,7 +90,7 @@ nav ul {
     position: relative;
 }
 
-.card .source {
+.card address {
     font: bold medium helvetica;
     position: absolute;
     bottom: 1em;
@@ -99,7 +99,7 @@ nav ul {
     z-index: 1;
 }
 
-.card .source img {
+.card address img {
     height:         2em;
     width:          2em;
     vertical-align: text-bottom;

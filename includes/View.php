@@ -55,7 +55,7 @@
         $nav .= "           <li><a href='/CVH/view/source/all'>Sources</a>";
         $nav .= "       </ul>";
         $nav .= "   </li>";
-        $nav .= "   <li><a href='/CVH/suggest'>Add New</a>";
+        $nav .= "   <li><a href='/CVH/suggest'>New</a>";
         $nav .= "</ul>";
         $nav .= "</nav>";
         

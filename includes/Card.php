@@ -18,7 +18,7 @@ class Card {
     const DECIMAL = 'decimal';
     
     /** Card($type) constructor
-     * Creates a new card. Type is required, must be either 'question' or 'answer'
+     * Creates a new card. Type and id are required.
      * 
      * @param string $type type of card, either Card::QUESTION or Card::ANSWER
      * @param int    $id   id of card to get or Card::RANDOM for random card
@@ -195,22 +195,6 @@ class Card {
         return $cardId;
     }
     
-    /** getCard($id)
-     * Gets the current cards data. Id must be set for this to work. For a 
-     * random card see randomCard()
-     * 
-     * @param   int $id
-     * @return  boolean true on success, false on failure.
-     */
-    public function getCard($id) {
-        if (empty($id)) { return FALSE; }
-
-        /* set the details */
-        $this->id   = $id;
-        
-        return $this->retrieveCard();
-    }
-    
     /**addCard
      * adds data for current card, and adds it to the database.
      * 
@@ -245,6 +229,7 @@ class Card {
 
     /** displayCard
     * Returns a properly formated card for display.
+    * @todo move to view class.
     *
     * @param   string  $linkURL     the link the card should go to, if any.
     * @return  string  HTML code for the card.
@@ -277,7 +262,7 @@ class Card {
             $result .= $this->text;
         }
 
-        $result .= '<a href="' . $this->sourceURL . '" class="source">';
+        $result .= "<address title='source'><a href='$this->sourceURL' rel='author'>";
 
         switch ($this->source) {
             case 'Cards Against Humanity':
@@ -288,7 +273,7 @@ class Card {
                 break;
         }
 
-        $result .= $this->source . '</a>';
+        $result .= $this->source . '</a></address>';
         $result .= '</article>' . PHP_EOL;
 
         return $result;
