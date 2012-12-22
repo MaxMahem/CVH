@@ -20,18 +20,26 @@ class Card {
     /** Card($type) constructor
      * Creates a new card. Type is required, must be either 'question' or 'answer'
      * 
-     * @param string $type
+     * @param string $type type of card, either Card::QUESTION or Card::ANSWER
+     * @param int    $id   id of card to get or Card::RANDOM for random card
+     * @param bool   $NSFW return NSFW cards or not. Default false.
      */
-    function Card($type, $id = NULL) {
+    function Card($type, $id, $NSFW = FALSE) {
         if (($type != self::QUESTION) && ($type != self::ANSWER)) {
             throw new InvalidArgumentException("Invalid type: $type passed to new Card");
         }
-        $this->type = $type;
-        
-        if (isset($id)) {
-            $this->id = $id;
-            $this->retrieveCard();
+        if (!is_numeric($id)) {
+            throw new InvalidArgumentException("Non numeric id: $id passed to new Card");
         }
+        if (!is_bool($NSFW)) {
+            throw new InvalidArgumentException("Non bool NSFW: $NSFW passed to new Card");
+        }
+        
+        $this->type = $type;
+        $this->id   = $id;
+        $this->NSFW = $NSFW;
+        
+        $this->retrieveCard();
     }
     
     /** dbConnect()
@@ -191,7 +199,7 @@ class Card {
      * Gets the current cards data. Id must be set for this to work. For a 
      * random card see randomCard()
      * 
-     * @param   type $id
+     * @param   int $id
      * @return  boolean true on success, false on failure.
      */
     public function getCard($id) {
@@ -199,20 +207,6 @@ class Card {
 
         /* set the details */
         $this->id   = $id;
-        
-        return $this->retrieveCard();
-    }
-    
-    /** randomCard($NSFW)
-     * Gets a random card. NSFW by defalt.
-     * 
-     * @param type $NSFW
-     * @return boolean true on succes, false on failure.
-     */
-    public function randomCard($NSFW = FALSE) {
-        /* set the details */
-        $this->NSFW = $NSFW;
-        $this->id   = self::RANDOM_CARD;
         
         return $this->retrieveCard();
     }

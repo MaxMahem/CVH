@@ -14,14 +14,12 @@ $NSFWCookie = filter_input(INPUT_COOKIE, 'NSFW');
 $NSFW = ($NSFWCookie == 'true') ? TRUE : FALSE;
     
 /* Get the question cards */
-$question = new Card(Card::QUESTION);
-$question->randomCard($NSFW);
+$question = new Card(Card::QUESTION, Card::RANDOM_CARD, $NSFW);
 
 /* Get the Answer cards, currently we get 3 */
 /* @todo: Consider a better way of getting multiple cards? 3 DB Calls is inefficent/don't work right */
 for ($i = 0; $i < 3; $i++) {
-    $answers[$i] = new Card(Card::ANSWER);
-    $answers[$i]->randomCard($NSFW);
+    $answers[$i] = new Card(Card::ANSWER, Card::RANDOM_CARD, $NSFW);
 }
 
 $permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/" .  $question->getID(Card::HEX) . "-";

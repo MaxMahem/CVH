@@ -26,33 +26,11 @@ class CardSet implements IteratorAggregate {
         return new ArrayIterator($this->cards);
     }
     
-    /** dbConnect()
-     * Makes a connection to the Card database
-     *
-     * @return mysqli
-     */
-    private function dbConnect() {
-        /* the db-connection file is assumed to define DBHOST, DBUSER, DBPASS, and DBNAME
-         * with their appropriate values, and should be located outside of the webroot  */
-        require($_SERVER['DOCUMENT_ROOT'] . '/../db-connection.php');
-        
-        /** @todo: maybe add more error checking here, I don't like returning this info to the user though */
-        $mysqli = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
-        if ($mysqli->connect_errno) {
-            echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error . PHP_EOL;
-            return false;
-        }
-
-        return $mysqli;
-    }
-
     public function getType() {
         return $this->type;
     }
     
     public function getAllCards() {        
-        $mysqli = $this->dbConnect();
-        
         /* tables are plural, so add an s */
         $table = $this->type . 's';
 
@@ -63,22 +41,7 @@ class CardSet implements IteratorAggregate {
         /* build the query */
         $query = $select . ' ' . $from;
 
-        /* get the data */
-        $result = $mysqli->query($query);
-        
-        /* check for query errors */
-        if (!$result) {
-            echo "QUERY:" . ' ' . $query . PHP_EOL;
-            echo "Errormessage: " . mysqli_error($mysqliLink) . PHP_EOL;
-            return;
-        }
-        
-        /* get all the cards's */
-        while ($row = mysqli_fetch_assoc($result)) {
-            $id = $row['id'];
-            $this->cards[$id] = new Card($this->type);
-            $this->cards[$id]->getCard($id);
-        }
+        $this->getData($query);
     }
     
     public function getTopCards(Card $pairCard, $num = 4) {
@@ -88,8 +51,6 @@ class CardSet implements IteratorAggregate {
         if ($pairType == $this->type) {
             throw new InvalidArgumentException("CardSet->getTopCards called with bad Card type, $pairType, pair card must be the opposite type as the paired set.");
         }
-        
-        $mysqliLink = $this->dbConnect();
         
         $select = "SELECT `questions_answers_votes`.`$this->type" . "_id`";
         $from   = "FROM   `questions_answers_votes`";
@@ -104,51 +65,49 @@ class CardSet implements IteratorAggregate {
         /* build the query */
         $query = $select . ' ' . $from . ' ' . $where . ' ' . $order . ' ' . $limit;
     
-        /* get the data */
-        $result = mysqli_query($mysqliLink, $query);
-        
-        /* check for query errors */
-        if (!$result) {
-            echo "QUERY:" . ' ' . $query . PHP_EOL;
-            echo "Errormessage: " . mysqli_error($mysqliLink) . PHP_EOL;
-            return exit;
-        }
-
-        /* get all the cards's */
-        while ($row = mysqli_fetch_assoc($result)) {
-            $this->cards[$row['id']] = new Card($this->type);
-            $this->cards[$row['id']]->getCard($row['id']);
-        }
+        $this->getData($query);
     }
     
-    public function getSourceCards($sourceId) {
-        $mysqliLink = $this->dbConnect();
-        
+    public function getSourceCards($sourceId) {       
         /* tables are plural, so add an s */
         $table = $this->type . 's';
 
         /* this query will get all the cards of the selected type */
         $select = "SELECT `$table`.`id`";      
-        $from   = "FROM `$table`";
-        $where  = "WHERE `$table`.`source_id`=$sourceId";
+        $from   = "FROM   `$table`";
+        $where  = "WHERE  `$table`.`source_id`=$sourceId";
 
         /* build the query */
         $query = $select . ' ' . $from . ' ' . $where;
-
+        
+        $this->getData($query);
+    }
+    
+    
+    private function getData($query) {       
+        /* the db-connection file is assumed to define DBHOST, DBUSER, DBPASS, and DBNAME
+         * with their appropriate values, and should be located outside of the webroot  */
+        require($_SERVER['DOCUMENT_ROOT'] . '/../db-connection.php');
+        
+        /* connect to DB */
+        $mysqli = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
+        if ($mysqli->connect_errno) {
+            throw new mysqli_sql_exception("Error connecting to MySQL: $mysqli->connect_error", $mysqli->errno);
+        }
+        
         /* get the data */
-        $result = mysqli_query($mysqliLink, $query);
+        $result = $mysqli->query($query);
         
         /* check for query errors */
         if (!$result) {
-            echo "QUERY:" . ' ' . $query . PHP_EOL;
-            echo "Errormessage: " . mysqli_error($mysqliLink) . PHP_EOL;
-            return exit;
+            throw new mysqli_sql_exception("My SQL Query Error: $mysqli->error" . PHP_EOL
+                                         . "QUERY: $query", $mysqli->errno);
         }
-
+        
         /* get all the cards's */
         while ($row = mysqli_fetch_assoc($result)) {
-            $this->cards[] = new Card($this->type, $row['id']);
-        }
-    }
-    
+            $id = $row['id'];
+            $this->cards[$id] = new Card($this->type, $id);
+        }       
+    }    
 }
