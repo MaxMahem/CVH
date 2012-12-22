@@ -48,13 +48,14 @@
         $nav .= "<nav>";
         $nav .= "<ul>";
         $nav .= "   <li><a href='/CVH/settings/view.php'>Settings</a>";
-        $nav .= "   <li>View All";
+        $nav .= "   <li>View";
         $nav .= "       <ul>";
         $nav .= "           <li><a href='/CVH/view/answer/all'>Answers</a>";
         $nav .= "           <li><a href='/CVH/view/question/all'>Questions</a>";
+        $nav .= "           <li><a href='/CVH/view/source/all'>Sources</a>";
         $nav .= "       </ul>";
         $nav .= "   </li>";
-        $nav .= "   <li><a href='/CVH/suggest.php'>Add New</a>";
+        $nav .= "   <li><a href='/CVH/suggest'>Add New</a>";
         $nav .= "</ul>";
         $nav .= "</nav>";
         

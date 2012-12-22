@@ -35,26 +35,27 @@ $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
     
 <div id="main">
     
-    <div class="cardbox">
-        <?= $question->displayCard(); ?>
-    </div>
-
-    <div class="instructions">
+    <section class='instructions'>
         <p>Pick the card you like the best!</p>
         <p>Or <a href="/CVH">RELOAD</a> this page to get new questions.</p>
-        <p>Or <a href="suggest.php">Suggest something better?</a></p>
-    </div>
+    </section>
+    
+    <section class="questions">
+        <div class="cardbox">
+            <?= $question->displayCard(); ?>
+        </div>
+    </section>
     
     <div class="clear"></div>
 
-    <div class="answers">
+    <section class="answers">
 <?php foreach ($answers as $answer) { ?>
         <div class="cardbox">
             <?= $answer->displayCard($voteURL . $answer->getId(Card::HEX)); ?>
-        <div class="permalink"><a href="<?php echo $permURL . $answer->getId(Card::HEX); ?>" >Permalink</a></div>
-    </div>
+            <div class="permalink"><a href="<?php echo $permURL . $answer->getId(Card::HEX); ?>" >Permalink</a></div>
+        </div>
 <?php } ?>
-    </div>
+    </section>
     
     <div class="clear"></div>
     

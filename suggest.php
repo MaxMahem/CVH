@@ -24,11 +24,11 @@
                     </select>
                 </div>
                 
-                <textarea name="text" placeholder="Enter Question Text"></textarea>
+                <textarea name="text" placeholder="Enter Question Text" required></textarea>
             
                 <div class="source">
-                    <input class="" name="source" placeholder="Enter Your Name" /><br />
-                    <input class="" type="url" name="url"    placeholder="Enter Credit URL (optional)" />
+                    <input class=""            name="source" placeholder="Enter Your Name"  required><br />
+                    <input class="" type="url" name="url"    placeholder="Enter Credit URL">
                 </div>
             </div>
         

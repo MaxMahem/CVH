@@ -215,6 +215,11 @@ input[type=submit] {
     font: bold x-large helvetica;
 }
 
+/* add a star to the end of required fields */
+input:required + label::after {
+    content: "*";
+}
+
 footer {
     clear:      both;
     height:      1em;

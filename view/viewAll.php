@@ -35,13 +35,13 @@ $cards->getAllCards();
     
 <div id="main">
 	
-    <div class="<?=$cards->getType(); ?>">
+    <section class="<?=$cards->getType(); ?>">
 <?php foreach ($cards as $card) { ?>
         <div class="cardbox">
             <?= $card->displayCard() ?>
         </div>
 <?php } ?>
-    </div>
+    </section>
 
     <div class="clear"></div>
     

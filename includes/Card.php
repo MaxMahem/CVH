@@ -263,7 +263,7 @@ class Card {
         if ($linkURL != NULL) { $classes[] = 'vote'; }
 
         $class = implode(' ', $classes);
-        $result .= "<div class=\"$class\" id=\"" . $this->getId(self::DECIMAL) . "\">";
+        $result .= "<article class=\"$class\" id=\"" . $this->getId(self::DECIMAL) . "\">";
 
         /* if NSFW, add the tag */
         if ($this->NSFW) {
@@ -295,7 +295,7 @@ class Card {
         }
 
         $result .= $this->source . '</a>';
-        $result .= '</div>' . PHP_EOL;
+        $result .= '</article>' . PHP_EOL;
 
         return $result;
     }

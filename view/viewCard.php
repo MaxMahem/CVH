@@ -47,11 +47,11 @@ $topCards->getTopCards($card, 5);
     
     <div id="main">
 	
-    <div class="questions">
+    <section class="questions">
         <div class="cardbox">
             <?= $card->displayCard(); ?>
         </div>
-    </div>
+    </section>
     
     This card has recived <?= $card->numVotes(); ?> votes.
 
