@@ -30,7 +30,7 @@ if ($type == Card::ANSWER)   { $setType = Card::QUESTION; }
 
 $topCards = new CardSet($setType);
 
-$topCards->getTopCards($card, 5);
+$topCards->getTop($card, 5);
 
 ?>
 <!DOCTYPE html>

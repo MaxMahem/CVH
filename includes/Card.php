@@ -102,7 +102,7 @@ class Card {
          * If we are getting a RANDOM card, and NSFW is FALSE we want to include this clause
          * If we aren't getting a RANDOM card, we want to exclude this clause.
          * Including this clause will exclude NSFW entries. */
-         if (($this->id == self::RANDOM_CARD) && ($this->NSFW == FALSE)) {
+        if (($this->id == self::RANDOM_CARD) && ($this->NSFW == FALSE)) {
             $whereClauses[] = "$table.NSFW = FALSE";
         }
 

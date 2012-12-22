@@ -24,7 +24,7 @@ if (($type != Card::QUESTION) && ($type != Card::ANSWER)) {
 $viewAll = new View('View All' . ' '. ucfirst($type) . 's');
     
 $cards = new CardSet($type);
-$cards->getAllCards();
+$cards->getAll();
     
 ?>
 <?= $viewAll->displayHead(); ?>

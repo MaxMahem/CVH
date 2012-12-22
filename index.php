@@ -1,6 +1,8 @@
 <?php
-/* contains the card class used to create the cards */
+/* contains the card classes used to create the cards */
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/CardSet.php');
+
 /* contains the view class used for view elements. */
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/View.php');
 
@@ -17,10 +19,8 @@ $NSFW = ($NSFWCookie == 'true') ? TRUE : FALSE;
 $question = new Card(Card::QUESTION, Card::RANDOM_CARD, $NSFW);
 
 /* Get the Answer cards, currently we get 3 */
-/* @todo: Consider a better way of getting multiple cards? 3 DB Calls is inefficent/don't work right */
-for ($i = 0; $i < 3; $i++) {
-    $answers[$i] = new Card(Card::ANSWER, Card::RANDOM_CARD, $NSFW);
-}
+$answers = new CardSet(Card::ANSWER);
+$answers->getRandom(3);
 
 $permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/" .  $question->getID(Card::HEX) . "-";
 $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";

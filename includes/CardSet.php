@@ -30,7 +30,7 @@ class CardSet implements IteratorAggregate {
         return $this->type;
     }
     
-    public function getAllCards() {        
+    public function getAll($start = '0', $number = '30') {        
         /* tables are plural, so add an s */
         $table = $this->type . 's';
 
@@ -44,7 +44,24 @@ class CardSet implements IteratorAggregate {
         $this->getData($query);
     }
     
-    public function getTopCards(Card $pairCard, $num = 4) {
+    public function getRandom($number = '3') {
+        /* tables are plural, so add an s */
+        $table = $this->type . 's';
+
+        /* this query will get all the cards of the selected type */
+        $select = "SELECT `$table`.`id`";      
+        $from   = "FROM `$table`";
+        $order  = "ORDER BY RAND()";
+        $limit  = "LIMIT 0, $number";
+
+        /* build the query */
+        $query = $select . ' ' . $from . ' ' . $order . ' ' . $limit;
+
+        $this->getData($query);
+    }
+
+
+    public function getTop(Card $pairCard, $number = 4) {
         $pairId   = $pairCard->getId(Card::DECIMAL);
         $pairType = $pairCard->getType();
         
@@ -60,7 +77,7 @@ class CardSet implements IteratorAggregate {
         
         $where = "WHERE" . ' ' . implode(' AND ', $whereClauses);
         $order = "ORDER BY `questions_answers_votes`.`vote_tally`";
-        $limit = "LIMIT 0, $num";
+        $limit = "LIMIT 0, $number";
         
         /* build the query */
         $query = $select . ' ' . $from . ' ' . $where . ' ' . $order . ' ' . $limit;
@@ -68,7 +85,7 @@ class CardSet implements IteratorAggregate {
         $this->getData($query);
     }
     
-    public function getSourceCards($sourceId) {       
+    public function getSource($sourceId) {       
         /* tables are plural, so add an s */
         $table = $this->type . 's';
 
