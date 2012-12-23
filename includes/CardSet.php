@@ -8,23 +8,46 @@ class CardSet implements IteratorAggregate {
     private $type;
     private $cards;
     private $NSFW;
+    private $unvalidated;
     
-    public function CardSet($type, $NSFW = FALSE) {
-        if (($type != Card::QUESTION) && ($type != Card::ANSWER)) {
-            throw new InvalidArgumentException("Invalid type: $type passed to new CardSet");
-        }
-        if (!is_bool($NSFW)) {
-            throw new InvalidArgumentException("Non bool NSFW: $NSFW passed to new CardSet");
+    /** CardSet Constructor
+     * 
+     * @param string $type        Type of card set, either Card::QUESTION or CARD::ANSWER
+     * @param bool   $NSFW        Return NSFW results or not. Defaults to FALSE
+     * @param bool   $unvalidated Return unvalidated cards or not. Defaults to FALSE.
+     *
+     * @throws InvalidArgumentException If given bad data it is unhappy.
+     */
+    public function CardSet($type, $NSFW = FALSE, $unvalidated = FALSE) {
+        if (
+            (($type != Card::QUESTION) && ($type != Card::ANSWER)) || 
+            (!is_bool($NSFW)) || 
+            (!is_bool($unvalidated))
+           )    {
+            $message = "Bad arguments passed to new CardSet" . PHP_EOL
+                     . "Type:        $type" . PHP_EOL
+                     . "NSFW:        $NSFW" . PHP_EOL
+                     . "unvalidated: $unvalidated" . PHP_EOL;
+            throw new InvalidArgumentException($message);
         }
         
         $this->NSFW = $NSFW;
         $this->type = $type;
     }
     
+    /**
+     * Makes a cardset iterable! Black magic as far as I'm concurned.
+     * 
+     * @return \ArrayIterator
+     */
     public function getIterator() {
         return new ArrayIterator($this->cards);
     }
     
+    /**
+     * Returns the Cardset Type
+     * @return type
+     */
     public function getType() {
         return $this->type;
     }
@@ -42,7 +65,7 @@ class CardSet implements IteratorAggregate {
         /* build the query */
         $query = $select . ' ' . $from . ' ' . $where . ' ' . $limit;
 
-        $this->getData($query);
+        $this->retrieveData($query);
     }
     
     public function getRandom($number = '3') {
@@ -59,7 +82,7 @@ class CardSet implements IteratorAggregate {
         /* build the query */
         $query = $select . ' ' . $from . ' ' . $where . ' ' . $order . ' ' . $limit;
 
-        $this->getData($query);
+        $this->retrieveData($query);
     }
 
 
@@ -84,7 +107,7 @@ class CardSet implements IteratorAggregate {
         /* build the query */
         $query = $select . ' ' . $from . ' ' . $where . ' ' . $order . ' ' . $limit;
     
-        $this->getData($query);
+        $this->retrieveData($query);
     }
     
     public function getSource($sourceId) {       
@@ -99,11 +122,11 @@ class CardSet implements IteratorAggregate {
         /* build the query */
         $query = $select . ' ' . $from . ' ' . $where;
         
-        $this->getData($query);
+        $this->retrieveData($query);
     }
     
     
-    private function getData($query) {       
+    private function retrieveData($query) {       
         /* the db-connection file is assumed to define DBHOST, DBUSER, DBPASS, and DBNAME
          * with their appropriate values, and should be located outside of the webroot  */
         require($_SERVER['DOCUMENT_ROOT'] . '/../db-connection.php');
