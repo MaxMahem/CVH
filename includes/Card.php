@@ -240,13 +240,13 @@ class Card {
 
         if ($this->NSFW)      { $classes[] = 'NSFW'; }
         if ($linkURL != NULL) { $classes[] = 'vote'; }
-
         $class = implode(' ', $classes);
-        $result .= "<article class=\"$class\" id=\"" . $this->getId(self::DECIMAL) . "\">";
+
+        $result .= "<article class='$class' id='" . $this->getId(self::DECIMAL) . "'>";
 
         /* if NSFW, add the tag */
         if ($this->NSFW) {
-            $result .= "<div class=\"NSFWtag NSFW\">NSFW</div>";
+            $result .= "<div class='NSFW'>NSFW</div>";
         }
 
         /**

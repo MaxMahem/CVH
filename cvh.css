@@ -79,7 +79,13 @@ nav ul {
     color: white;
 }
 
-.NSFWtag {
+/* hide section heads */
+section h1 {
+    display: none;
+}
+
+/* style the NSFW tag for the cards */
+.card .NSFW {
     top:   .75em;
     right: .75em;
     position: absolute;

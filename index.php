@@ -28,11 +28,13 @@ $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
 <div id="main">
     
     <section class='instructions'>
+        <h1>Instructions</h1>
         <p>Pick the card you like the best!</p>
         <p>Or <a href="/CVH">RELOAD</a> this page to get new questions.</p>
     </section>
     
     <section class="questions">
+        <h1>Questions</h1>
         <div class="cardbox">
             <?= $question->displayCard(); ?>
         </div>
@@ -41,6 +43,7 @@ $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
     <div class="clear"></div>
 
     <section class="answers">
+        <h1>Answers</h1>
 <?php foreach ($answers as $answer) { ?>
         <div class="cardbox">
             <?= $answer->displayCard($voteURL . $answer->getId(Card::HEX)); ?>
