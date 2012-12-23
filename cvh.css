@@ -47,9 +47,16 @@ footer {
     padding: .5em 1em;
 }
 
+/* we do not want to display most of the h1's, they are for 
+ * outline/accessability only */
+h1 {
+    display: none;
+}
+
 header h1 {
-    font: bold xx-large helvetica;
-    float: left;
+    display: block;
+    float:   left;
+    font:    bold xx-large helvetica;
 }
 
 header h2 {
@@ -60,6 +67,11 @@ header h2 {
 
 nav {
     clear: left;
+}
+
+/* the header block above overides our hide h1 rule, so we re apply it */
+nav h1 {
+    display: none;
 }
 
 nav li,
@@ -77,11 +89,6 @@ nav ul {
 
 .SFW {
     color: white;
-}
-
-/* hide section heads */
-section h1 {
-    display: none;
 }
 
 /* style the NSFW tag for the cards */

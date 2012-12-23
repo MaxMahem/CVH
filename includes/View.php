@@ -43,8 +43,9 @@
         }
         
         $header  = '<header>';
+        $header .= ($this->NSFW) ? "<hgroup>" : '';
         $header .= "<h1><a href='/CVH'>Cards vs Humans</a>$headerTitle</h1>";
-        $header .= ($this->NSFW) ? "<h2 class='NSFW'>NSFW</h2>" : '';
+        $header .= ($this->NSFW) ? "<h2 class='NSFW'>NSFW</h2></hgroup>" : '';
         $header .= self::displayNav();
         $header .= '</header>' . PHP_EOL;
         
@@ -53,6 +54,7 @@
     
     public function displayNav() {
         $nav .= "<nav>";
+        $nav .= "<h1>Site Navigation</h1>";
         $nav .= "<ul>";
         $nav .= "   <li><a href='/CVH/settings/view.php'>Settings</a>";
         $nav .= "   <li>View";
@@ -98,9 +100,10 @@
      * @return string
      */
     Function displayFooter() {
-        $footer  = '<footer id="footer">';
-        $footer .= 'Madeby: <a href="mailto:maxtmahem@gmail.com">Austin Stanley</a> - Last Modified:' . ' ' . date("F d, Y H:i", getlastmod());
-        $footer .= '</footer>' . PHP_EOL;
+        $footer  = "<footer>";
+        $footer .= "Madeby: <a rel='Author' href='mailto:maxtmahem@gmail.com'>Austin Stanley</a> - ";
+        $footer .= "Last Modified:" . ' ' . date("F d, Y H:i", getlastmod());
+        $footer .= "</footer>" . PHP_EOL;
         
         return $footer;
     }

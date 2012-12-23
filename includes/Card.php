@@ -242,16 +242,13 @@ class Card {
         if ($linkURL != NULL) { $classes[] = 'vote'; }
         $class = implode(' ', $classes);
 
-        $result .= "<article class='$class' id='" . $this->getId(self::DECIMAL) . "'>";
+        $result .= "<article class='$class'>";
+        
+        /* header for the card, if NSFW we add a hgroup and a tag */
+        $result .= ($this->NSFW) ? "<hgroup>" : '';
+        $result .= "<h1>" . ucfirst($this->type) . ": $this->id </h1>";
+        $result .= ($this->NSFW) ? "<h2 class='NSFW'>NSFW</h2></hgroup>" : '';
 
-        /* if NSFW, add the tag */
-        if ($this->NSFW) {
-            $result .= "<div class='NSFW'>NSFW</div>";
-        }
-
-        /**
-        * @todo Possibly add code for handling voting on questions?
-        */
         if ($linkURL != NULL) {
             /* if we recieved a vote URL, embeded the card text inside a voting link */
             $result .= "<a class='answerlink' href='" . $linkURL . "'>";
