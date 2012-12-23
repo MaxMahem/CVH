@@ -31,8 +31,9 @@ class CardSet implements IteratorAggregate {
             throw new InvalidArgumentException($message);
         }
         
-        $this->NSFW = $NSFW;
-        $this->type = $type;
+        $this->NSFW        = $NSFW;
+        $this->type        = $type;
+        $this->unvalidated = $unvalidated;
     }
     
     /**
@@ -58,8 +59,12 @@ class CardSet implements IteratorAggregate {
 
         /* this query will get all the cards of the selected type */
         $select = "SELECT `$table`.`id`";      
-        $from   = "FROM `$table`";
-        $where  = ($this->NSFW == FALSE) ? "WHERE $table.NSFW = FALSE" : '';
+        $from   = "FROM   `$table`";
+        
+        $whereClause[] = (!$this->NSFW)        ? "`$table`.`NSFW` = FALSE"     : 'TRUE';
+        $whereClause[] = (!$this->unvalidated) ? "`$table`.`validated` = TRUE" : 'TRUE';
+        $where = "WHERE" . ' ' . implode(' AND ', $whereClause);
+        
         $limit  = "LIMIT $start, $number";
 
         /* build the query */

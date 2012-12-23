@@ -23,7 +23,7 @@ if (($type != Card::QUESTION) && ($type != Card::ANSWER)) {
 /* create View for page */
 $view = new View('View All' . ' '. ucfirst($type) . 's');
     
-$cards = new CardSet($type, $view->NSFW);
+$cards = new CardSet($type, $view->NSFW, $view->unvalidated);
 $cards->getAll();
     
 ?>
