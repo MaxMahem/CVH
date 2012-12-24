@@ -27,8 +27,11 @@ if (empty($type) || empty($id)) {
 /* get the card */
 $card = new Card($type, $id);
 
-if ($type == Card::QUESTION) { $setType = Card::ANSWER; }
-if ($type == Card::ANSWER)   { $setType = Card::QUESTION; }
+/* get card date */
+$cardAdded = strtotime($card->added);
+
+/* Card set type needs to be the opposite of the primary card type */
+$setType = ($type == Card::QUESTION) ? Card::ANSWER : Card::QUESTION;
 
 $topCards = new CardSet($setType, $viewCard->NSFW, $viewCard->unvalidated);
 
@@ -49,8 +52,12 @@ $topCards->getTop($card, 5);
             <?= $card->displayCard(NULL); ?>
         </div>
     </section>
-    
-    This card has received <?= $card->numVotes(); ?> votes.
+        
+    <section>
+        <h1>Stats:</h1>
+        This card has received <?= $card->numVotes(); ?> votes.<br>
+        It was added on <time datetime="<?= date("c", $cardAdded); ?>"><?= date('F j, Y', $cardAdded); ?></time>
+    </section>
 
     <div class="clear"></div>
     
