@@ -45,12 +45,12 @@ class CardSet implements IteratorAggregate {
         return new ArrayIterator($this->cards);
     }
     
-    /**
-     * Returns the Cardset Type
-     * @return type
-     */
-    public function getType() {
-        return $this->type;
+    public function __get($property) {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        } else {
+            throw LogicException("Attempted to get CardSet property $property which does not exist.");
+        }
     }
     
     public function getAll($start = '0', $number = '30') {        
@@ -93,7 +93,7 @@ class CardSet implements IteratorAggregate {
 
     public function getTop(Card $pairCard, $number = 4) {
         $pairId   = $pairCard->getId(Card::DECIMAL);
-        $pairType = $pairCard->getType();
+        $pairType = $pairCard->type;
         
         if ($pairType == $this->type) {
             throw new InvalidArgumentException("CardSet->getTopCards called with bad Card type, $pairType, pair card must be the opposite type as the paired set.");

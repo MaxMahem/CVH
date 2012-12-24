@@ -35,7 +35,8 @@ $cards->getAll();
     
 <div id="main">
 	
-    <section class="<?=$cards->getType(); ?>">
+    <section class="<?=$cards->type; ?>">
+        <h1><?= ucfirst($cards->type) . 's'; ?></h1>
 <?php foreach ($cards as $card) { ?>
         <div class="cardbox">
             <?= $card->displayCard(Card::LINK); ?>

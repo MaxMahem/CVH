@@ -44,7 +44,7 @@ $topCards->getTop($card, 5);
     <div id="main">
 	
     <section>
-        <h1><?= ucfirst($card->getType()); ?></h1>
+        <h1><?= ucfirst($card->type); ?></h1>
         <div class="cardbox">
             <?= $card->displayCard(NULL); ?>
         </div>
@@ -55,7 +55,7 @@ $topCards->getTop($card, 5);
     <div class="clear"></div>
     
     <section>
-        <h1>Top <?= ucfirst($topCards->getType() . 's'); ?></h1>
+        <h1>Top <?= ucfirst($topCards->type . 's'); ?></h1>
 <?php foreach ($topCards as $topCard) { ?>
         <div class="cardbox">
             <?= $topCard->displayCard(Card::LINK) ?>

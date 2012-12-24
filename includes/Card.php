@@ -10,6 +10,7 @@ class Card {
     private $NSFW;
     private $source;
     private $sourceURL;
+    private $added;
 
     const RANDOM_CARD = -1;
     
@@ -87,6 +88,7 @@ class Card {
         $selectClauses[] = "$table.NSFW";
         $selectClauses[] = "sources.source";
         $selectClauses[] = "sources.url";
+        $selectClauses[] = "$table.added";
                 
         /* build select from selectClauses array */
         $select = "SELECT" . ' ' . implode(', ', $selectClauses);
@@ -140,6 +142,7 @@ class Card {
         $this->NSFW      = $data['NSFW'];
         $this->source    = $data['source'];
         $this->sourceURL = $data['url'];
+        $this->added     = $data['added'];
         
         return true;
     }
@@ -354,12 +357,11 @@ class Card {
         return $id;
     }
     
-    /** getType
-     * Returns the card type.
-     * 
-     * @return string the card type, either 'question' or 'answer'
-     */
-    public function getType() {
-        return $this->type;
+    public function __get($property) {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        } else {
+            throw LogicException("Attempted to get Card property $property which does not exist.");
+        }
     }
 }
