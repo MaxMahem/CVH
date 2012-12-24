@@ -99,13 +99,15 @@ class CardSet implements IteratorAggregate {
             throw new InvalidArgumentException("CardSet->getTopCards called with bad Card type, $pairType, pair card must be the opposite type as the paired set.");
         }
         
-        $select = "SELECT `questions_answers_votes`.`$this->type" . "_id`";
+        /* Important, retrieve function expects a field as 'id' so important to
+         * do 'AS id' here. */
+        $select = "SELECT `questions_answers_votes`.`{$this->type}_id` AS id";
         $from   = "FROM   `questions_answers_votes`";
 
-        $whereClauses[] = "`questions_answers_votes`.`$pairType" . "_id`=$pairId";
+        $whereClauses[] = "`questions_answers_votes`.`{$pairType}_id`=$pairId";
         $whereClauses[] = "`questions_answers_votes`.`vote_tally` != 0";
-        
         $where = "WHERE" . ' ' . implode(' AND ', $whereClauses);
+        
         $order = "ORDER BY `questions_answers_votes`.`vote_tally`";
         $limit = "LIMIT 0, $number";
         

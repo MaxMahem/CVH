@@ -38,7 +38,7 @@ $cards->getAll();
     <section class="<?=$cards->getType(); ?>">
 <?php foreach ($cards as $card) { ?>
         <div class="cardbox">
-            <?= $card->displayCard() ?>
+            <?= $card->displayCard($card->getId(Card::HEX)) ?>
         </div>
 <?php } ?>
     </section>
@@ -49,4 +49,4 @@ $cards->getAll();
     
 </div> <!-- End of #wrapper -->
     
-<?= $view->displayFooter(); ?>  
+<?= $view->displayFooter(); ?>

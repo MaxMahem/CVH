@@ -1,6 +1,6 @@
 <?php
 /**
- * /view/question.php display data on question card.
+ * /view/card.php display data on a card.
  */
 
 /* contains the card class used to create the cards */
@@ -9,8 +9,10 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/CardSet.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/View.php');
 
 /* filter_input is probably not necessary but we use it just to be safe */
-$type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
-$id   = hexdec(filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING));
+$type  = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
+$getId = filter_input(INPUT_GET, 'id',   FILTER_SANITIZE_STRING);
+
+$id = hexdec($getId);
 
 /* create View for page */
 $viewCard = new View('View' . ' '. ucfirst($type) . ' ' . 'Card');
@@ -28,42 +30,43 @@ $card = new Card($type, $id);
 if ($type == Card::QUESTION) { $setType = Card::ANSWER; }
 if ($type == Card::ANSWER)   { $setType = Card::QUESTION; }
 
-$topCards = new CardSet($setType);
+$topCards = new CardSet($setType, $viewCard->NSFW, $viewCard->unvalidated);
 
 $topCards->getTop($card, 5);
 
 ?>
-<!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">  
-
 <?= $viewCard->displayHead(); ?>
 
-<body>
-    <div id="wrapper">
+<div id="wrapper">
     
     <?= $viewCard->displayHeader(); ?>
     
     <div id="main">
 	
-    <section class="questions">
+    <section>
+        <h1><?= ucfirst($card->getType()); ?></h1>
         <div class="cardbox">
             <?= $card->displayCard(); ?>
         </div>
     </section>
     
-    This card has recived <?= $card->numVotes(); ?> votes.
+    This card has received <?= $card->numVotes(); ?> votes.
 
     <div class="clear"></div>
     
-    <?= $topCards->displayAllCards(); ?>
+    <section>
+        <h1>Top <?= ucfirst($topCards->getType() . 's'); ?></h1>
+<?php foreach ($topCards as $topCard) { ?>
+        <div class="cardbox">
+            <?= $topCard->displayCard() ?>
+        </div>
+<?php } ?>
+    </section>
     
     <div class="clear"></div>
     
-    </div> <!-- End of #main -->
+</div> <!-- End of #main -->
     
-    </div> <!-- End of #wrapper -->
+</div> <!-- End of #wrapper -->
     
-    <?= $viewCard->displayFooter(); ?>  
-</body>
-</html>
+<?= $viewCard->displayFooter(); ?>

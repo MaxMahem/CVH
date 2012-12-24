@@ -28,9 +28,10 @@ class Card {
         if (($type != self::QUESTION) && ($type != self::ANSWER)) {
             throw new InvalidArgumentException("Invalid type: $type passed to new Card");
         }
-        if (!is_numeric($id)) {
-            throw new InvalidArgumentException("Non numeric id: $id passed to new Card");
-        }
+// commented out for now 'cause it ain't working as expected.
+//        if (!is_numeric($id)) {
+//            throw new InvalidArgumentException("Non numeric id: $id passed to new Card");
+//        }
         if (!is_bool($NSFW)) {
             throw new InvalidArgumentException("Non bool NSFW: $NSFW passed to new Card");
         }
