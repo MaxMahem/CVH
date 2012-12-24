@@ -36,7 +36,7 @@ $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
     <section class="questions">
         <h1>Questions</h1>
         <div class="cardbox">
-            <?= $question->displayCard(); ?>
+            <?= $question->displayCard(NULL); ?>
         </div>
     </section>
     

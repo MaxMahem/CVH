@@ -12,10 +12,14 @@ class Card {
     private $sourceURL;
 
     const RANDOM_CARD = -1;
-    const QUESTION = 'question';
-    const ANSWER = 'answer';
-    const HEX = 'hex';
-    const DECIMAL = 'decimal';
+    
+    const QUESTION    = 'question';
+    const ANSWER      = 'answer';
+    
+    const HEX         = 'hex';
+    const DECIMAL     = 'decimal';
+    
+    const LINK        = 'link';
     
     /** Card($type) constructor
      * Creates a new card. Type and id are required.
@@ -28,10 +32,9 @@ class Card {
         if (($type != self::QUESTION) && ($type != self::ANSWER)) {
             throw new InvalidArgumentException("Invalid type: $type passed to new Card");
         }
-// commented out for now 'cause it ain't working as expected.
-//        if (!is_numeric($id)) {
-//            throw new InvalidArgumentException("Non numeric id: $id passed to new Card");
-//        }
+        if (!is_numeric($id)) {
+            throw new InvalidArgumentException("Non numeric id: $id passed to new Card");
+        }
         if (!is_bool($NSFW)) {
             throw new InvalidArgumentException("Non bool NSFW: $NSFW passed to new Card");
         }
@@ -235,7 +238,7 @@ class Card {
     * @param   string  $linkURL     the link the card should go to, if any.
     * @return  string  HTML code for the card.
     */
-    public function displayCard($linkURL = NULL) {
+    public function displayCard($linkURL = self::LINK) {
         $classes[] = 'card';
         $classes[] = $this->type;
 
@@ -251,6 +254,11 @@ class Card {
         $result .= ($this->NSFW) ? "<h2 class='NSFW'>NSFW</h2></hgroup>" : '';
 
         if ($linkURL != NULL) {
+            /* if we got self::LINK for a value, we want to simply point our link
+             * at a link for this specific card */
+            if ($linkURL == self::LINK) {
+                $linkURL = "/CVH/view/$this->type/" . $this->getId(self::HEX);
+            }
             /* if we recieved a vote URL, embeded the card text inside a voting link */
             $result .= "<a class='answerlink' href='" . $linkURL . "'>";
             $result .= $this->text;
