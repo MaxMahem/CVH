@@ -17,19 +17,17 @@
         <form action="add.php" method="post">
             <input type="hidden" name="type" value="question" />
             <div class="card question">
-                <div class="NSFWtag">
-                    <select name="NSFW">
+                <select class='NSFW' name="NSFW">
                         <option value="SFW" class="SFW">SFW</option>
                         <option value="NSFW">NSFW</option>
-                    </select>
-                </div>
+                </select>
                 
                 <textarea name="text" placeholder="Enter Question Text" required></textarea>
             
-                <div class="source">
+                <address>
                     <input class=""            name="source" placeholder="Enter Your Name"  required><br />
                     <input class="" type="url" name="url"    placeholder="Enter Credit URL">
-                </div>
+                </address>
             </div>
         
             <input type="submit" name="submit" value="Submit" />
@@ -41,19 +39,17 @@
         <form action="add.php" method="post">
             <input type="hidden" name="type" value="answer" />
             <div class="card answer">
-                <div class="NSFWtag">
-                    <select name="NSFW">
+                <select class='NSFW' name="NSFW">
                         <option value="SFW" class="SFW">SFW</option>
                         <option value="NSFW">NSFW</option>
-                    </select>
-                </div>
+                </select>
                 
                 <textarea name="text" placeholder="Enter Answer Text"></textarea>
             
-                <div class="source">
+                <address>
                     <input class="" name="source" placeholder="Enter Your Name" /><br />
                     <input class="" type="url" name="url"    placeholder="Enter Credit URL (optional)" />
-                </div>
+                </address>
             </div>
         
         <input type="submit" name="submit" value="Submit" />
