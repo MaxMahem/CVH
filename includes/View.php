@@ -7,9 +7,8 @@
      
     private $title;
     private $ajax;
-    
-    public $NSFW;
-    public $unvalidated;
+    private $NSFW;
+    private $unvalidated;
 
     /**
      * Constructor sets the title.
@@ -28,6 +27,14 @@
         
         $this->unvalidated = ($unvalidatedCookie) ? TRUE : FALSE;               
         $this->NSFW        = ($NSFWCookie)        ? TRUE : FALSE;
+    }
+    
+    public function __get($property) {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        } else {
+            throw LogicException("Attempted to get View property $property which does not exist.");
+        }
     }
     
     /**
