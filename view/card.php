@@ -51,12 +51,12 @@ $topCards->getTop($card, 5);
         <div class="cardbox">
             <?= $card->displayCard(NULL); ?>
         </div>
-    </section>
-        
-    <section>
-        <h1>Stats:</h1>
-        This card has received <?= $card->numVotes(); ?> votes.<br>
-        It was added on <time datetime="<?= date("c", $cardAdded); ?>"><?= date('F j, Y', $cardAdded); ?></time>
+
+        <article>
+            <h1>Stats:</h1>
+            This card has received <?= $card->numVotes(); ?> votes.<br>
+            It was added on <time datetime="<?= date("c", $cardAdded); ?>"><?= date('F j, Y', $cardAdded); ?></time>
+        </article>
     </section>
 
     <div class="clear"></div>
