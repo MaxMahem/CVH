@@ -16,7 +16,6 @@ $question = new Card(Card::QUESTION, Card::RANDOM_CARD, $index->NSFW);
 $answers = new CardSet(Card::ANSWER, $index->NSFW);
 $answers->getRandom(3);
 
-$permURL = "http://" . $_SERVER['HTTP_HOST'] . "/CVH/display/" .  $question->getID(Card::HEX) . "-";
 $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
 ?>
 <?= $index->displayHead(); ?>
@@ -36,7 +35,7 @@ $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
     <section class="questions">
         <h1>Questions</h1>
         <div class="cardbox">
-            <?= $question->displayCard(NULL); ?>
+            <?= $index->displayCard($question, NULL); ?>
         </div>
     </section>
     
@@ -46,8 +45,7 @@ $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
         <h1>Answers</h1>
 <?php foreach ($answers as $answer) { ?>
         <div class="cardbox">
-            <?= $answer->displayCard($voteURL . $answer->getId(Card::HEX)); ?>
-            <div class="permalink"><a href="<?php echo $permURL . $answer->getId(Card::HEX); ?>" >Permalink</a></div>
+            <?= $index->displayCard($answer, $voteURL . $answer->getId(Card::HEX)); ?>
         </div>
 <?php } ?>
     </section>

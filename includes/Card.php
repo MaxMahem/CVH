@@ -1,15 +1,13 @@
 <?php
 
-/**
- * @todo add error checking maybe?
- */
+require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Source.php');
+
 class Card {
     private $id;
     private $type;
     private $text;
     private $NSFW;
     private $source;
-    private $sourceURL;
     private $added;
 
     const RANDOM_CARD = -1;
@@ -83,12 +81,13 @@ class Card {
         $table = $this->type . 's';
 
         /* fields to be selected */
-        $selectClauses[] = "$table.id";
-        $selectClauses[] = "$table.text";
-        $selectClauses[] = "$table.NSFW";
-        $selectClauses[] = "sources.source";
-        $selectClauses[] = "sources.url";
-        $selectClauses[] = "$table.added";
+        $selectClauses[] = "`$table`.`id`";
+        $selectClauses[] = "`$table`.`text`";
+        $selectClauses[] = "`$table`.`NSFW`";
+        $selectClauses[] = "`sources`.`id` AS source_id";
+        $selectClauses[] = "`sources`.`source`";
+        $selectClauses[] = "`sources`.`url`";
+        $selectClauses[] = "`$table`.`added`";
                 
         /* build select from selectClauses array */
         $select = "SELECT" . ' ' . implode(', ', $selectClauses);
@@ -140,10 +139,10 @@ class Card {
         $this->id        = $data['id'];
         $this->text      = $data['text'];
         $this->NSFW      = $data['NSFW'];
-        $this->source    = $data['source'];
-        $this->sourceURL = $data['url'];
         $this->added     = $data['added'];
         
+        $this->source    = new Source($data['source_id'], $data['source'], $data['url']);
+
         return true;
     }
     
@@ -233,61 +232,7 @@ class Card {
         
         return $cardId;
     }
-
-    /** displayCard
-    * Returns a properly formated card for display.
-    * @todo move to view class.
-    *
-    * @param   string  $linkURL     the link the card should go to, if any.
-    * @return  string  HTML code for the card.
-    */
-    public function displayCard($linkURL = self::LINK) {
-        $classes[] = 'card';
-        $classes[] = $this->type;
-
-        if ($this->NSFW)      { $classes[] = 'NSFW'; }
-        if ($linkURL != NULL) { $classes[] = 'vote'; }
-        $class = implode(' ', $classes);
-
-        $result .= "<article class='$class'>";
-        
-        /* header for the card, if NSFW we add a hgroup and a tag */
-        $result .= ($this->NSFW) ? "<hgroup>" : '';
-        $result .= "<h1>" . ucfirst($this->type) . ": $this->id </h1>";
-        $result .= ($this->NSFW) ? "<h2 class='NSFW'>NSFW</h2></hgroup>" : '';
-
-        if ($linkURL != NULL) {
-            /* if we got self::LINK for a value, we want to simply point our link
-             * at a link for this specific card */
-            if ($linkURL == self::LINK) {
-                $linkURL = "/CVH/view/$this->type/" . $this->getId(self::HEX);
-            }
-            /* if we recieved a vote URL, embeded the card text inside a voting link */
-            $result .= "<a class='answerlink' href='" . $linkURL . "'>";
-            $result .= $this->text;
-            $result .= "</a>";
-        } else {
-            /* if we didn't recieve a vote URL, just spit out the card text. */
-            $result .= $this->text;
-        }
-
-        $result .= "<address title='source'><a href='$this->sourceURL' rel='author'>";
-
-        switch ($this->source) {
-            case 'Cards Against Humanity':
-                $result .=  "<img src=\"/CVH/CAH-Cards-$this->type.svg\" alt=\"Cards Against Humanity\" />";
-                break;
-            case 'Cards vs Humans':
-                $result .= '<img src="/CVH/CVH_Logo.svg" alt="Cards vs Humans" />';
-                break;
-        }
-
-        $result .= $this->source . '</a></address>';
-        $result .= '</article>' . PHP_EOL;
-
-        return $result;
-    }
-   
+  
     /** numVotes()
      * Returns the number of votes this card has recieved.
      *

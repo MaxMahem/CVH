@@ -21,17 +21,17 @@ if (($type != Card::QUESTION) && ($type != Card::ANSWER)) {
 }
 
 /* create View for page */
-$view = new View('View All' . ' '. ucfirst($type) . 's');
+$viewAll = new View('View All' . ' '. ucfirst($type) . 's');
     
-$cards = new CardSet($type, $view->NSFW, $view->unvalidated);
+$cards = new CardSet($type, $viewAll->NSFW, $viewAll->unvalidated);
 $cards->getAll();
     
 ?>
-<?= $view->displayHead(); ?>
+<?= $viewAll->displayHead(); ?>
 
 <div id="wrapper">
     
-<?= $view->displayHeader(); ?>
+<?= $viewAll->displayHeader(); ?>
     
 <div id="main">
 	
@@ -39,7 +39,7 @@ $cards->getAll();
         <h1><?= ucfirst($cards->type) . 's'; ?></h1>
 <?php foreach ($cards as $card) { ?>
         <div class="cardbox">
-            <?= $card->displayCard(Card::LINK); ?>
+            <?= $viewAll->displayCard($card, Card::LINK); ?>
         </div>
 <?php } ?>
     </section>
@@ -50,4 +50,4 @@ $cards->getAll();
     
 </div> <!-- End of #wrapper -->
     
-<?= $view->displayFooter(); ?>
+<?= $viewAll->displayFooter(); ?>
