@@ -14,7 +14,7 @@ $question = new Card(Card::QUESTION, Card::RANDOM_CARD, $index->NSFW);
 
 /* Get the Answer cards, currently we get 3 */
 $answers = new CardSet(Card::ANSWER, $index->NSFW);
-$answers->getRandom(3);
+$answers->getRandom(4);
 
 $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
 ?>
@@ -27,25 +27,28 @@ $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
 <div id="main">
     
     <section class='instructions'>
-        <h1>Instructions</h1>
+        <h2>Instructions</h2>
         <p>Pick the card you like the best!</p>
         <p>Or <a href="/CVH">RELOAD</a> this page to get new questions.</p>
     </section>
     
     <section class="questions">
-        <h1>Questions</h1>
+        <h2>Questions</h2>
         <div class="cardbox">
-            <?= $index->displayCard($question, NULL); ?>
+            <?= $question->display(NULL); ?>
+        </div>
+        <div class="cardbox">
+            <article class='card question vote'><h3>Reload</h3><a class='answerlink' href='.'>Get me a different question!</a></article>
         </div>
     </section>
     
     <div class="clear"></div>
 
     <section class="answers">
-        <h1>Answers</h1>
+        <h2>Answers</h2>
 <?php foreach ($answers as $answer) { ?>
         <div class="cardbox">
-            <?= $index->displayCard($answer, $voteURL . $answer->getId(Card::HEX)); ?>
+            <?= $answer->display($voteURL . $answer->getId(Card::HEX)); ?>
         </div>
 <?php } ?>
     </section>

@@ -27,7 +27,7 @@ class Card {
      * @param int    $id   id of card to get or Card::RANDOM for random card
      * @param bool   $NSFW return NSFW cards or not. Default false.
      */
-    function Card($type, $id, $NSFW = FALSE) {
+    public function Card($type, $id, $NSFW = FALSE) {
         if (($type != self::QUESTION) && ($type != self::ANSWER)) {
             throw new InvalidArgumentException("Invalid type: $type passed to new Card");
         }
@@ -199,6 +199,49 @@ class Card {
         $cardId = mysqli_insert_id($mysqliLink);
         
         return $cardId;
+    }
+    
+   /** displayCard
+    * Returns a properly formated card for display.
+    *
+    * @param   string  $linkURL     the link the card should go to, if any.
+    * @return  string  HTML code for the card.
+    */
+    public function display($linkURL = Card::LINK) {
+        /* setup classes for card */
+        $classes[] = 'card';
+        $classes[] = $this->type;
+        $classes[] = ($this->NSFW)      ? 'NSFW' : '';
+        $classes[] = ($linkURL != NULL) ? 'vote' : '';
+        $class = implode(' ', $classes);
+
+        $result .= "<article class='$class'>";
+        
+        /* header for the card, if NSFW we add a hgroup and a tag */
+        $result .= ($this->NSFW) ? "<hgroup>" : '';
+        $result .= "<h3>" . ucfirst($this->type) . ": $this->id </h1>";
+        $result .= ($this->NSFW) ? "<h4 class='NSFW'>NSFW</h2>" : '';
+        $result .= ($this->NSFW) ? "</hgroup>" : '';
+
+        if ($linkURL != NULL) {
+            /* if we got self::LINK for a value, we want to simply point our link
+             * at a link for this specific card */
+            if ($linkURL == Card::LINK) {
+                $linkURL = "/CVH/view/$this->type/" . $this->getId(Card::HEX);
+            }
+            
+            /* if we recieved a vote URL, embeded the card text inside a voting link */
+            $result .= "<a class='answerlink' href='" . $linkURL . "'>";
+            $result .= $this->text;
+            $result .= "</a>";
+        } else {
+            /* if we didn't recieve a vote URL, just spit out the card text. */
+            $result .= $this->text;
+        }
+
+        $result .= $this->source->display($this->type);
+        
+        return $result;
     }
     
     /**addCard

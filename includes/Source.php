@@ -9,6 +9,8 @@ class Source {
     private $source;
     private $url;
     private $added;
+    private $questionCards;
+    private $answerCards;
     
     /** Source constructor
      * Creates a source. Id is required, if source & url are not provided, it will be fetched.
@@ -17,7 +19,7 @@ class Source {
      * @param string $source Name of the source.
      * @param string $url    for the source (if any).
      */
-    function Source($id, $source, $url) {
+    function Source($id, $source = NULL, $url = NULL) {
         if (!is_numeric($id)) {
             throw new InvalidArgumentException("Non numeric id: $id passed to new Source");
         }
@@ -33,6 +35,28 @@ class Source {
         }
     }
     
+    public function display($type = NULL) {
+        $result .= "<address><a title='source' href='$this->url' rel='author'>";
+
+        switch ($this->source) {
+            case 'Cards Against Humanity':
+                $result .=  "<img src=\"/CVH/CAH-Cards-$type.svg\" alt=\"Cards Against Humanity\" />";
+                break;
+            case 'Cards vs Humans':
+                $result .= '<img src="/CVH/CVH_Logo.svg" alt="Cards vs Humans" />';
+                break;
+        }
+
+        $result .= $this->source . '</a></address>';
+        
+        return $result;
+    }
+    
+    public function getCards() {
+        
+    }
+
+
     private function retrieveSource() {
         /* the db-connection file is assumed to define DBHOST, DBUSER, DBPASS, and DBNAME
          * with their appropriate values, and should be located outside of the webroot  */

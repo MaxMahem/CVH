@@ -1,4 +1,7 @@
 <?php
+require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Source.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
+
 /**
  * a set of cards.
  *
@@ -117,7 +120,7 @@ class CardSet implements IteratorAggregate {
         $this->retrieveData($query);
     }
     
-    public function getSource($sourceId) {       
+    public function getSource(Source $source) {       
         /* tables are plural, so add an s */
         $table = $this->type . 's';
 

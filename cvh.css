@@ -35,11 +35,6 @@ html, body, #wrapper {
     font:   bold medium helvetica;
 }
 
-body > #container {
-    height:     auto;
-    min-height: 100%;
-}
-
 header, 
 footer {
     background-color: black;
@@ -49,7 +44,7 @@ footer {
 
 /* we do not want to display most of the h1's, they are for 
  * outline/accessability only */
-h1 {
+h2, h3 {
     display: none;
 }
 
@@ -59,19 +54,13 @@ header h1 {
     font:    bold xx-large helvetica;
 }
 
-header h2 {
+header .NSFW {
     float: left;
-    font-size: xx-large;
     padding-left: .5em;
 }
 
 nav {
     clear: left;
-}
-
-/* the header block above overides our hide h1 rule, so we re apply it */
-nav h1 {
-    display: none;
 }
 
 nav li,
@@ -80,11 +69,14 @@ nav ul {
 }
 
 #main {
-    padding-bottom: 1em;
+    padding: 1em;
 }
 
+/* NSFW is a h2 or H4 element, so we need to ensure it's displayed */
 .NSFW {
     color: red;
+    font: bold medium helvetica;
+    display: block;
 }
 
 .SFW {
@@ -97,7 +89,6 @@ nav ul {
     right: .75em;
     position: absolute;
     z-index: 1;
-    font: bold small helvetica;
 }
 
 .cardbox {
@@ -107,10 +98,11 @@ nav ul {
 .card {
     font: bold x-large helvetica;
     width:          8em;
-    height:        11em;
+    height:        11.2em;
     padding:        1em;
     margin:        .5em .5em 0 .5em;
     border-radius: .5em;
+    border: solid 2px black;
     position: relative;
 }
 
@@ -123,7 +115,8 @@ nav ul {
     z-index: 1;
 }
 
-.card address img {
+/* styling for logos embeded in address */
+address img {
     height:         2em;
     width:          2em;
     vertical-align: text-bottom;
@@ -180,14 +173,12 @@ nav ul {
 }
 
 .question {
-    border: solid 2px white;
     color: white;
     background-color: black;
 }
 
 /* Answers float left */
 .answer {
-    border: solid 2px black;
     color: black;
     background-color: white;
 }

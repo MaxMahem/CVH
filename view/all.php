@@ -39,7 +39,7 @@ $cards->getAll();
         <h1><?= ucfirst($cards->type) . 's'; ?></h1>
 <?php foreach ($cards as $card) { ?>
         <div class="cardbox">
-            <?= $viewAll->displayCard($card, Card::LINK); ?>
+            <?= $card->display(Card::LINK); ?>
         </div>
 <?php } ?>
     </section>
