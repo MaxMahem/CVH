@@ -19,7 +19,7 @@ if (!empty($postData['text'])) { $text = $postData['text']; }
 if (!empty($postData['type'])) { 
 
     $card = new Card($postData['type']);
-    $result = $card->addCard($postData['NSFW'], $postData['text'], $postData['source'], $postData['url']);
+    $result = $card->add($postData['NSFW'], $postData['text'], $postData['source'], $postData['url']);
 
     if ($result) {
         $typeId[$card->getType()] = $card->getId(Card::HEX);

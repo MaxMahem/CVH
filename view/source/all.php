@@ -30,7 +30,6 @@ $sources->getAll();
         <?php foreach ($sources as $source) { ?>
             <li><?php echo $source->display(Card::ANSWER); ?>
                 <details open>
-                    <summary></summary>
                     <?php $source->getCards($viewAll->NSFW, $viewAll->unvalidated); ?>
                     <details>
                         <summary>Questions (<?=count($source->questionCards); ?>)</summary>

@@ -30,6 +30,13 @@ class SourceSet implements IteratorAggregate, Countable {
         return count($this->sources);
     }
     
+    /** 
+     * Magic method returns private properties without muss or fuss.
+     * 
+     * @param  string   $property   name of the property requested
+     * @return type                 returns the value of the property requested
+     * @throws LogicException       Throws logic exception if requested property not present.
+     */
     public function __get($property) {
         if (property_exists($this, $property)) {
             return $this->$property;

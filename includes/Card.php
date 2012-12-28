@@ -1,14 +1,13 @@
 <?php
 
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Source.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Item.php');
 
-class Card {
-    private $id;
+class Card extends Item {
     private $type;
     private $text;
     private $NSFW;
     private $source;
-    private $added;
 
     const RANDOM_CARD = -1;
     
@@ -42,27 +41,7 @@ class Card {
         $this->id   = $id;
         $this->NSFW = $NSFW;
         
-        $this->retrieveCard();
-    }
-    
-    /** dbConnect()
-     * Makes a connection to the Card database
-     *
-     * @return mysqli
-     */
-    private function dbConnect() {
-        /* the db-connection file is assumed to define DBHOST, DBUSER, DBPASS, and DBNAME
-         * with their appropriate values, and should be located outside of the webroot  */
-        include_once($_SERVER['DOCUMENT_ROOT'] . '/../db-connection.php');
-        
-        /** @todo: maybe add more error checking here, I don't like returning this info to the user though */
-        $mysqliLink = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
-        if (!$mysqliLink) {
-            echo "Failed to connect to MySQL: (" . mysqli_connect_errno() . ") " . mysqli_connect_error() . PHP_EOL;
-            return false;
-        }
-
-        return $mysqliLink;
+        $this->retrieve();
     }
     
     /** retrieveCard()
@@ -73,7 +52,7 @@ class Card {
      * 
      * @return boolean  returns true on success, false on failure.
      */
-    private function retrieveCard() {
+    protected function retrieve() {
         $mysqliLink = $this->dbConnect();
         
         /* the DB we query (questions or answers) is plural. So it should be
@@ -158,7 +137,7 @@ class Card {
      * 
      * @return int id of card after insert, false on failure.
      */
-    private function insertCard() {
+    protected function insert() {
         /* get connection to DB */
         $mysqliLink = $this->dbConnect();
 
@@ -257,7 +236,7 @@ class Card {
      * @param  string  $sourceURL URL of the card source
      * @return int id of new card.
      */
-    public function addCard($NSFW, $text, $source, $sourceURL) {
+    public function add($NSFW, $text, $source, $sourceURL) {
         
         if ($NSFW == 'NSFW') {
             $this->NSFW = TRUE;
@@ -271,7 +250,7 @@ class Card {
         
         /* this should return the id of our new card on success, and false on
          * failure. */
-        $cardId = $this->insertCard();
+        $cardId = $this->insert();
         
         $this->id = $cardId;
         
@@ -345,13 +324,5 @@ class Card {
         if ($format == self::HEX)     { $id = strtoupper(dechex($this->id)); }
 
         return $id;
-    }
-    
-    public function __get($property) {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        } else {
-            throw LogicException("Attempted to get Card property $property which does not exist.");
-        }
     }
 }

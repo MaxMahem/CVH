@@ -1,6 +1,7 @@
 <?php
 
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/CardSet.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Item.php');
 
 /**
  * Class for a Card Source
@@ -8,10 +9,8 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/CardSet.php');
  * @author MaxMahem
  */
 class Source {
-    private $id;
     private $source;
     private $url;
-    private $added;
     private $questionCards;
     private $answerCards;
     
@@ -31,7 +30,7 @@ class Source {
         
         /* if we didn't get a $source, then we need to retrieve it (and maybe the url) */
         if (empty($source)) {
-            $this->retrieveSource();
+            $this->retrieve();
         } else {
             $this->source = $source;
             $this->url    = $url;
@@ -64,16 +63,8 @@ class Source {
     }
 
 
-    private function retrieveSource() {
-        /* the db-connection file is assumed to define DBHOST, DBUSER, DBPASS, and DBNAME
-         * with their appropriate values, and should be located outside of the webroot  */
-        require($_SERVER['DOCUMENT_ROOT'] . '/../db-connection.php');
-        
-        /* connect to DB */
-        $mysqli = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
-        if ($mysqli->connect_errno) {
-            throw new mysqli_sql_exception("Error connecting to MySQL: $mysqli->connect_error", $mysqli->errno);
-        }
+    protected function retrieve() {
+        $mysqli = $this->dbConnect();
         
         $select = "SELECT `sources`.`source`, `sources`.`url`";
         $from   = "FROM   `sources`";
@@ -95,14 +86,6 @@ class Source {
         
         $this->source = $row['source'];
         $this->url    = $row['url'];
-    }
-    
-    public function __get($property) {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        } else {
-            throw new LogicException("Attempted to get Source property $property which does not exist.");
-        }
     }
 }
 
