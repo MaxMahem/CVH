@@ -10,7 +10,7 @@ abstract class Item {
      * @param int    $id   id of card to get or Card::RANDOM for random card
      */
     public function Item($id = NULL) {
-        if (is_set($id)) {
+        if (isset($id)) {
             $this->id = $id;
             $this->retrieve();
         }

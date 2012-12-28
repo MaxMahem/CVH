@@ -63,15 +63,12 @@ class Card extends Item {
         $selectClauses[] = "`$table`.`id`";
         $selectClauses[] = "`$table`.`text`";
         $selectClauses[] = "`$table`.`NSFW`";
-        $selectClauses[] = "`sources`.`id` AS source_id";
-        $selectClauses[] = "`sources`.`source`";
-        $selectClauses[] = "`sources`.`url`";
+        $selectClauses[] = "`$table`.`source_id`";
         $selectClauses[] = "`$table`.`added`";
                 
         /* build select from selectClauses array */
         $select = "SELECT" . ' ' . implode(', ', $selectClauses);
-        
-        $from = "FROM $table INNER JOIN sources ON $table.source_id = sources.id";
+        $from   = "FROM $table";
 
         /* having a do nothing whereClause makes later logic easier. We don't have to evaluate
          * for empty whereClauses, we can implode them all. */
@@ -120,7 +117,7 @@ class Card extends Item {
         $this->NSFW      = $data['NSFW'];
         $this->added     = $data['added'];
         
-        $this->source    = new Source($data['source_id'], $data['source'], $data['url']);
+        $this->source    = new Source($data['source_id']);
 
         return true;
     }

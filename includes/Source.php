@@ -8,34 +8,11 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Item.php');
  *
  * @author MaxMahem
  */
-class Source {
+class Source extends Item {
     private $source;
     private $url;
     private $questionCards;
     private $answerCards;
-    
-    /** Source constructor
-     * Creates a source. Id is required, if source & url are not provided, it will be fetched.
-     * 
-     * @param int    $id     id of source. Required.
-     * @param string $source Name of the source.
-     * @param string $url    for the source (if any).
-     */
-    function Source($id, $source = NULL, $url = NULL) {
-        if (!is_numeric($id)) {
-            throw new InvalidArgumentException("Non numeric id: $id passed to new Source");
-        }
-        
-        $this->id = $id;
-        
-        /* if we didn't get a $source, then we need to retrieve it (and maybe the url) */
-        if (empty($source)) {
-            $this->retrieve();
-        } else {
-            $this->source = $source;
-            $this->url    = $url;
-        }
-    }
     
     public function display($type = NULL) {
         $result .= "<address><a title='source' href='$this->url' rel='author'>";
@@ -87,6 +64,8 @@ class Source {
         $this->source = $row['source'];
         $this->url    = $row['url'];
     }
+    
+    protected function insert() { }
 }
 
 ?>
