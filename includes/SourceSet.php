@@ -4,22 +4,30 @@
  *
  * @author MaxMahem
  */
-class SourceSet implements IteratorAggregate {
+class SourceSet implements IteratorAggregate, Countable {
     private $sources;
     
     /** SourceSet Constructor
      *
      */
-    public function SourceSet() {
-    }
+    public function SourceSet() { }
     
     /**
-     * Makes a sourceset iterable! Black magic as far as I'm concurned.
+     * Makes a sourceset iterable!
      * 
      * @return \ArrayIterator
      */
     public function getIterator() {
         return new ArrayIterator($this->sources);
+    }
+    
+    /**
+     * Makes the sourceset countable.
+     * 
+     * @return int the number of cards in the set
+     */
+    public function count() {
+        return count($this->sources);
     }
     
     public function __get($property) {
