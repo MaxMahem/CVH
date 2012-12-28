@@ -24,12 +24,32 @@ $sources->getAll();
     
 <div id="main">
 	
-    <section class="<?=$cards->type; ?>">
-        <h1>Sources</h1>
+    <section class="sources">
+        <h2>Sources</h2>
         <ul>
-<?php foreach ($sources as $source) { ?>
+        <?php foreach ($sources as $source) { ?>
             <li><?php echo $source->display(Card::ANSWER); ?>
-<?php } ?>
+                <details open>
+                    <summary></summary>
+                    <?php $source->getCards($viewAll->NSFW, $viewAll->unvalidated); ?>
+                    <details>
+                        <summary>Questions (<?=count($source->questionCards); ?>)</summary>
+                        <?php 
+                            foreach ($source->questionCards as $question) {
+                                echo $question->display(Card::LINK);
+                            }
+                        ?>
+                    </details>
+                    <details>
+                        <summary>Answers (<?=count($source->answerCards); ?>)</summary>
+                        <?php 
+                            foreach ($source->answerCards as $answer) {
+                                echo $answer->display(Card::LINK);
+                            }
+                        ?>
+                    </details>
+                 </details>
+        <?php } ?>
         </ul>
     </section>
 

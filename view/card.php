@@ -47,13 +47,13 @@ $topCards->getTop($card, 5);
     <div id="main">
 	
     <section>
-        <h1><?= ucfirst($card->type); ?></h1>
+        <h2><?= ucfirst($card->type . 's'); ?></h2>
         <div class="cardbox">
             <?= $card->display(NULL); ?>
         </div>
 
         <article>
-            <h1>Stats:</h1>
+            <h2>Stats:</h2>
             This card has received <?= $card->numVotes(); ?> votes.<br>
             It was added on <time datetime="<?= date("c", $cardAdded); ?>"><?= date('F j, Y', $cardAdded); ?></time>
         </article>
@@ -62,7 +62,7 @@ $topCards->getTop($card, 5);
     <div class="clear"></div>
     
     <section>
-        <h1>Top <?= ucfirst($topCards->type . 's'); ?></h1>
+        <h2>Top <?= ucfirst($topCards->type . 's'); ?></h2>
 <?php foreach ($topCards as $topCard) { ?>
         <div class="cardbox">
             <?= $topCard->display(Card::LINK) ?>

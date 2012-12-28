@@ -69,7 +69,7 @@ nav ul {
 }
 
 #main {
-    padding: 1em;
+    padding: .5em;
 }
 
 /* NSFW is a h2 or H4 element, so we need to ensure it's displayed */
@@ -83,16 +83,8 @@ nav ul {
     color: white;
 }
 
-/* style the NSFW tag for the cards */
-.card .NSFW {
-    top:   .75em;
-    right: .75em;
-    position: absolute;
-    z-index: 1;
-}
-
 .cardbox {
-    float: left;
+/*    float: left; */
 }
 
 .card {
@@ -100,10 +92,19 @@ nav ul {
     width:          8em;
     height:        11.2em;
     padding:        1em;
-    margin:        .5em .5em 0 .5em;
+    margin:        .5em;
     border-radius: .5em;
     border: solid 2px black;
     position: relative;
+    float: left;
+}
+
+/* style the NSFW tag for the cards */
+.card .NSFW {
+    top:   .75em;
+    right: .75em;
+    position: absolute;
+    z-index: 1;
 }
 
 .card address {
@@ -198,13 +199,18 @@ address img {
 }
 
 /* turn grey on hover to indicate it's a link */
-.vote:hover {
+.link:hover {
     background-color: grey;
 }
 
 /* prevents our text from turning gray when we hover though */
-.vote:hover a {
+.link:hover a {
     color: black;
+}
+
+/* prevent details from flooding over */
+details {
+    clear: left;
 }
 
 /* permalink border is there to ensure exact spacing */

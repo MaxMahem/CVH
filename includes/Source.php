@@ -1,4 +1,7 @@
 <?php
+
+require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/CardSet.php');
+
 /**
  * Class for a Card Source
  *
@@ -52,8 +55,12 @@ class Source {
         return $result;
     }
     
-    public function getCards() {
+    public function getCards($NSFW = FALSE, $unvalidated = FALSE) {
+        $this->questionCards = new CardSet(Card::QUESTION, $NSFW, $unvalidated);
+        $this->questionCards->getSource($this);
         
+        $this->answerCards   = new CardSet(Card::ANSWER,   $NSFW, $unvalidated);
+        $this->answerCards->getSource($this);
     }
 
 
@@ -94,7 +101,7 @@ class Source {
         if (property_exists($this, $property)) {
             return $this->$property;
         } else {
-            throw LogicException("Attempted to get Source property $property which does not exist.");
+            throw new LogicException("Attempted to get Source property $property which does not exist.");
         }
     }
 }

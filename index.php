@@ -38,7 +38,7 @@ $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
             <?= $question->display(NULL); ?>
         </div>
         <div class="cardbox">
-            <article class='card question vote'><h3>Reload</h3><a class='answerlink' href='.'>Get me a different question!</a></article>
+            <article class='card question link'><h3>Reload</h3><a class='answerlink' href='.'>Get me a different question!</a></article>
         </div>
     </section>
     

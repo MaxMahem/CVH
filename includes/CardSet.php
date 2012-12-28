@@ -7,7 +7,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
  *
  * @author MaxMahem
  */
-class CardSet implements IteratorAggregate {
+class CardSet implements IteratorAggregate, Countable {
     private $type;
     private $cards;
     private $NSFW;
@@ -45,7 +45,20 @@ class CardSet implements IteratorAggregate {
      * @return \ArrayIterator
      */
     public function getIterator() {
-        return new ArrayIterator($this->cards);
+        if (empty($this->cards)) {
+            return new ArrayIterator(array ());
+        } else {
+            return new ArrayIterator($this->cards);
+        }
+    }
+    
+    /**
+     * Makes the cardset countable.
+     * 
+     * @return int the number of cards in the set
+     */
+    public function count() {
+        return count($this->cards);
     }
     
     public function __get($property) {
@@ -127,14 +140,13 @@ class CardSet implements IteratorAggregate {
         /* this query will get all the cards of the selected type */
         $select = "SELECT `$table`.`id`";      
         $from   = "FROM   `$table`";
-        $where  = "WHERE  `$table`.`source_id`=$sourceId";
+        $where  = "WHERE  `$table`.`source_id`=$source->id";
 
         /* build the query */
         $query = $select . ' ' . $from . ' ' . $where;
         
         $this->retrieveData($query);
     }
-    
     
     private function retrieveData($query) {       
         /* the db-connection file is assumed to define DBHOST, DBUSER, DBPASS, and DBNAME

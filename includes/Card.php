@@ -212,15 +212,15 @@ class Card {
         $classes[] = 'card';
         $classes[] = $this->type;
         $classes[] = ($this->NSFW)      ? 'NSFW' : '';
-        $classes[] = ($linkURL != NULL) ? 'vote' : '';
-        $class = implode(' ', $classes);
+        $classes[] = ($linkURL != NULL) ? 'link' : '';
+        $class = trim(implode(' ', $classes));
 
         $result .= "<article class='$class'>";
         
         /* header for the card, if NSFW we add a hgroup and a tag */
         $result .= ($this->NSFW) ? "<hgroup>" : '';
-        $result .= "<h3>" . ucfirst($this->type) . ": $this->id </h1>";
-        $result .= ($this->NSFW) ? "<h4 class='NSFW'>NSFW</h2>" : '';
+        $result .= "<h3>" . ucfirst($this->type) . ": $this->id </h3>";
+        $result .= ($this->NSFW) ? "<h4 class='NSFW'>NSFW</h4>" : '';
         $result .= ($this->NSFW) ? "</hgroup>" : '';
 
         if ($linkURL != NULL) {
@@ -230,7 +230,7 @@ class Card {
                 $linkURL = "/CVH/view/$this->type/" . $this->getId(Card::HEX);
             }
             
-            /* if we recieved a vote URL, embeded the card text inside a voting link */
+            /* if we recieved a linkUrl, embeded the card text inside the link */
             $result .= "<a class='answerlink' href='" . $linkURL . "'>";
             $result .= $this->text;
             $result .= "</a>";
@@ -240,6 +240,8 @@ class Card {
         }
 
         $result .= $this->source->display($this->type);
+        
+        $result .= "</article>" . PHP_EOL;
         
         return $result;
     }
