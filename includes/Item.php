@@ -20,7 +20,7 @@ abstract class Item {
         if (property_exists($this, $property)) {
             return $this->$property;
         } else {
-            throw LogicException("Attempted to get property $property which does not exist.");
+            throw new LogicException("Attempted to get property $property which does not exist.");
         }
     }
     

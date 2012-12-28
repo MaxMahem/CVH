@@ -9,10 +9,10 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Item.php');
  * @author MaxMahem
  */
 class Source extends Item {
-    private $source;
-    private $url;
-    private $questionCards;
-    private $answerCards;
+    protected $source;
+    protected $url;
+    protected $questionCards;
+    protected $answerCards;
     
     public function display($type = NULL) {
         $result .= "<address><a title='source' href='$this->url' rel='author'>";

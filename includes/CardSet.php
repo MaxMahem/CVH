@@ -108,7 +108,7 @@ class CardSet implements IteratorAggregate, Countable {
 
 
     public function getTop(Card $pairCard, $number = 4) {
-        $pairId   = $pairCard->getId(Card::DECIMAL);
+        $pairId   = $pairCard->id;
         $pairType = $pairCard->type;
         
         if ($pairType == $this->type) {

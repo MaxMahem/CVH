@@ -4,18 +4,13 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Source.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Item.php');
 
 class Card extends Item {
-    private $type;
-    private $text;
-    private $NSFW;
-    private $source;
-
-    const RANDOM_CARD = -1;
+    protected $type;
+    protected $text;
+    protected $NSFW;
+    protected $source;
     
     const QUESTION    = 'question';
     const ANSWER      = 'answer';
-    
-    const HEX         = 'hex';
-    const DECIMAL     = 'decimal';
     
     const LINK        = 'link';
     
@@ -26,20 +21,16 @@ class Card extends Item {
      * @param int    $id   id of card to get or Card::RANDOM for random card
      * @param bool   $NSFW return NSFW cards or not. Default false.
      */
-    public function Card($type, $id, $NSFW = FALSE) {
+    public function Card($type, $id) {
         if (($type != self::QUESTION) && ($type != self::ANSWER)) {
             throw new InvalidArgumentException("Invalid type: $type passed to new Card");
         }
         if (!is_numeric($id)) {
             throw new InvalidArgumentException("Non numeric id: $id passed to new Card");
         }
-        if (!is_bool($NSFW)) {
-            throw new InvalidArgumentException("Non bool NSFW: $NSFW passed to new Card");
-        }
         
         $this->type = $type;
         $this->id   = $id;
-        $this->NSFW = $NSFW;
         
         $this->retrieve();
     }
@@ -68,37 +59,11 @@ class Card extends Item {
                 
         /* build select from selectClauses array */
         $select = "SELECT" . ' ' . implode(', ', $selectClauses);
-        $from   = "FROM $table";
-
-        /* having a do nothing whereClause makes later logic easier. We don't have to evaluate
-         * for empty whereClauses, we can implode them all. */
-        $whereClauses[] = 'TRUE';
-        
-        /* if we got a specific id, we want to return that row specifically. */
-        if ($this->id != self::RANDOM_CARD) {
-            $whereClauses[] = "$table.id = $this->id";
-        }
-        
-        /* If we are getting a RANDOM card, and NSFW is TRUE we want to exclude this clause
-         * If we are getting a RANDOM card, and NSFW is FALSE we want to include this clause
-         * If we aren't getting a RANDOM card, we want to exclude this clause.
-         * Including this clause will exclude NSFW entries. */
-        if (($this->id == self::RANDOM_CARD) && ($this->NSFW == FALSE)) {
-            $whereClauses[] = "$table.NSFW = FALSE";
-        }
-
-        /* build the where of the query. The different clauses get linked by AND */
-        $where = "WHERE" . ' ' . implode(' AND ', $whereClauses);
-
-        /* if we get a id of 0, we want a random result, do this with an order by rand() statment. */
-        if ($this->id == self::RANDOM_CARD) {
-            $order = "ORDER BY RAND() LIMIT 0,1";   /* random result */
-        } else {
-            $order = "";
-        }
+        $from   = "FROM  $table";        
+        $where  = "WHERE $table.id = $this->id";
 
         /* build the query */
-        $query = $select . ' ' . $from . ' ' . $where . ' ' . $order;
+        $query = $select . ' ' . $from . ' ' . $where;
 
         /* get the data */
         $result = mysqli_query($mysqliLink, $query);
@@ -203,7 +168,7 @@ class Card extends Item {
             /* if we got self::LINK for a value, we want to simply point our link
              * at a link for this specific card */
             if ($linkURL == Card::LINK) {
-                $linkURL = "/CVH/view/$this->type/" . $this->getId(Card::HEX);
+                $linkURL = "/CVH/view/$this->type/" . dechex($this->id);
             }
             
             /* if we recieved a linkUrl, embeded the card text inside the link */
@@ -293,33 +258,5 @@ class Card extends Item {
         }
                 
         return $votes;
-    }
-    
-    /** getId
-     * Returns the current id in either HEX or DECIMAL format. Default is decimal.
-     * 
-     * @param  string $format either 'hex' or 'decimal' default is decimal.
-     * @return string/int id of card asked for in hex or decimal.
-     */
-    public function getId($format = self::DECIMAL) {
-        /* check input format */
-        if (($format != self::DECIMAL) && ($format != self::HEX)) {
-            throw new InvalidArgumentException("Invalid format: $format passed to Card->getId");
-        }
-        
-        /* check card id */
-        if ((!isset($this->id)) || ($this->id == self::RANDOM_CARD)) {
-            if (!isset($this->id)) {
-                throw new LogicException("Card->getId called on card without id");
-            }
-            if ($this->id == self::RANDOM_CARD) {
-                throw new LogicException("Card->getId called on card set to a RANDOM_CARD");
-            }
-        }
-                    
-        if ($format == self::DECIMAL) { $id = $this->id; }
-        if ($format == self::HEX)     { $id = strtoupper(dechex($this->id)); }
-
-        return $id;
     }
 }

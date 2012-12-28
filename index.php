@@ -1,6 +1,7 @@
 <?php
 /* contains the card classes used to create the cards */
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/RandomCard.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/CardSet.php');
 
 /* contains the view class used for view elements. */
@@ -10,13 +11,13 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/View.php');
 $index = new View();
     
 /* Get the question cards */
-$question = new Card(Card::QUESTION, Card::RANDOM_CARD, $index->NSFW);
+$question = new RandomCard(Card::QUESTION, $index->NSFW);
 
 /* Get the Answer cards, currently we get 3 */
 $answers = new CardSet(Card::ANSWER, $index->NSFW);
 $answers->getRandom(4);
 
-$voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
+$voteURL = "/CVH/vote/" . dechex($question->id) . "-";
 ?>
 <?= $index->displayHead(); ?>
 
@@ -29,7 +30,6 @@ $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
     <section class='instructions'>
         <h2>Instructions</h2>
         <p>Pick the card you like the best!</p>
-        <p>Or <a href="/CVH">RELOAD</a> this page to get new questions.</p>
     </section>
     
     <section class="questions">
@@ -48,7 +48,7 @@ $voteURL = "/CVH/vote/" .  $question->getId(Card::HEX) . "-";
         <h2>Answers</h2>
 <?php foreach ($answers as $answer) { ?>
         <div class="cardbox">
-            <?= $answer->display($voteURL . $answer->getId(Card::HEX)); ?>
+            <?= $answer->display($voteURL . dechex($answer->id)); ?>
         </div>
 <?php } ?>
     </section>
