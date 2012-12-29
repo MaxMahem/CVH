@@ -55,10 +55,10 @@ class SourceSet implements IteratorAggregate, Countable {
         /* build the query */
         $query = $select . ' ' . $from . ' ' . $where . ' ' . $limit;
 
-        $this->retrieveData($query);
+        $this->retrieve($query);
     }    
     
-    private function retrieveData($query) {       
+    private function retrieve($query) {       
         /* the db-connection file is assumed to define DBHOST, DBUSER, DBPASS, and DBNAME
          * with their appropriate values, and should be located outside of the webroot  */
         require($_SERVER['DOCUMENT_ROOT'] . '/../db-connection.php');
