@@ -1,17 +1,17 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Source.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Set.php');
 
 /**
  * a set of cards.
  *
  * @author MaxMahem
  */
-class CardSet implements IteratorAggregate, Countable {
-    private $type;
-    private $cards;
-    private $NSFW;
-    private $unvalidated;
+class CardSet extends Set {
+    protected $cardType;
+    protected $NSFW;
+    protected $unvalidated;
     
     /** CardSet Constructor
      * 
@@ -35,43 +35,13 @@ class CardSet implements IteratorAggregate, Countable {
         }
         
         $this->NSFW        = $NSFW;
-        $this->type        = $type;
+        $this->cardType    = $type;
         $this->unvalidated = $unvalidated;
-    }
-    
-    /**
-     * Makes a cardset iterable! Black magic as far as I'm concurned.
-     * 
-     * @return \ArrayIterator
-     */
-    public function getIterator() {
-        if (empty($this->cards)) {
-            return new ArrayIterator(array ());
-        } else {
-            return new ArrayIterator($this->cards);
-        }
-    }
-    
-    /**
-     * Makes the cardset countable.
-     * 
-     * @return int the number of cards in the set
-     */
-    public function count() {
-        return count($this->cards);
-    }
-    
-    public function __get($property) {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        } else {
-            throw LogicException("Attempted to get CardSet property $property which does not exist.");
-        }
     }
     
     public function getAll($start = '0', $number = '30') {        
         /* tables are plural, so add an s */
-        $table = $this->type . 's';
+        $table = $this->cardType . 's';
 
         /* this query will get all the cards of the selected type */
         $select = "SELECT `$table`.`id`";      
@@ -91,7 +61,7 @@ class CardSet implements IteratorAggregate, Countable {
     
     public function getRandom($number = '3') {
         /* tables are plural, so add an s */
-        $table = $this->type . 's';
+        $table = $this->cardType . 's';
 
         /* this query will get all the cards of the selected type */
         $select = "SELECT `$table`.`id`";      
@@ -111,13 +81,13 @@ class CardSet implements IteratorAggregate, Countable {
         $pairId   = $pairCard->id;
         $pairType = $pairCard->type;
         
-        if ($pairType == $this->type) {
+        if ($pairType == $this->cardType) {
             throw new InvalidArgumentException("CardSet->getTopCards called with bad Card type, $pairType, pair card must be the opposite type as the paired set.");
         }
         
         /* Important, retrieve function expects a field as 'id' so important to
          * do 'AS id' here. */
-        $select = "SELECT `questions_answers_votes`.`{$this->type}_id` AS id";
+        $select = "SELECT `questions_answers_votes`.`{$this->cardType}_id` AS id";
         $from   = "FROM   `questions_answers_votes`";
 
         $whereClauses[] = "`questions_answers_votes`.`{$pairType}_id`=$pairId";
@@ -135,7 +105,7 @@ class CardSet implements IteratorAggregate, Countable {
     
     public function getSource(Source $source) {       
         /* tables are plural, so add an s */
-        $table = $this->type . 's';
+        $table = $this->cardType . 's';
 
         /* this query will get all the cards of the selected type */
         $select = "SELECT `$table`.`id`";      
@@ -148,7 +118,7 @@ class CardSet implements IteratorAggregate, Countable {
         $this->retrieve($query);
     }
     
-    private function retrieve($query) {       
+    protected function retrieve($query) {       
         /* the db-connection file is assumed to define DBHOST, DBUSER, DBPASS, and DBNAME
          * with their appropriate values, and should be located outside of the webroot  */
         require($_SERVER['DOCUMENT_ROOT'] . '/../db-connection.php');
@@ -171,7 +141,7 @@ class CardSet implements IteratorAggregate, Countable {
         /* get all the cards's */
         while ($row = mysqli_fetch_assoc($result)) {
             $id = $row['id'];
-            $this->cards[$id] = new Card($this->type, $id);
+            $this->data[$id] = new Card($this->cardType, $id);
         }       
     }    
 }

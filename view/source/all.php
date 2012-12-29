@@ -1,6 +1,6 @@
 <?php
 /**
- * /view/viewAll.php display all cards in the DB.
+ * /view/source/all.php display all sources in the DB.
  */
 
 /* contains the card class used to create the sources */

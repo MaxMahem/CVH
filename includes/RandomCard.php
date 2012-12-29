@@ -19,10 +19,10 @@ class RandomCard extends Card {
      */
     public function RandomCard($type, $NSFW = FALSE, $validated = FALSE) {
         if (($type != self::QUESTION) && ($type != self::ANSWER)) {
-            throw new InvalidArgumentException("Invalid type: $type passed to new Card");
+            throw new InvalidArgumentException("Invalid type: $type passed to new RandomCard");
         }
         if (!is_bool($NSFW)) {
-            throw new InvalidArgumentException("Non bool NSFW: $NSFW passed to new Card");
+            throw new InvalidArgumentException("Non bool NSFW: $NSFW passed to new RandomCard");
         }
         
         $this->type = $type;
