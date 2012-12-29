@@ -5,15 +5,14 @@
 
 /* contains the card class used to create the sources */
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Source.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/SourceSet.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Set.php');
 /* contains the view class used for view elements. */
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/View.php');
 
 /* create View for page */
 $viewAll = new View('View All Sources');
     
-$sources = new SourceSet();
-$sources->getAll();
+$sources = new Set('source');
     
 ?>
 <?= $viewAll->displayHead(); ?>

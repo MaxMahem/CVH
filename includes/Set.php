@@ -5,9 +5,27 @@
  *
  * @author MaxMahem
  */
-abstract class Set implements IteratorAggregate, Countable {    
+class Set implements IteratorAggregate, Countable {    
     protected $data;
     protected $dataType;
+    protected $table;
+
+
+    public function Set($dataType) {
+        $this->dataType = $dataType;
+        
+        $table = $this->dataType . 's';
+        
+        /* this query will get all the cards of the selected type */
+        $select = "SELECT `$table`.`id`";      
+        $from   = "FROM   `$table`";
+        $where  = "WHERE  TRUE";
+
+        /* build the query */
+        $query = $select . ' ' . $from . ' ' . $where;
+
+        $this->retrieve($query);
+    }
 
     /**
      * Makes a set itterable! Black magic as far as I'm concurned.
