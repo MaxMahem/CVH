@@ -9,10 +9,10 @@ class Card extends Item {
     protected $NSFW;
     protected $source;
     
-    const QUESTION    = 'question';
-    const ANSWER      = 'answer';
+    const QUESTION = 'question';
+    const ANSWER   = 'answer';
     
-    const LINK        = 'link';
+    const LINK     = 'link';
     
     /** Card($type) constructor
      * Creates a new card. Type and id are required.
@@ -25,14 +25,16 @@ class Card extends Item {
         if (($type != self::QUESTION) && ($type != self::ANSWER)) {
             throw new InvalidArgumentException("Invalid type: $type passed to new Card");
         }
-        if (!is_numeric($id)) {
-            throw new InvalidArgumentException("Non numeric id: $id passed to new Card");
-        }
-        
         $this->type = $type;
-        $this->id   = $id;
         
-        $this->retrieve();
+        if (isset($id)) {
+            if (!is_numeric($id)) {
+                throw new InvalidArgumentException("Non numeric id: $id passed to new Card");
+            }
+            
+            $this->id   = $id;       
+            $this->retrieve();            
+        }
     }
     
     /** retrieveCard()
