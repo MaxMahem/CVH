@@ -146,7 +146,7 @@ address img {
 }
 
 .card select {
-    font:       inherit;
+    font:       bold small helvetica;
     color:      inherit;
     background: transparent;
     border:  0;
@@ -238,6 +238,8 @@ input[type=submit] {
     float: left;
     font: bold x-large helvetica;
 }
+
+
 
 footer {
     clear:      both;

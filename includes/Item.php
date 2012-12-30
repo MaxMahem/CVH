@@ -49,11 +49,4 @@ abstract class Item {
      * @return boolean  returns true on success, false on failure.
      */
     abstract protected function retrieve();
-    
-    /** insert()
-     * inserts the current item into the DB.
-     * 
-     * @return int id of item after insert, false on failure.
-     */
-    abstract protected function insert();
 }

@@ -12,14 +12,15 @@
 <?= $suggest->displayHeader(); ?>
     
 <div id="main">
-    
-    <div class="cardbox">
+    <article>
+        <h2>Add Question</h2>
         <form action="add.php" method="post">
             <input type="hidden" name="type" value="question" />
-            <div class="card question">
+            <section class="card question">
+                <h3>Question Details</h3>
                 <select class='NSFW' name="NSFW">
-                        <option value="SFW" class="SFW">SFW</option>
-                        <option value="NSFW">NSFW</option>
+                    <option value="SFW" class="SFW">SFW</option>
+                    <option value="NSFW">NSFW</option>
                 </select>
                 
                 <textarea name="text" placeholder="Enter Question Text" required></textarea>
@@ -28,14 +29,20 @@
                     <input class=""            name="source" placeholder="Enter Your Name"  required><br />
                     <input class="" type="url" name="url"    placeholder="Enter Credit URL">
                 </address>
-            </div>
-        
-            <input type="submit" name="submit" value="Submit" />
-        
+            </section>
+            <section>
+                <h3>Question Submit</h3>
+                <input type="submit" name="submit" value="Submit" />
+            </section>
         </form>
-    </div>
-     
-    <div class="cardbox">
+        <section>
+            <h3>Instructions</h3>
+            <p>Questions should be in a form which can be answered by a single noun.</p>
+        </section>       
+    </article>
+
+    <section>
+        <h2>Add Answer</h2>
         <form action="add.php" method="post">
             <input type="hidden" name="type" value="answer" />
             <div class="card answer">
@@ -55,12 +62,12 @@
         <input type="submit" name="submit" value="Submit" />
         
         </form>
-    </div>
-        
-    <div class="instructions">
-        <p>Questions should be in a form which can be answered by a single noun.</p>
+    </section>
+    
+    <section class="instructions">
+        <h2>Instructions</h2>
         <p>Please mark your question Safe For Work (SFW) or <span class="NSFW">Not Safe For Work (NSFW)</span> as appropriate.</p>
-    </div>
+    </section>
     
     <div class="clear"></div>
     

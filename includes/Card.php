@@ -18,10 +18,9 @@ class Card extends Item {
      * Creates a new card. Type and id are required.
      * 
      * @param string $type type of card, either Card::QUESTION or Card::ANSWER
-     * @param int    $id   id of card to get or Card::RANDOM for random card
-     * @param bool   $NSFW return NSFW cards or not. Default false.
+     * @param int    $id   id of card to get, or null if adding a new card.
      */
-    public function Card($type, $id) {
+    public function Card($type, $id = NULL) {
         if (($type != self::QUESTION) && ($type != self::ANSWER)) {
             throw new InvalidArgumentException("Invalid type: $type passed to new Card");
         }
@@ -39,9 +38,6 @@ class Card extends Item {
     
     /** retrieveCard()
      * retrieve's data about a card from the DB.
-     * 
-     * If a card id isn't set, it gets a random card.
-     * @todo consider removing random card functionality into seperate function.
      * 
      * @return boolean  returns true on success, false on failure.
      */
@@ -102,46 +98,7 @@ class Card extends Item {
      * @return int id of card after insert, false on failure.
      */
     protected function insert() {
-        /* get connection to DB */
-        $mysqliLink = $this->dbConnect();
 
-        /* Insert the source into the DB. The first part is standard, but if we
-         * hit an address that isn't unique, we do some magic. id=LASTER_INSERT_ID(id)
-         * shouldn't make any change to the DB, but will arrange our values such
-         * that mysqli_insert_id will return the id of the duplicate value. */
-        $sourceInsert = "INSERT INTO `sources` (`source`,        `url`)" . ' '
-                      . "VALUES                ('$this->source', '$this->sourceURL')" . ' '
-                      . "ON DUPLICATE KEY UPDATE `id` = LAST_INSERT_ID(`id`)";
-        
-        $sourceResult = mysqli_query($mysqliLink, $sourceInsert);
-        
-        /* check for query errors */
-        if (!$sourceResult) {
-            echo "QUERY:" . ' ' . $sourceInsert . PHP_EOL;
-            echo "Errormessage: " . mysqli_error($mysqliLink) . PHP_EOL;
-            return false;
-        }
-        
-        $table = $this->type . 's';
-        
-        /* this should return us the id of the Source */
-        $sourceId = mysqli_insert_id($mysqliLink);
-        
-        $cardInsert = "INSERT INTO `$table` (`text`,        `NSFW`,        `source_id`)" . ' '
-                    . "VALUES               ('$this->text', '$this->NSFW', '$sourceId' )";
-        
-        $cardResult = mysqli_query($mysqliLink, $cardInsert);
-        
-        if (!$cardResult) {
-            echo "QUERY:" . ' ' . $cardInsert . PHP_EOL;
-            echo "Errormessage: " . mysqli_error($mysqliLink) . PHP_EOL;
-            return false;
-        }
-        
-        /* get the id of the card created */
-        $cardId = mysqli_insert_id($mysqliLink);
-        
-        return $cardId;
     }
     
    /** displayCard
@@ -200,25 +157,38 @@ class Card extends Item {
      * @param  string  $sourceURL URL of the card source
      * @return int id of new card.
      */
-    public function add($NSFW, $text, $source, $sourceURL) {
+    public function add($NSFW, $text, $sourceText, $sourceURL) {      
+        $this->NSFW = $NSFW;
+        $this->text = $text;
         
-        if ($NSFW == 'NSFW') {
-            $this->NSFW = TRUE;
-        } else {
-            $this->NSFW = FALSE;
+        $source = new Source();
+        $sourceId = $source->add($sourceText, $sourceURL);
+        
+        if (!$sourceId) {
+            echo 'Failed adding source.';
+            return FALSE;
         }
-
-        $this->text      = $text;
-        $this->source    = $source;
-        $this->sourceURL = $sourceURL;
+                
+        $mysqli = $this->dbConnect();
         
-        /* this should return the id of our new card on success, and false on
-         * failure. */
-        $cardId = $this->insert();
+        $table = $this->type . 's';
+                
+        $insert = "INSERT INTO `$table` (`text`,        `NSFW`,        `source_id`)" . ' '
+                . "VALUES               ('$this->text', '$this->NSFW', '$sourceId')";
         
-        $this->id = $cardId;
+        /* get the data */
+        $result = $mysqli->query($insert);
         
-        return $cardId;
+        /* check for query errors */
+        if (!$result) {
+            throw new mysqli_sql_exception("My SQL Query Error: $mysqli->error" . PHP_EOL
+                                         . "QUERY: $insert", $mysqli->errno);
+        }
+        
+        /* get the id of the card created */
+        $this->id = $mysqli->insert_id;
+        
+        return $this->id;
     }
   
     /** numVotes()
@@ -228,28 +198,28 @@ class Card extends Item {
      */
     public function numVotes() {
         /* get connection to DB */
-        $mysqliLink = self::dbConnect();
+        $mysqli = $this->dbConnect();
         
         /* $typeId is the type + _id, which should be the id row name we want */
         $typeId = $this->type . '_id';
     
         $select  = "SELECT   `questions_answers_votes`.`$typeId`, SUM(`questions_answers_votes`.`vote_tally`) as `vote_tally`";
         $from    = "FROM     `questions_answers_votes`";
-        $where   = "WHERE    `questions_answers_votes`.`$typeId`=$this->id";
+        $where   = "WHERE    `questions_answers_votes`.`$typeId` = $this->id";
         $groupBy = "GROUP BY `questions_answers_votes`.`$typeId`";
         
         /* build the query */
-        $query   = $select . ' ' . $from . ' ' . $where . ' ' . $groupBy;
+        $query  = $select . ' ' . $from . ' ' . $where . ' ' . $groupBy;
         
-        $result = mysqli_query($mysqliLink, $query);
-        
+       /* get the data */
+        $result = $mysqli->query($query);
+                
         /* check for query errors */
         if (!$result) {
-            echo "QUERY:" . ' ' . $query . PHP_EOL;
-            echo "Errormessage: " . mysqli_error($mysqliLink) . PHP_EOL;
-            return false;
+            throw new mysqli_sql_exception("My SQL Query Error: $mysqli->error" . PHP_EOL
+                                         . "QUERY: $query", $mysqli->errno);
         }
-        $data   = mysqli_fetch_assoc($result);
+        $data = mysqli_fetch_assoc($result);
         
         /* get the number of votes */
         if (is_null($data)) {

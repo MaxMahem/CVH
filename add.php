@@ -18,12 +18,11 @@ if (!empty($postData['text'])) { $text = $postData['text']; }
     
 if (!empty($postData['type'])) { 
 
-    $card = new Card($postData['type']);
+    $card   = new Card($postData['type']);
     $result = $card->add($postData['NSFW'], $postData['text'], $postData['source'], $postData['url']);
 
     if ($result) {
-        $typeId[$card->getType()] = $card->getId(Card::HEX);
-        $redirectDest = '/CVH/display/' . $typeId[Card::QUESTION] . '-' . $typeId[Card::ANSWER];
+        $redirectDest = '/CVH/view/' . $postData['type'] . '/' . dechex($result);
         $redirectURL = "http://" . $_SERVER['HTTP_HOST'] . $redirectDest;
         header("Location: $redirectURL", 303);
         die();

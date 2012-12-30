@@ -39,6 +39,44 @@ class Source extends Item {
         $this->answerCards->getSource($this);
     }
 
+    public function add($source = 'Anonymous', $url = NULL) {
+        if (!is_string($source)) {
+            throw new InvalidArgumentException("Non string $source passed.");
+        }
+        $this->source = $source;
+        
+        /* check for empty or invalid URL, set to null if so */
+        if (empty($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
+            $this->url = NULL;
+        } else {
+            $this->url = $url;
+        }
+        
+        /* get connection to DB */
+        $mysqli = $this->dbConnect();
+
+        /* Insert the source into the DB. The first part is standard, but if we
+         * hit an address that isn't unique, we do some magic. id=LASTER_INSERT_ID(id)
+         * shouldn't make any change to the DB, but will arrange our values such
+         * that mysqli_insert_id will return the id of the duplicate value. */
+        $insert = "INSERT INTO `sources` (`source`,        `url`)" . ' '
+                . "VALUES                ('$this->source', '$this->url')" . ' '
+                . "ON DUPLICATE KEY UPDATE `id` = LAST_INSERT_ID(`id`)";
+        
+        /* get the data */
+        $result = $mysqli->query($insert);
+                
+        /* check for query errors */
+        if (!$result) {
+            throw new mysqli_sql_exception("My SQL Query Error: $mysqli->error" . PHP_EOL
+                                         . "QUERY: $insert", $mysqli->errno);
+        }
+        
+        /* insert is done, get id */
+        $this->id = $mysqli->insert_id;
+        
+        return $this->id;
+    }
 
     protected function retrieve() {
         $mysqli = $this->dbConnect();
@@ -64,8 +102,4 @@ class Source extends Item {
         $this->source = $row['source'];
         $this->url    = $row['url'];
     }
-    
-    protected function insert() { }
 }
-
-?>
