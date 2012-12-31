@@ -9,9 +9,13 @@ class Set implements IteratorAggregate, Countable {
     protected $data;
     protected $dataType;
     protected $table;
+    protected $page;
+    
+    const COUNT = 25;
 
-
-    public function Set($dataType) {
+    public function Set($dataType, $page = 0) {
+        $this->page  = $page;
+        
         $this->dataType = $dataType;
         
         $table = $this->dataType . 's';
@@ -28,7 +32,8 @@ class Set implements IteratorAggregate, Countable {
     }
 
     /**
-     * Makes a set itterable! Black magic as far as I'm concurned.
+     * Makes a set itterable! We actually return a LimitIterator, latery we will
+     * implement paging.
      * 
      * @return \ArrayIterator
      */
@@ -36,7 +41,11 @@ class Set implements IteratorAggregate, Countable {
         if (empty($this->data)) {
             return new ArrayIterator(array ());
         } else {
-            return new ArrayIterator($this->data);
+            $offset = $this->page * self::COUNT;
+            
+            $arrayIterator = new ArrayIterator($this->data);
+            $limitIterator = new LimitIterator($arrayIterator, $offset, self::COUNT);
+            return $limitIterator;
         }
     }
     

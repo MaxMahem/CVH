@@ -39,7 +39,10 @@ class CardSet extends Set {
         $this->unvalidated = $unvalidated;
     }
     
-    public function getAll($start = '0', $number = '30') {        
+    public function getAll($page = 0) {
+        $offset = $page * self::COUNT;
+        $this->page = $page;
+        
         /* tables are plural, so add an s */
         $table = $this->cardType . 's';
 
@@ -51,7 +54,7 @@ class CardSet extends Set {
         $whereClause[] = (!$this->unvalidated) ? "`$table`.`validated` = TRUE" : 'TRUE';
         $where = "WHERE" . ' ' . implode(' AND ', $whereClause);
         
-        $limit  = "LIMIT $start, $number";
+        $limit  = "LIMIT $offset," . ' ' . self::COUNT;
 
         /* build the query */
         $query = $select . ' ' . $from . ' ' . $where . ' ' . $limit;
