@@ -44,8 +44,8 @@ class Set implements IteratorAggregate, Countable {
             $offset = $this->page * self::COUNT;
             
             $arrayIterator = new ArrayIterator($this->data);
-            $limitIterator = new LimitIterator($arrayIterator, $offset, self::COUNT);
-            return $limitIterator;
+//            $limitIterator = new LimitIterator($arrayIterator, $offset, self::COUNT);
+            return $arrayIterator;
         }
     }
     

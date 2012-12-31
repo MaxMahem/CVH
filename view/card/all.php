@@ -10,44 +10,45 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/View.php');
 
 /* filter_input is probably not necessary but we use it just to be safe */
-$type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
+$typeGet = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
+$pageGet = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
+
+$page = (empty($pageGet)) ? 0 : $pageGet;
 
 /* check to see if we got a good type */
-if (($type != Card::QUESTION) && ($type != Card::ANSWER)) {
+if (($typeGet != Card::QUESTION) && ($typeGet != Card::ANSWER)) {
     /** @todo better error handling
      *  @todo handle quesetion or answer plurals */
     echo "Bad Type: $type";
     exit;
+} else {
+    $type = $typeGet;
 }
 
 /* create View for page */
 $viewAll = new View('View All' . ' '. ucfirst($type) . 's');
     
 $cards = new CardSet($type, $viewAll->NSFW, $viewAll->unvalidated);
-$cards->getAll();
+$cards->getAll($page);
     
 ?>
 <?= $viewAll->displayHead(); ?>
-
-<div id="wrapper">
     
 <?= $viewAll->displayHeader(); ?>
-    
-<div id="main">
 	
-    <section class="<?=$cards->cardType . 's'; ?>">
-        <h2><?= ucfirst($cards->cardType) . 's'; ?></h2>
+<section class="<?=$cards->cardType . 's'; ?>">
+    <h2><?= ucfirst($cards->cardType) . 's'; ?></h2>
 <?php foreach ($cards as $card) { ?>
-        <div class="cardbox">
-            <?= $card->display(Card::LINK); ?>
-        </div>
+    <div class="cardbox">
+        <?= $card->display(Card::LINK); ?>
+    </div>
 <?php } ?>
-    </section>
-
-    <div class="clear"></div>
     
-</div> <!-- End of #main -->
-    
-</div> <!-- End of #wrapper -->
+    <nav>
+            <h3><?=  ucfirst($cards->cardType . 's'); ?> Navigation</h3>
+        <a href="<?=$page - 1; ?>">&LT;&LT;</a> <?=$page; ?> <a href="<?=$page + 1; ?>">&GT;&GT;</a>
+    </nav>
+        
+</section>
     
 <?= $viewAll->displayFooter(); ?>
