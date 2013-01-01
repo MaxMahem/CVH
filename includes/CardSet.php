@@ -62,7 +62,7 @@ class CardSet extends Set {
         $this->retrieve($query);
     }
     
-    public function getRandom($number = '3') {
+    public function getRandom($number = '3', $seed = NULL) {
         /* tables are plural, so add an s */
         $table = $this->cardType . 's';
 
@@ -70,7 +70,7 @@ class CardSet extends Set {
         $select = "SELECT `$table`.`id`";      
         $from   = "FROM `$table`";
         $where  = ($this->NSFW == FALSE) ? "WHERE $table.NSFW = FALSE" : '';
-        $order  = "ORDER BY RAND()";
+        $order  = "ORDER BY RAND($seed)";
         $limit  = "LIMIT 0, $number";
 
         /* build the query */

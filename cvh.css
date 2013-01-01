@@ -20,19 +20,14 @@ a {
     text-decoration: inherit;
 }
 
-a:hover {
-    color: grey;
-}
-
 /* clear floats. Technicaly we should be able to do without this,
    but this is an easy way to handle it */
 .clear {
     clear: both;
 }
 
-html, body, #wrapper {
-    height: 100%;
-    font:   bold medium helvetica;
+body {
+    font:   normal bold x-large helvetica;
 }
 
 header, 
@@ -61,6 +56,11 @@ header .NSFW {
 
 nav {
     clear: left;
+    font-size: medium;
+}
+
+nav a:hover {
+    color: grey;
 }
 
 nav li,
@@ -87,8 +87,38 @@ nav ul {
 /*    float: left; */
 }
 
+.questions .arrow {
+    fill: black;
+}
+
+.answers .arrow {
+    fill: white;
+}
+.arrow {
+    stroke: black;
+    float: left;
+    height: 11.2em;
+    width: 3em;
+    padding: 1em 0;
+    margin: .5em;
+    font-size: x-large;
+    stroke-width: .75px;
+}
+
+.arrow svg {
+    height: inherit;
+}
+    
+.arrow:hover {
+    fill: grey;
+}
+    
+
+li {
+    display: block;
+}
+
 .card {
-    font: bold x-large helvetica;
     width:          8em;
     height:        11.2em;
     padding:        1em;
@@ -108,7 +138,8 @@ nav ul {
 }
 
 .card address {
-    font: bold medium helvetica;
+    font-size: medium;
+    font-style: normal;
     position: absolute;
     bottom: 1em;
     left:   1em;
@@ -146,7 +177,7 @@ address img {
 }
 
 .card select {
-    font:       bold small helvetica;
+    font-size:  medium;
     color:      inherit;
     background: transparent;
     border:  0;
@@ -214,35 +245,20 @@ details {
     clear: left;
 }
 
-/* permalink border is there to ensure exact spacing */
-.permalink {
-    width:   8em;
-    padding: 0  1em;
-    margin:  0 .5em;
-    text-align: center;
-    font-size: x-large;
-    float: left;
-    clear: left;
-    border: solid 2px white;
-}
-
-.permalink a {
-    font: bold medium helvetica;
-}
-
 input[type=submit] {
     width:   10em;
     padding:  0  1em;
     margin:   0 .5em;
     border-radius: .5em;
     float: left;
-    font: bold x-large helvetica;
+    font-size: x-large;
 }
 
 
 
 footer {
     clear:      both;
-    height:      1em;
-    margin-top: -2em;
+    font-size:  medium;
+    /*height:      1em;*/
+    /*margin-top: -2em;*/
 }

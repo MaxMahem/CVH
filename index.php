@@ -9,20 +9,20 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/View.php');
 
 /* create View for page */
 $index = new View();
-    
+
+$seed= rand();
+
 /* Get the question cards */
-$question = new RandomCard(Card::QUESTION, $index->NSFW);
+$question = new RandomCard(Card::QUESTION, $index->NSFW, $seed);
 
 /* Get the Answer cards, currently we get 3 */
-$answers = new CardSet(Card::ANSWER, $index->NSFW);
-$answers->getRandom(4);
+$answers = new CardSet(Card::ANSWER, $index->NSFW, $index->unvalidated);
+$answers->getRandom(3, $seed);
 
 $voteURL = "/CVH/vote/" . dechex($question->id) . "-";
 ?>
 <?= $index->displayHead(); ?>
-
-<div id="wrapper">
-    
+   
 <?= $index->displayHeader(); ?>
     
 <div id="main">
@@ -34,29 +34,35 @@ $voteURL = "/CVH/vote/" . dechex($question->id) . "-";
     
     <section class="questions">
         <h2>Questions</h2>
-        <div class="cardbox">
-            <?= $question->display(NULL); ?>
-        </div>
-        <div class="cardbox">
-            <article class='card question link'><h3>Reload</h3><a class='answerlink' href='.'>Get me a different question!</a></article>
-        </div>
+        <?= $question->display(NULL); ?>
+        <a class='arrow' href='<?=$seed; ?>/Q2'>
+            <svg viewBox="0 0 30 100" height="11.2em" width="3em">
+                <polygon points="25,50 5,100, 5,0" />
+            </svg>
+        </a>
     </section>
     
     <div class="clear"></div>
 
     <section class="answers">
         <h2>Answers</h2>
+
+        <ul>
 <?php foreach ($answers as $answer) { ?>
-        <div class="cardbox">
-            <?= $answer->display($voteURL . dechex($answer->id)); ?>
-        </div>
+            <li><?= $answer->display($voteURL . dechex($answer->id)); ?>
 <?php } ?>
+        </ul>
+        
+        <a class='arrow' href='<?=$seed; ?>/A2'>
+            <svg viewBox="0 0 30 100" height="11.2em" width="3em">
+                <polygon points="25,50 5,100, 5,0" />
+            </svg>
+        </a>
+        
     </section>
     
     <div class="clear"></div>
     
 </div> <!-- End of #main -->
-    
-</div> <!-- End of #wrapper -->
     
 <?= $index->displayFooter(); ?>

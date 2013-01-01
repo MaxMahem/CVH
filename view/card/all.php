@@ -44,10 +44,13 @@ $cards->getAll($page);
     </div>
 <?php } ?>
     
-    <nav>
+    <footer>
+        <nav>
             <h3><?=  ucfirst($cards->cardType . 's'); ?> Navigation</h3>
-        <a href="<?=$page - 1; ?>">&LT;&LT;</a> <?=$page; ?> <a href="<?=$page + 1; ?>">&GT;&GT;</a>
-    </nav>
+            <a href="<?=$page - 1; ?>">&LT;&LT;</a> <?=$page; ?> <a href="<?=$page + 1; ?>">&GT;&GT;</a>
+        </nav>
+    </footer>
+    
         
 </section>
     

@@ -111,7 +111,6 @@ class Card extends Item {
         /* setup classes for card */
         $classes[] = 'card';
         $classes[] = $this->type;
-        $classes[] = ($this->NSFW)      ? 'NSFW' : '';
         $classes[] = ($linkURL != NULL) ? 'link' : '';
         $class = trim(implode(' ', $classes));
 

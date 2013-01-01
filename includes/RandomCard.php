@@ -9,15 +9,16 @@
 class RandomCard extends Card {
     
     private $validated;
+    private $seed;
     
-    /** Card($type) constructor
+    /** RandomCard($type) constructor
      * Creates a new card. Type and id are required.
      * 
      * @param string $type type of card, either Card::QUESTION or Card::ANSWER
      * @param int    $id   id of card to get or Card::RANDOM for random card
      * @param bool   $NSFW return NSFW cards or not. Default false.
      */
-    public function RandomCard($type, $NSFW = FALSE, $validated = FALSE) {
+    public function RandomCard($type, $NSFW = FALSE, $validated = FALSE, $seed = NULL) {
         if (($type != self::QUESTION) && ($type != self::ANSWER)) {
             throw new InvalidArgumentException("Invalid type: $type passed to new RandomCard");
         }
@@ -28,6 +29,7 @@ class RandomCard extends Card {
         $this->type = $type;
         $this->NSFW = $NSFW;
         $this->validated = $validated;
+        $this->seed = $seed;
         
         $this->retrieve();
     }
@@ -59,7 +61,7 @@ class RandomCard extends Card {
         /* build the where of the query. The different clauses get linked by AND */
         $where = "WHERE" . ' ' . implode(' AND ', $whereClauses);
 
-        $order = "ORDER BY RAND() LIMIT 0,1";   /* random result */
+        $order = "ORDER BY RAND($seed) LIMIT 0,1";   /* random result */
 
         /* build the query */
         $query = $select . ' ' . $from . ' ' . $where . ' ' . $order;
