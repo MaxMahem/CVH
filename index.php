@@ -7,19 +7,33 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/CardSet.php');
 /* contains the view class used for view elements. */
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/View.php');
 
+/* get variables from page (if present) */
+$seedGet         = filter_input(INPUT_GET, 'seed',         FILTER_SANITIZE_NUMBER_INT);
+$questionPageGet = filter_input(INPUT_GET, 'questionPage', FILTER_SANITIZE_NUMBER_INT);
+$answerPageGet   = filter_input(INPUT_GET, 'answerPage',   FILTER_SANITIZE_NUMBER_INT);
+
+/* set variables as necessary */
+$seed         = (empty($seedGet))         ? rand() : $seedGet;
+$questionPage = (empty($questionPageGet)) ? 1      : $questionPageGet;
+$answerPage   = (empty($answerPageGet))   ? 1      : $answerPageGet;
+
 /* create View for page */
 $index = new View();
 
-$seed= rand();
-
 /* Get the question cards */
-$question = new RandomCard(Card::QUESTION, $index->NSFW, $seed);
+$questions = new CardSet(Card::QUESTION, $index->NSFW, $index->unvalidated);
+$questions->getRandom(1, $seed, $questionPage - 1);
+
+foreach ($questions as $question) {}
 
 /* Get the Answer cards, currently we get 3 */
-$answers = new CardSet(Card::ANSWER, $index->NSFW, $index->unvalidated);
-$answers->getRandom(3, $seed);
+$answers   = new CardSet(Card::ANSWER,   $index->NSFW, $index->unvalidated);
+$answers->getRandom(3, $seed, $answerPage - 1);
 
 $voteURL = "/CVH/vote/" . dechex($question->id) . "-";
+
+$nextQuestion = '/CVH/R' . $seed . '/Q' . strval($questionPage + 1) . '/A' . strval($answerPage);
+$nextAnswers  = '/CVH/R' . $seed . '/Q' . strval($questionPage)     . '/A' . strval($answerPage + 1);
 ?>
 <?= $index->displayHead(); ?>
    
@@ -35,7 +49,7 @@ $voteURL = "/CVH/vote/" . dechex($question->id) . "-";
     <section class="questions">
         <h2>Questions</h2>
         <?= $question->display(NULL); ?>
-        <a class='arrow' href='<?=$seed; ?>/Q2'>
+        <a class='arrow' href='<?=$nextQuestion; ?>'>
             <svg viewBox="0 0 30 100" height="11.2em" width="3em">
                 <polygon points="25,50 5,100, 5,0" />
             </svg>
@@ -53,7 +67,7 @@ $voteURL = "/CVH/vote/" . dechex($question->id) . "-";
 <?php } ?>
         </ul>
         
-        <a class='arrow' href='<?=$seed; ?>/A2'>
+        <a class='arrow' href='<?=$nextAnswers; ?>'>
             <svg viewBox="0 0 30 100" height="11.2em" width="3em">
                 <polygon points="25,50 5,100, 5,0" />
             </svg>

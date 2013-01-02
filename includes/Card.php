@@ -114,13 +114,13 @@ class Card extends Item {
         $classes[] = ($linkURL != NULL) ? 'link' : '';
         $class = trim(implode(' ', $classes));
 
-        $result .= "<article class='$class'>";
+        $result .= "<article class='$class'>" . PHP_EOL;
         
         /* header for the card, if NSFW we add a hgroup and a tag */
-        $result .= ($this->NSFW) ? "<hgroup>" : '';
-        $result .= "<h3>" . ucfirst($this->type) . ": $this->id </h3>";
-        $result .= ($this->NSFW) ? "<h4 class='NSFW'>NSFW</h4>" : '';
-        $result .= ($this->NSFW) ? "</hgroup>" : '';
+        $result .= ($this->NSFW) ? "<hgroup>" . PHP_EOL : '';
+        $result .= "<h3>" . ucfirst($this->type) . ": $this->id </h3>" . PHP_EOL;
+        $result .= ($this->NSFW) ? "<h4 class='NSFW'>NSFW</h4>" . PHP_EOL : '';
+        $result .= ($this->NSFW) ? "</hgroup>" . PHP_EOL : '';
 
         if ($linkURL != NULL) {
             /* if we got self::LINK for a value, we want to simply point our link
@@ -132,13 +132,13 @@ class Card extends Item {
             /* if we recieved a linkUrl, embeded the card text inside the link */
             $result .= "<a class='answerlink' href='" . $linkURL . "'>";
             $result .= $this->text;
-            $result .= "</a>";
+            $result .= "</a>" . PHP_EOL;
         } else {
             /* if we didn't recieve a vote URL, just spit out the card text. */
-            $result .= $this->text;
+            $result .= $this->text . PHP_EOL;
         }
 
-        $result .= $this->source->display($this->type);
+        $result .= $this->source->display($this->type) . PHP_EOL;
         
         $result .= "</article>" . PHP_EOL;
         

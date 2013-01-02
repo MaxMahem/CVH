@@ -62,16 +62,18 @@ class CardSet extends Set {
         $this->retrieve($query);
     }
     
-    public function getRandom($number = '3', $seed = NULL) {
+    public function getRandom($number = '3', $seed = NULL, $page = 0) {
         /* tables are plural, so add an s */
         $table = $this->cardType . 's';
+        
+        $offset = $page * $number;
 
         /* this query will get all the cards of the selected type */
         $select = "SELECT `$table`.`id`";      
         $from   = "FROM `$table`";
         $where  = ($this->NSFW == FALSE) ? "WHERE $table.NSFW = FALSE" : '';
         $order  = "ORDER BY RAND($seed)";
-        $limit  = "LIMIT 0, $number";
+        $limit  = "LIMIT $offset, $number";
 
         /* build the query */
         $query = $select . ' ' . $from . ' ' . $where . ' ' . $order . ' ' . $limit;

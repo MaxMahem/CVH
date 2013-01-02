@@ -51,31 +51,31 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
             $headerTitle = ' - ' . $this->title;
         }
         
-        $header  = '<header>';
-        $header .= ($this->NSFW) ? "<hgroup>" : '';
-        $header .= "<h1><a href='/CVH'>Cards vs Humans</a>$headerTitle</h1>";
-        $header .= ($this->NSFW) ? "<h4 class='NSFW'>NSFW</h2></hgroup>" : '';
-        $header .= self::displayNav();
+        $header  = '<header>' . PHP_EOL;
+        $header .= ($this->NSFW) ? "<hgroup>"  . PHP_EOL : '';
+        $header .= "<h1><a href='/CVH'>Cards vs Humans</a>$headerTitle</h1>" . PHP_EOL;
+        $header .= ($this->NSFW) ? "<h4 class='NSFW'>NSFW</h2></hgroup>"  . PHP_EOL : '';
+        $header .= self::displayNav() . PHP_EOL;
         $header .= '</header>' . PHP_EOL;
         
         return $header;
     }
     
     public function displayNav() {
-        $nav .= "<nav>";
-        $nav .= "<h2>Site Navigation</h2>";
-        $nav .= "<ul>";
-        $nav .= "   <li><a href='/CVH/settings/view.php'>Settings</a>";
-        $nav .= "   <li>View";
-        $nav .= "       <ul>";
-        $nav .= "           <li><a href='/CVH/view/card/answer/all'>Answers</a>";
-        $nav .= "           <li><a href='/CVH/view/card/question/all'>Questions</a>";
-        $nav .= "           <li><a href='/CVH/view/source/all'>Sources</a>";
-        $nav .= "       </ul>";
-        $nav .= "   </li>";
-        $nav .= "   <li><a href='/CVH/suggest'>New</a>";
-        $nav .= "</ul>";
-        $nav .= "</nav>";
+        $nav .= "<nav>" . PHP_EOL;
+        $nav .= "<h2>Site Navigation</h2>" . PHP_EOL;
+        $nav .= "<ul>" . PHP_EOL;
+        $nav .= "<li><a href='/CVH/settings/view.php'>Settings</a>" . PHP_EOL;
+        $nav .= "<li>View" . PHP_EOL;
+        $nav .= "<ul>" . PHP_EOL;
+        $nav .= "<li><a href='/CVH/view/card/answer/all'>Answers</a>" . PHP_EOL;
+        $nav .= "<li><a href='/CVH/view/card/question/all'>Questions</a>" . PHP_EOL;
+        $nav .= "<li><a href='/CVH/view/source/all'>Sources</a>" . PHP_EOL;
+        $nav .= "</ul>" . PHP_EOL;
+        $nav .= "</li>" . PHP_EOL;
+        $nav .= "<li><a href='/CVH/suggest'>New</a>" . PHP_EOL;
+        $nav .= "</ul>" . PHP_EOL;
+        $nav .= "</nav>" . PHP_EOL;
         
         return $nav;   
     }
