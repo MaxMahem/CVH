@@ -21,6 +21,7 @@ $viewCard = new View('View' . ' '. ucfirst($type) . ' ' . 'Card');
 if (empty($type) || empty($id)) {
     /** @todo: better error handling here */
     echo 'No input!';
+    var_dump($_GET);
     exit;
 }
 

@@ -45,6 +45,9 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
      * @return string
      */
     public function displayHeader() {
+        /* if we are an ajax request we want to abort, and not set a header */
+        if ($this->ajax) { return; }
+        
         $headerTitle = '';
         
         if (isset($this->title)) {
@@ -61,7 +64,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
         return $header;
     }
     
-    public function displayNav() {
+    public function displayNav() {        
         $nav .= "<nav>" . PHP_EOL;
         $nav .= "<h2>Site Navigation</h2>" . PHP_EOL;
         $nav .= "<ul>" . PHP_EOL;
@@ -87,7 +90,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
      */
     public function displayHead() {
         /* if we are an ajax request we want to abort, and not set a header */
-        if ($this->ajax) { die(); }
+        if ($this->ajax) { return; }
         
         $headTitle = '';
         
@@ -99,6 +102,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
         $head .= '<meta charset="utf-8" />' . PHP_EOL;
         $head .= '<title>Cards vs Humans' . $headTitle . '</title>' . PHP_EOL;
         $head .= '<link rel="stylesheet" href="/CVH/cvh.css" />' . PHP_EOL;
+        $head .= '<script src="http://code.jquery.com/jquery-latest.js"></script>' . PHP_EOL;
         
         return $head;
     }
@@ -109,6 +113,9 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
      * @return string
      */
     public function displayFooter() {
+        /* if we are an ajax request we want to abort, and not set a header */
+        if ($this->ajax) { return; }
+        
         $footer  = "<footer>";
         $footer .= "Madeby: <a rel='Author' href='mailto:maxtmahem@gmail.com'>Austin Stanley</a> - ";
         $footer .= "Last Modified:" . ' ' . date("F d, Y H:i", getlastmod());

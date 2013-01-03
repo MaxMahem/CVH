@@ -126,9 +126,10 @@ class Card extends Item {
             /* if we got self::LINK for a value, we want to simply point our link
              * at a link for this specific card */
             if ($linkURL == Card::LINK) {
-                $linkURL = "/CVH/view/card/$this->type/" . dechex($this->id);
+                $linkURL = "/CVH/view/card/$this->type/ID";
             }
             
+            $linkURL = preg_replace('/ID/', $this->id, $linkURL);
             /* if we recieved a linkUrl, embeded the card text inside the link */
             $result .= "<a class='answerlink' href='" . $linkURL . "'>";
             $result .= $this->text;

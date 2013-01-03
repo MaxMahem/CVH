@@ -1,7 +1,6 @@
 <?php
 /* contains the card classes used to create the cards */
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/RandomCard.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/CardSet.php');
 
 /* contains the view class used for view elements. */
@@ -30,7 +29,7 @@ foreach ($questions as $question) {}
 $answers   = new CardSet(Card::ANSWER,   $index->NSFW, $index->unvalidated);
 $answers->getRandom(3, $seed, $answerPage - 1);
 
-$voteURL = "/CVH/vote/" . dechex($question->id) . "-";
+$voteURL = "/CVH/vote/$question->id-ID";
 
 $nextQuestion = '/CVH/R' . $seed . '/Q' . strval($questionPage + 1) . '/A' . strval($answerPage);
 $nextAnswers  = '/CVH/R' . $seed . '/Q' . strval($questionPage)     . '/A' . strval($answerPage + 1);
@@ -40,7 +39,42 @@ $nextAnswers  = '/CVH/R' . $seed . '/Q' . strval($questionPage)     . '/A' . str
 <?= $index->displayHeader(); ?>
     
 <div id="main">
-    
+    <script>
+        $(document).ready(function() {
+            $('section.questions a.arrow').live('click', function(event) {
+                var oldHref = $(this).attr('href');
+                var regex   = new RegExp("R(\\d+)/Q(\\d+)/A(\\d+)", "");
+                var newHref = oldHref.replace(regex, "view/random/question/S$1/P$2/N1");
+                var $parent = $(this).parent();
+        
+                $.get(newHref, function(data) {
+                    $parent.fadeOut('slow', function() {
+                        $parent.replaceWith(data);
+                        $parent.fadeIn('slow');
+                    });                    
+                });
+                
+                event.preventDefault();
+            });
+            
+            $('section.answers a.arrow').live('click', function(event) {
+                var oldHref = $(this).attr('href');
+                var regex   = new RegExp("R(\\d+)/Q(\\d+)/A(\\d+)", "");
+                var newHref = oldHref.replace(regex, "view/random/answer/S$1/P$3/N3");
+                var $parent = $(this).parent();
+                
+        
+                $.get(newHref, function(data) {
+                    $parent.fadeOut('slow', function() {
+                        $parent.replaceWith(data);
+                        $parent.fadeIn('slow');
+                    });                    
+                });
+                
+                event.preventDefault();
+            });
+        });
+    </script>
     <section class='instructions'>
         <h2>Instructions</h2>
         <p>Pick the card you like the best!</p>
@@ -63,7 +97,7 @@ $nextAnswers  = '/CVH/R' . $seed . '/Q' . strval($questionPage)     . '/A' . str
 
         <ul>
 <?php foreach ($answers as $answer) { ?>
-            <li><?= $answer->display($voteURL . dechex($answer->id)); ?>
+            <li><?= $answer->display($voteURL); ?>
 <?php } ?>
         </ul>
         

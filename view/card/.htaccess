@@ -10,31 +10,21 @@ RewriteEngine On
 # Rewrite to display all questions
 # Request: question/all
 # Rewrite: all.php?type=question&page=PAGE
-RewriteRule question/all/(.*) all.php?type=question&page=$1 [L]
-RewriteRule question/all      all.php?type=question         [L]
+RewriteRule question/all/(\d+)/?$ all.php?type=question&page=$1  [L]
+RewriteRule question/all/?$       all.php?type=question          [L]
 
 # Rewrite to display all answers
 # Request: answer/all
 # Rewrite: all.php?type=answer&page=PAGE
-RewriteRule answer/all/(.*)   all.php?type=answer&page=$1   [L]
-RewriteRule answer/all        all.php?type=answer           [L]
+RewriteRule answer/all/(\d+)/?$   all.php?type=answer&page=$1    [L]
+RewriteRule answer/all/?$         all.php?type=answer            [L]
 
 # Rewrite to display questions
 # Request: question/ID
 # Rewrite: card.php?type=question&id=ID
-RewriteRule question/(.*) card.php?type=question&id=$1 [L]
+RewriteRule question/(\d+)/?$ card.php?type=question&id=$1 [L]
 
 # Rewrite to display answers
 # Request: answer/ID
 # Rewrite: card.php?type=answer&id=ID
-RewriteRule answer/(.*) card.php?type=answer&id=$1 [L]
-
-# Rewrite if we don't match a directory
-RewriteCond %{REQUEST_FILENAME} !-d 
-
-# Rewrite if the request is a php file
-RewriteCond %{REQUEST_FILENAME}\.php -f 
-
-# Request: /CVH/view/file.php
-# Rewrite: /CVH/view/file
-RewriteRule ^(.*)$ $1.php
+RewriteRule answer/(\d+)/?$   card.php?type=answer&id=$1   [L]
