@@ -9,10 +9,13 @@ class Card extends Item {
     protected $NSFW;
     protected $source;
     
+    const NEWCARD  = -1;
+    
     const QUESTION = 'question';
     const ANSWER   = 'answer';
     
     const LINK     = 'link';
+    const VOTE     = 'vote';
     
     /** Card($type) constructor
      * Creates a new card. Type and id are required.
@@ -20,20 +23,16 @@ class Card extends Item {
      * @param string $type type of card, either Card::QUESTION or Card::ANSWER
      * @param int    $id   id of card to get, or null if adding a new card.
      */
-    public function Card($type, $id = NULL) {
+    public function Card($type, $id) {
         if (($type != self::QUESTION) && ($type != self::ANSWER)) {
             throw new InvalidArgumentException("Invalid type: $type passed to new Card");
         }
         $this->type = $type;
         
-        if (isset($id)) {
-            if (!is_numeric($id)) {
-                throw new InvalidArgumentException("Non numeric id: $id passed to new Card");
-            }
-            
-            $this->id   = $id;       
-            $this->retrieve();            
-        }
+        if (!is_numeric($id)) {
+            throw new InvalidArgumentException("Non numeric id: $id passed to new Card");
+        }  
+        $this->id = $id;
     }
     
     /** retrieveCard()
@@ -104,46 +103,69 @@ class Card extends Item {
    /** displayCard
     * Returns a properly formated card for display.
     *
-    * @param   string  $linkURL     the link the card should go to, if any.
-    * @return  string  HTML code for the card.
+    * @param   string  $linkType    the link the card should go to, if any.
+    * @param   string  $voteId      id of the card used in voting
+    * @return  string               HTML code for the card.
     */
-    public function display($linkURL = Card::LINK) {
+    public function display($linkType = Card::LINK, $voteId = NULL) {
+        /* check arguments */
+//        if (!(($linkType == NULL) || ($linkType == Card::LINK) || ($linkType == Card::VOTE))) {
+//            throw new InvalidArgumentException("Bad linkType $linkType passed.");
+//        }
+        if (($linkType == Card::LINK) && (!empty($voteId))) {
+            throw new InvalidArgumentException("No voteId $voteId passed with type Card::VOTE");
+        }
+        
+        /* check if the card is empty and if so, retrieve it */
+        if (empty($this->text)) { $this->retrieve(); }
+        
         /* setup classes for card */
         $classes[] = 'card';
         $classes[] = $this->type;
-        $classes[] = ($linkURL != NULL) ? 'link' : '';
+        /* linkType is either 'vote' 'link' or NULL so makes an okay class decleration solo */
+        $classes[] = $linkType;
         $class = trim(implode(' ', $classes));
+        
+        /* add the card id as ID, first letter of type + id number */
+        $cardId = strtoupper($this->type[0]) . $this->id;
 
-        $result .= "<article class='$class'>" . PHP_EOL;
+        $result[] = "<article class='$class' id='$cardId'>";       /* open article */
         
         /* header for the card, if NSFW we add a hgroup and a tag */
-        $result .= ($this->NSFW) ? "<hgroup>" . PHP_EOL : '';
-        $result .= "<h3>" . ucfirst($this->type) . ": $this->id </h3>" . PHP_EOL;
-        $result .= ($this->NSFW) ? "<h4 class='NSFW'>NSFW</h4>" . PHP_EOL : '';
-        $result .= ($this->NSFW) ? "</hgroup>" . PHP_EOL : '';
+        $result[] = ($this->NSFW) ? "<hgroup>" : '';
+        $result[] = "<h3>" . ucfirst($this->type) . ": $this->id </h3>";
+        $result[] = ($this->NSFW) ? "<h4 class='NSFW'>NSFW</h4>": '';
+        $result[] = ($this->NSFW) ? "</hgroup>": '';
 
-        if ($linkURL != NULL) {
-            /* if we got self::LINK for a value, we want to simply point our link
-             * at a link for this specific card */
-            if ($linkURL == Card::LINK) {
-                $linkURL = "/CVH/view/card/$this->type/ID";
-            }
-            
-            $linkURL = preg_replace('/ID/', $this->id, $linkURL);
-            /* if we recieved a linkUrl, embeded the card text inside the link */
-            $result .= "<a class='answerlink' href='" . $linkURL . "'>";
-            $result .= $this->text;
-            $result .= "</a>" . PHP_EOL;
-        } else {
-            /* if we didn't recieve a vote URL, just spit out the card text. */
-            $result .= $this->text . PHP_EOL;
+        /* format the url according to the $linkType */
+        switch ($linkType) {
+            case self::LINK:
+                $link = "/CVH/view/card/$this->type/ID";
+                $result[] = "<a class='cardlink' href='$link'>$this->text</a>";
+                break;
+            case self::VOTE:
+                $link = "/CVH/vote/$cardId-$voteId";
+                $result[] = $this->text;
+                break;
+            case NULL:
+                $result[] = $this->text;
+                break;
         }
 
-        $result .= $this->source->display($this->type) . PHP_EOL;
+        $result[] = $this->source->display($this->type);
         
-        $result .= "</article>" . PHP_EOL;
+        $result[] = "</article>";
         
-        return $result;
+        if ($linkType == self::VOTE) {
+            $result[] = "<form method='post' action='/CVH/vote/vote' name='$cardId'>";
+            $result[] = "<input type='hidden' name='answer'   value='$cardId'>";
+            $result[] = "<input type='hidden' name='question' value='$voteId'>";
+            $result[] = "<noscript><input type='submit' name='submit'   value='vote'></noscript>";
+            $result[] = "</form>";
+        }
+        
+        $results = implode(PHP_EOL, $result);
+        return $results;
     }
     
     /**addCard

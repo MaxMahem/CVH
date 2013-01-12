@@ -12,7 +12,7 @@ RewriteRule question/S(\d+)/?$               display.php?type=question&seed=$1  
 RewriteRule question/?$                      display.php?type=question                           [L]
 
 #Rewrite answer/S#SEED#/P#PAGE#/N#NUMBER#/V#VOTE# display.php?type=answer&seed=#SEED#&page=#PAGE#&number=#NUMBER#&vote=#VOTE#
-RewriteRule answer/S(\d+)/P(\d+)/N(\d+)/V(\d+)/?$ display.php?type=answer&seed=$1&page=$2&number=$3&vote=$4 [L]
+RewriteRule answer/S(\d+)/P(\d+)/N(\d+)/(Q\d+)/?$ display.php?type=answer&seed=$1&page=$2&number=$3&vote=$4 [L]
 RewriteRule answer/S(\d+)/P(\d+)/N(\d+)/?$        display.php?type=answer&seed=$1&page=$2&number=$3         [L]
 RewriteRule answer/S(\d+)/P(\d+)/?$               display.php?type=answer&seed=$1&page=$2                   [L]
 RewriteRule answer/S(\d+)/?$                      display.php?type=answer&seed=$1                           [L]

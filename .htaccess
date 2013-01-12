@@ -12,8 +12,6 @@ RewriteEngine On
 # Rewrite: /CVH/view/file
 RewriteRule ^$ index.php [L]
 
-RewriteRule R(.*)/Q(.*)/A(.*) index.php?seed=$1&questionPage=$2&answerPage=$3 [L]
-
 # Rewrite if we don't match a directory
 RewriteCond %{REQUEST_FILENAME} !-d 
 # Rewrite if the request is a php file

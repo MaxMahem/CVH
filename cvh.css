@@ -94,6 +94,7 @@ nav ul {
 .answers .arrow {
     fill: white;
 }
+
 .arrow {
     stroke: black;
     float: left;
@@ -219,18 +220,25 @@ address img {
    it is designed to sit on the bottom layer so that the source link can
    which is also absolutely positioned can sit on top of it, allowing the
    to links to effectively be nested, which is normally not allowed */
-.answerlink {
+.cardlink {
     position: absolute;
     left:     0;
     top:      0;
     width:    8em;
-    height:  11em;
+    height:  11.2em;
     padding:  1em;
     z-index:  0;
 }
 
+/* vote cards actually do a javascript powered submit. We need to indicate the
+   div is clickable */
+.vote {
+    cursor: pointer;
+}
+
 /* turn grey on hover to indicate it's a link */
-.link:hover {
+.link:hover,
+.vote:hover  {
     background-color: grey;
 }
 

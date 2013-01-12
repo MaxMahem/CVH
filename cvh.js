@@ -1,17 +1,51 @@
 $(document).ready(function(){
+    $('section.questions a.arrow').live('click', function(event) {
+        var href = $(this).attr('href');
+        var $parent = $(this).parent();
+
+        $.get(href, function(data) {
+            $('section.questions article.card').hide('drop', { direction: 'down' }, 'slow', function() {
+                $parent.replaceWith(data);
+            });
+            
+            var qId         = $(data).find('article.question').attr('id');
+            var answerRegex = new RegExp('Q\\d+', '');
+            
+            $('section.answers article.card a.answerlink').each(function() {
+                var oldAnswerCardHref = $(this).attr('href');
+                var newAnswerCardHref = oldAnswerCardHref.replace(answerRegex, qId);
+                
+                $(this).attr('href', newAnswerCardHref);
+            });
+            
+            var $answerArrow       = $('section.answers a.arrow');
+            var oldAnswerArrowHref = $answerArrow.attr('href');
+            var newAnswerArrowHref = oldAnswerArrowHref.replace(answerRegex, qId);
+            $answerArrow.attr('href', newAnswerArrowHref);
+        });
+
+        event.preventDefault();
+    });
+
+    $('section.answers a.arrow').live('click', function(event) {
+        var href = $(this).attr('href');
+        var $parent = $(this).parent();
+
+        $.get(href, function(data) {
+            $('section.answers article.card').hide('drop', { direction: 'down' }, 'slow', function() {
+                $parent.replaceWith(data);
+            });                    
+        });
+
+        event.preventDefault();
+    });
     
-// This function is not currently necessary, but preserved in case we move to
-// javascript in order to allow two options to be picked.
-//    /* when the answer div is clicked */
-//    $('.answer').click(function(event) {
-//        /* remove selected class from all answers */
-//        $('.answer').removeClass("selected");
-//
-//        /* add 'selected' class to clicked answer */
-//        $(this).addClass("selected");
-//        
-//        /* toggle the state of the option */
-//        var optionBox = $(this).find("input");
-//        optionBox.prop("checked", !optionBox.prop("checked"));
-//    });
+    $('section.answers article.vote').each(function() {
+        var aId = $(this).attr('id');
+        var selector = 'form[name="' + aId + '"]';
+        
+        $(this).live('click', function(){
+            $('section.answers ' + selector).submit();
+        });
+    });
 });

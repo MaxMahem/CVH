@@ -102,7 +102,9 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
         $head .= '<meta charset="utf-8" />' . PHP_EOL;
         $head .= '<title>Cards vs Humans' . $headTitle . '</title>' . PHP_EOL;
         $head .= '<link rel="stylesheet" href="/CVH/cvh.css" />' . PHP_EOL;
-        $head .= '<script src="http://code.jquery.com/jquery-latest.js"></script>' . PHP_EOL;
+        $head .= '<script src="//code.jquery.com/jquery-latest.js"></script>' . PHP_EOL;
+        $head .= '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.js"></script>' . PHP_EOL;
+        $head .= '<script src="/CVH/cvh.js"></script>' . PHP_EOL;
         
         return $head;
     }

@@ -9,7 +9,7 @@ RewriteEngine On
 
 # Request: QUESTIONID-ANSWERID to
 # Rewrite: vote.php?Q=QUESTIONID&A=ANSWERID
-RewriteRule ([^-]*)-([^-]*)$ /CVH/vote/vote.php?Q=$1&A=$2 [L]
+RewriteRule ([Q|A]/d+)-([Q|A]/d+)$ /CVH/vote/vote.php?Q=$1&A=$2 [L]
 
 # Rewrite if we don't match a directory
 RewriteCond %{REQUEST_FILENAME} !-d 

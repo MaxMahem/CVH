@@ -6,75 +6,34 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/CardSet.php');
 /* contains the view class used for view elements. */
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/View.php');
 
-/* get variables from page (if present) */
-$seedGet         = filter_input(INPUT_GET, 'seed',         FILTER_SANITIZE_NUMBER_INT);
-$questionPageGet = filter_input(INPUT_GET, 'questionPage', FILTER_SANITIZE_NUMBER_INT);
-$answerPageGet   = filter_input(INPUT_GET, 'answerPage',   FILTER_SANITIZE_NUMBER_INT);
-
 /* set variables as necessary */
-$seed         = (empty($seedGet))         ? rand() : $seedGet;
-$questionPage = (empty($questionPageGet)) ? 1      : $questionPageGet;
-$answerPage   = (empty($answerPageGet))   ? 1      : $answerPageGet;
+$seed = rand();
 
 /* create View for page */
 $index = new View();
 
 /* Get the question cards */
 $questions = new CardSet(Card::QUESTION, $index->NSFW, $index->unvalidated);
-$questions->getRandom(1, $seed, $questionPage - 1);
+$questions->getRandom(1, $seed);
 
+/* get the question (there is only 1) */
 foreach ($questions as $question) {}
+
+/* get question ID */
+$questionId = 'Q' . $question->id;
 
 /* Get the Answer cards, currently we get 3 */
 $answers   = new CardSet(Card::ANSWER,   $index->NSFW, $index->unvalidated);
-$answers->getRandom(3, $seed, $answerPage - 1);
+$answers->getRandom(3, $seed);
 
-$voteURL = "/CVH/vote/$question->id-ID";
-
-$nextQuestion = '/CVH/R' . $seed . '/Q' . strval($questionPage + 1) . '/A' . strval($answerPage);
-$nextAnswers  = '/CVH/R' . $seed . '/Q' . strval($questionPage)     . '/A' . strval($answerPage + 1);
+$nextQuestion = '/CVH/view/card/random/question/S' . $seed . '/P1/N1';
+$nextAnswers  = '/CVH/view/card/random/answer/S'   . $seed . '/P1/N3/' . $questionId;
 ?>
 <?= $index->displayHead(); ?>
    
 <?= $index->displayHeader(); ?>
     
 <div id="main">
-    <script>
-        $(document).ready(function() {
-            $('section.questions a.arrow').live('click', function(event) {
-                var oldHref = $(this).attr('href');
-                var regex   = new RegExp("R(\\d+)/Q(\\d+)/A(\\d+)", "");
-                var newHref = oldHref.replace(regex, "view/random/question/S$1/P$2/N1");
-                var $parent = $(this).parent();
-        
-                $.get(newHref, function(data) {
-                    $parent.fadeOut('slow', function() {
-                        $parent.replaceWith(data);
-                        $parent.fadeIn('slow');
-                    });                    
-                });
-                
-                event.preventDefault();
-            });
-            
-            $('section.answers a.arrow').live('click', function(event) {
-                var oldHref = $(this).attr('href');
-                var regex   = new RegExp("R(\\d+)/Q(\\d+)/A(\\d+)", "");
-                var newHref = oldHref.replace(regex, "view/random/answer/S$1/P$3/N3");
-                var $parent = $(this).parent();
-                
-        
-                $.get(newHref, function(data) {
-                    $parent.fadeOut('slow', function() {
-                        $parent.replaceWith(data);
-                        $parent.fadeIn('slow');
-                    });                    
-                });
-                
-                event.preventDefault();
-            });
-        });
-    </script>
     <section class='instructions'>
         <h2>Instructions</h2>
         <p>Pick the card you like the best!</p>
@@ -97,7 +56,7 @@ $nextAnswers  = '/CVH/R' . $seed . '/Q' . strval($questionPage)     . '/A' . str
 
         <ul>
 <?php foreach ($answers as $answer) { ?>
-            <li><?= $answer->display($voteURL); ?>
+            <li><?= $answer->display(Card::VOTE, $questionId); ?>
 <?php } ?>
         </ul>
         

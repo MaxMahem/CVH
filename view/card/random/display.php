@@ -16,7 +16,7 @@ $voteGet   = filter_input(INPUT_GET, 'vote',   FILTER_SANITIZE_STRING);
 /* set variables as necessary */
 $type = (empty($typeGet)) ? Card::QUESTION : $typeGet;
 $seed = (empty($seedGet)) ? rand()         : $seedGet;
-$page = (empty($pageGet)) ? 1              : $pageGet;
+$page = (empty($pageGet)) ? 0              : $pageGet;
 $vote = (empty($voteGet)) ? NULL           : $voteGet;
 
 /* default number varies based on type, Questions get one, answers get 3 */
@@ -28,12 +28,14 @@ $display = new View();
 
 /* Get the cards */
 $cards = new CardSet($type, $display->NSFW, $display->unvalidated);
-$cards->getRandom($number, $seed, $page - 1);
+$cards->getRandom($number, $seed, $page);
 
 $nextPage = $page + 1;
-$nextURL  = "/CVH/view/random/$type/S$seed/P$nextPage/N$number";
+$nextURL  = "/CVH/view/card/random/$type/S$seed/P$nextPage/N$number";
 
-$linkURL = (empty($vote)) ? NULL : "/CVH/vote/$vote-ID" ;
+$nextURL .= ($vote) ? "/$vote" : '';
+
+$linkURL = (empty($vote)) ? NULL : Card::VOTE;
 ?>
 <?= $display->displayHead(); ?>
    
@@ -43,7 +45,7 @@ $linkURL = (empty($vote)) ? NULL : "/CVH/vote/$vote-ID" ;
     <h2><?=ucfirst($type . 's'); ?></h2>
     <ul>
 <?php foreach ($cards as $card) { ?>
-        <li><?= $card->display($linkURL); ?>
+        <li><?= $card->display($linkURL, $vote); ?>
 <?php } ?>
     </ul>
     <a class='arrow' href='<?=$nextURL; ?>'>
