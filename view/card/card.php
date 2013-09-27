@@ -9,8 +9,10 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/CardSet.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/View.php');
 
 /* filter_input is probably not necessary but we use it just to be safe */
-$type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
-$id   = filter_input(INPUT_GET, 'id',   FILTER_SANITIZE_NUMBER_INT);
+$type  = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
+$getId = filter_input(INPUT_GET, 'id',   FILTER_SANITIZE_NUMBER_INT);
+
+$id = hexdec($getId);
 
 /* create View for page */
 $viewCard = new View('View' . ' '. ucfirst($type) . ' ' . 'Card');
