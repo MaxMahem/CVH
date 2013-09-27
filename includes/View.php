@@ -120,7 +120,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
         
         $footer  = "<footer>";
         $footer .= "Madeby: <a rel='Author' href='mailto:maxtmahem@gmail.com'>Austin Stanley</a> - ";
-        $footer .= "Last Modified:" . ' ' . date("F d, Y H:i", getlastmod()) . "yes I really made this.";
+        $footer .= "Last Modified:" . ' ' . date("F d, Y H:i", getlastmod());
         $footer .= "</footer>" . PHP_EOL;
         
         return $footer;
