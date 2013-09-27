@@ -1,0 +1,30 @@
+# Document   : .htaccess
+# Created on : Dec 4, 2012, 8:37:44 PM
+# Author     : MaxMahem
+# Description:
+#
+# Rewrite requests in the CVH/View subdirectory as appropriate
+
+RewriteEngine On
+
+# Rewrite to display all questions
+# Request: question/all
+# Rewrite: all.php?type=question&page=PAGE
+RewriteRule question/all/(\d+)/?$ all.php?type=question&page=$1  [L]
+RewriteRule question/all/?$       all.php?type=question          [L]
+
+# Rewrite to display all answers
+# Request: answer/all
+# Rewrite: all.php?type=answer&page=PAGE
+RewriteRule answer/all/(\d+)/?$   all.php?type=answer&page=$1    [L]
+RewriteRule answer/all/?$         all.php?type=answer            [L]
+
+# Rewrite to display questions
+# Request: question/ID
+# Rewrite: card.php?type=question&id=ID
+RewriteRule question/(\d+)/?$ card.php?type=question&id=$1 [L]
+
+# Rewrite to display answers
+# Request: answer/ID
+# Rewrite: card.php?type=answer&id=ID
+RewriteRule answer/(\d+)/?$   card.php?type=answer&id=$1   [L]

@@ -1,0 +1,18 @@
+# Document   : .htaccess
+# Created on : Dec 4, 2012, 8:37:44 PM
+# Author     : MaxMahem
+# Description:
+#
+# Rewrite requests in the CVH director to remove the php extension from
+# file names.
+
+RewriteEngine On
+
+# Request: /CVH/view/file.php
+# Rewrite: /CVH/view/file
+RewriteRule ^$ index.php [L]
+
+# Rewrite if we don't match a directory
+RewriteCond %{REQUEST_FILENAME} !-d 
+# Rewrite if the request is a php file
+RewriteCond %{REQUEST_FILENAME}\.php -f 
