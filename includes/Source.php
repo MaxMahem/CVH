@@ -78,7 +78,7 @@ class Source extends Item {
         return $this->id;
     }
 
-    protected function retrieve() {
+    public function retrieve() {
         $mysqli = $this->dbConnect();
         
         $select = "SELECT `sources`.`source`, `sources`.`url`";

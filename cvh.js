@@ -1,5 +1,5 @@
-$(document).ready(function(){
-    $('section.questions a.arrow').live('click', function(event) {
+var CVH = {
+    questionArrowClick : function(event) {
         var href = $(this).attr('href');
         var $parent = $(this).parent();
 
@@ -25,27 +25,28 @@ $(document).ready(function(){
         });
 
         event.preventDefault();
-    });
-
-    $('section.answers a.arrow').live('click', function(event) {
-        var href = $(this).attr('href');
+    },
+    answerArrowClick : function(event) {
+        var href    = $(this).attr('href');
         var $parent = $(this).parent();
-
-        $.get(href, function(data) {
-            $('section.answers article.card').hide('drop', { direction: 'down' }, 'slow', function() {
-                $parent.replaceWith(data);
-            });                    
-        });
-
-        event.preventDefault();
-    });
-    
-    $('section.answers article.vote').each(function() {
-        var aId = $(this).attr('id');
-        var selector = 'form[name="' + aId + '"]';
+        $parent.load(href);
         
-        $(this).live('click', function(){
-            $('section.answers ' + selector).submit();
-        });
-    });
-});
+        event.preventDefault();
+    },
+    voteClick : function(event) {
+        $(this).siblings('form').submit();
+        event.preventDefault();
+    },
+    dropReplace : function(data) {
+        var dataClass = $('section', data).attr('class');
+        console.log($('section', data));
+        alert(dataClass);
+        $(this).siblings('article.card').hide('drop', { direction: 'down' }, 'slow', function() {
+                $(this).parent().replaceWith(data);
+        });                    
+    }
+}
+
+$(document).on('click', 'section.questions a.arrow', CVH.questionArrowClick);
+$(document).on('click', 'section.answers a.arrow', CVH.answerArrowClick);
+$(document).on('click', 'section.answers article.vote', CVH.voteClick);

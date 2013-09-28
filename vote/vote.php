@@ -20,10 +20,20 @@ $answer   = new Card(Card::ANSWER,   $answerId);
 
 $pair = new CardPair($question, $answer);
 
-var_dump($pair->vote());
+/* submit a vote for the pair */
+$result = $pair->vote();
 
-die();
-    
-    /* Redirect. If everything went well we should be heading to /CVH otherwise /CVH/bad.php */
-    $redirectURL = "http://" . $_SERVER['HTTP_HOST'] . $redirectDest;
-    header('Location: ' . $redirectURL, 303);
+/* check the return result, at this point I don't think it should be possible to
+ * get anything besides true, but we'll leave the code in for later :) 
+ * TODO: Add/set message for past results here/errors, should be a session variable */
+if($result) {
+    /* send back around for another vote */
+    $redirectDest = '/CVH/';
+} else {
+    /* send back around for another vote anyways! */
+    $redirectDest = '/CVH/';
+}
+
+/* Redirect. If everything went well we should be heading to /CVH otherwise /CVH/bad.php */
+$redirectURL = "http://" . $_SERVER['HTTP_HOST'] . $redirectDest;
+header('Location: ' . $redirectURL, 303);

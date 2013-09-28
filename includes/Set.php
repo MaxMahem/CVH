@@ -91,5 +91,24 @@ class Set implements IteratorAggregate, Countable {
             $id = $row['id'];
             $this->data[$id] = new $this->dataType($id);
         }       
-    }    
+    }
+    
+    /** dbConnect()
+     * Makes a connection to the database
+     *
+     * @return mysqli
+     */
+    final protected function dbConnect() {
+        /* the db-connection file is assumed to define DBHOST, DBUSER, DBPASS, and DBNAME
+         * with their appropriate values, and should be located outside of the webroot  */
+        require($_SERVER['DOCUMENT_ROOT'] . '/../db-connection.php');
+        
+        /* connect to DB */
+        $mysqli = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
+        if ($mysqli->connect_errno) {
+            throw new mysqli_sql_exception("Error connecting to MySQL: $mysqli->connect_error", $mysqli->errno);
+        }
+        
+        return $mysqli;
+    }
 }

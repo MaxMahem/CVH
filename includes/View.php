@@ -74,6 +74,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
         $nav .= "<li><a href='/CVH/view/card/answer/all'>Answers</a>" . PHP_EOL;
         $nav .= "<li><a href='/CVH/view/card/question/all'>Questions</a>" . PHP_EOL;
         $nav .= "<li><a href='/CVH/view/source/all'>Sources</a>" . PHP_EOL;
+        $nav .= "<li><a href='/CVH/vote/recent'>Votes</a>" . PHP_EOL;
         $nav .= "</ul>" . PHP_EOL;
         $nav .= "</li>" . PHP_EOL;
         $nav .= "<li><a href='/CVH/suggest'>New</a>" . PHP_EOL;

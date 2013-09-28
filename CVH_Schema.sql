@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `questions_answers_votes` (
   `question_id` int(10) unsigned NOT NULL COMMENT 'FK questions.id',
   `answer_id` int(10) unsigned NOT NULL COMMENT 'FK answers.id',
   `vote_tally` int(10) unsigned NOT NULL DEFAULT '0',
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`question_id`,`answer_id`),
   KEY `answer_id` (`answer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
