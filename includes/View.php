@@ -27,6 +27,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
         $NSFWCookie        = filter_input(INPUT_COOKIE, 'NSFW');
         $unvalidatedCookie = filter_input(INPUT_COOKIE, 'Unvalidated');
         
+        /* set Cookie settings */
         $this->unvalidated = ($unvalidatedCookie) ? TRUE : FALSE;               
         $this->NSFW        = ($NSFWCookie)        ? TRUE : FALSE;
     }
@@ -48,10 +49,11 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
         /* if we are an ajax request we want to abort, and not set a header */
         if ($this->ajax) { return; }
         
-        $headerTitle = '';
-        
+        /* if we have a title, we want to add that on to our header */
         if (isset($this->title)) {
             $headerTitle = ' - ' . $this->title;
+        } else {
+            $headerTitle = '';
         }
         
         $header  = '<header>' . PHP_EOL;
@@ -66,19 +68,24 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
     
     public function displayNav() {        
         $nav .= "<nav>" . PHP_EOL;
-        $nav .= "<h2>Site Navigation</h2>" . PHP_EOL;
-        $nav .= "<ul>" . PHP_EOL;
-        $nav .= "<li><a href='/CVH/settings/view.php'>Settings</a>" . PHP_EOL;
-        $nav .= "<li>View" . PHP_EOL;
-        $nav .= "<ul>" . PHP_EOL;
-        $nav .= "<li><a href='/CVH/view/card/answer/all'>Answers</a>" . PHP_EOL;
-        $nav .= "<li><a href='/CVH/view/card/question/all'>Questions</a>" . PHP_EOL;
-        $nav .= "<li><a href='/CVH/view/source/all'>Sources</a>" . PHP_EOL;
-        $nav .= "<li><a href='/CVH/vote/recent'>Votes</a>" . PHP_EOL;
-        $nav .= "</ul>" . PHP_EOL;
-        $nav .= "</li>" . PHP_EOL;
-        $nav .= "<li><a href='/CVH/suggest'>New</a>" . PHP_EOL;
-        $nav .= "</ul>" . PHP_EOL;
+        $nav .= "   <h2>Site Navigation</h2>" . PHP_EOL;
+        $nav .= "   <ul>" . PHP_EOL;
+        $nav .= "       <li><a href='/CVH/settings/view.php'>Settings</a>" . PHP_EOL;
+        $nav .= "       <li>View" . PHP_EOL;
+        $nav .= "           <ul>" . PHP_EOL;
+        $nav .= "               <li><a href='/CVH/view/card/answer/all'>Answers</a>" . PHP_EOL;
+        $nav .= "               <li><a href='/CVH/view/card/question/all'>Questions</a>" . PHP_EOL;
+        $nav .= "               <li><a href='/CVH/view/source/all'>Sources</a>" . PHP_EOL;
+        $nav .= "           </ul>" . PHP_EOL;
+        $nav .= "       </li>" . PHP_EOL;
+        $nav .= "       <li>Votes" . PHP_EOL;
+        $nav .= "           <ul>" . PHP_EOL;
+        $nav .= "               <li><a href='/CVH/vote/display/recent'>Recent</a>" . PHP_EOL;
+        $nav .= "               <li><a href='/CVH/vote/display/top'>Top</a>" . PHP_EOL;
+        $nav .= "           </ul>" . PHP_EOL;
+        $nav .= "       </li>" . PHP_EOL;
+        $nav .= "       <li><a href='/CVH/suggest'>New</a>" . PHP_EOL;
+        $nav .= "   </ul>" . PHP_EOL;
         $nav .= "</nav>" . PHP_EOL;
         
         return $nav;   

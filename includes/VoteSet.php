@@ -16,6 +16,9 @@ class VoteSet extends Set {
     protected $NSFW;
     protected $unvalidated;
     
+    const RECENT = 'recent';
+    const TOP    = 'top';
+    
     /** CardSet Constructor
      * 
      * @param string $type        Type of card set, either Card::QUESTION or CARD::ANSWER
@@ -25,10 +28,7 @@ class VoteSet extends Set {
      * @throws InvalidArgumentException If given bad data it is unhappy.
      */
     public function VoteSet($NSFW = FALSE, $unvalidated = FALSE) {
-        if (
-            (!is_bool($NSFW)) || 
-            (!is_bool($unvalidated))
-           )    {
+        if ((!is_bool($NSFW)) || (!is_bool($unvalidated))) {
             $message = "Bad arguments passed to new VoteSet" . PHP_EOL
                      . "NSFW:        $NSFW" . PHP_EOL
                      . "unvalidated: $unvalidated" . PHP_EOL;
@@ -39,7 +39,15 @@ class VoteSet extends Set {
         $this->unvalidated = $unvalidated;
     }
     
-    public function getAll($page = 0) {
+    public function getAll($type = self::TOP, $page = 0) {
+        /* validate input */
+        if (($type !== self::TOP) && ($type !== self::RECENT)) {
+            throw new InvalidArgumentException("Invalid type: $type passed to getAll");
+        }
+        if (!is_integer($page)) {
+            throw new InvalidArgumentException("Invalid page: $page passed to getAll");
+        }
+        
         /* set the correct offset/page */
         $offset = $page * self::COUNT;
         $this->page = $page;
@@ -74,7 +82,14 @@ class VoteSet extends Set {
         
         $limit = "LIMIT $offset," . ' ' . self::COUNT;
         
-        $order = "ORDER BY `questions_answers_votes`.`updated` DESC";
+        /* order by the appropriate type */
+        if ($type === self::RECENT) {
+            $orderField = 'updated';
+        } else {
+            $orderField = 'vote_tally';
+        }
+        
+        $order = "ORDER BY `questions_answers_votes`.`$orderField` DESC";
 
         /* build the query */
         $query = $select . ' ' . $from . ' ' . $where . ' ' . $order . ' '. $limit;
