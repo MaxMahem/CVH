@@ -1,7 +1,5 @@
 <?php
 /* contains the card class used to create the cards */
-require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/CardSet.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/VoteSet.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/View.php');
 
