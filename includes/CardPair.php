@@ -24,9 +24,7 @@ class CardPair extends Item {
         $this->answer   = $answer;
         
         /* pair the numbers for an id, using Carnot Pairing function */
-        $x = $this->question->id;
-        $y = $this->answer->id;
-        $this->id = (($x + $y) * ($x + $y + 1)) / 2 + $y;
+        $this->id = CardPair::pair($question->id, $answer->id);
         
         /* added actually refers to when the pair was last voted on */
         $this->votes = $votes;
@@ -37,8 +35,8 @@ class CardPair extends Item {
         $mysqli = $this->dbConnect();
         
         /* Do vote insert. If we already have a value, update the vote_tally instead. */
-        $insert = "INSERT INTO questions_answers_votes (question_id, answer_id, vote_tally)";
-        $values = "VALUES (" . $this->question->id . ", " . $this->answer->id . ", 1)";
+        $insert = "INSERT INTO questions_answers_votes (id, question_id, answer_id, vote_tally)";
+        $values = "VALUES (" . $this->id . ", ". $this->question->id . ", " . $this->answer->id . ", 1)";
         $on     = "ON DUPLICATE KEY UPDATE vote_tally = vote_tally + 1";
         
         $result = $mysqli->query($insert . ' ' . $values . ' ' . $on);
@@ -81,7 +79,19 @@ class CardPair extends Item {
         
         return $votes;
     }
-
+    
+    /** pair($questionId, $answerId) 
+     * Generates a Carnot pair of two numbers.
+     * 
+     * @param int $questionId question number.
+     * @param int $answerId   answer number.
+     * @return int the carnot pair of the two numbers.
+     */
+    protected static function pair($questionId, $answerId) {
+        $x = $questionId;
+        $y = $answerId;
+        return (($x + $y) * ($x + $y + 1)) / 2 + $y;
+    }
 }
 
 ?>
