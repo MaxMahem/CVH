@@ -7,9 +7,13 @@
 
 RewriteEngine On
 
-# Request: QUESTIONID-ANSWERID to
+# Request: QUESTIONID-ANSWERID
 # Rewrite: vote.php?Q=QUESTIONID&A=ANSWERID
-RewriteRule ([Q|A]/d+)-([Q|A]/d+)$ /CVH/vote/vote.php?Q=$1&A=$2 [L]
+RewriteRule ([Q|A]/d+)-([Q|A]/d+)$  /CVH/vote/vote.php?Q=$1&A=$2  [L]
+
+# Request: display/top|recent
+# Rewrite: display.php?type=TYPE
+RewriteRule display/(.*)$ /CVH/vote/display.php?type=$1 [L]
 
 # Rewrite if we don't match a directory
 RewriteCond %{REQUEST_FILENAME} !-d 

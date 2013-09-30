@@ -9,8 +9,6 @@ class Card extends Item {
     protected $NSFW;
     protected $source;
     
-    const NEWCARD  = -1;
-    
     const QUESTION = 'question';
     const ANSWER   = 'answer';
     
@@ -40,7 +38,7 @@ class Card extends Item {
      * 
      * @return boolean  returns true on success, false on failure.
      */
-    protected function retrieve() {
+    public function retrieve() {
         $mysqliLink = $this->dbConnect();
         
         /* the DB we query (questions or answers) is plural. So it should be
@@ -100,7 +98,7 @@ class Card extends Item {
 
     }
     
-   /** displayCard
+   /** display
     * Returns a properly formated card for display.
     *
     * @param   string  $linkType    the link the card should go to, if any.

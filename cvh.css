@@ -43,6 +43,10 @@ h2, h3 {
     display: none;
 }
 
+header {
+    height: 2.1em;
+}
+
 header h1 {
     display: block;
     float:   left;
@@ -68,6 +72,20 @@ nav ul {
     display: inline;
 }
 
+nav ul li {
+    float: left;
+    width: 5em;
+    padding: .1em .2em;
+    background: black;
+}
+
+nav ul li ul {
+    display: none;
+}
+
+nav ul li:hover ul {
+    display: block;
+}
 #main {
     padding: .5em;
 }

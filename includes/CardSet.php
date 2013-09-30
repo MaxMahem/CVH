@@ -124,15 +124,8 @@ class CardSet extends Set {
     }
     
     protected function retrieve($query) {       
-        /* the db-connection file is assumed to define DBHOST, DBUSER, DBPASS, and DBNAME
-         * with their appropriate values, and should be located outside of the webroot  */
-        require($_SERVER['DOCUMENT_ROOT'] . '/../db-connection.php');
-        
-        /* connect to DB */
-        $mysqli = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
-        if ($mysqli->connect_errno) {
-            throw new mysqli_sql_exception("Error connecting to MySQL: $mysqli->connect_error", $mysqli->errno);
-        }
+        /* get connection to DB */
+        $mysqli = $this->dbConnect();
         
         /* get the data */
         $result = $mysqli->query($query);

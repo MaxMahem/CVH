@@ -19,7 +19,7 @@ $page = (empty($pageGet)) ? 0 : $pageGet;
 if (($typeGet != Card::QUESTION) && ($typeGet != Card::ANSWER)) {
     /** @todo better error handling
      *  @todo handle quesetion or answer plurals */
-    echo "Bad Type: $type";
+    echo "Bad Type: $typeGet";
     exit;
 } else {
     $type = $typeGet;

@@ -5,9 +5,9 @@ abstract class Item {
     protected $added;
     
     /** Item($id) constructor
-     * Creates a new item, id is required.
+     * Creates a new item, if given an id, tries and retrieves it.
      * 
-     * @param int    $id   id of card to get or Card::RANDOM for random card
+     * @param int    $id
      */
     public function Item($id = NULL) {
         if (isset($id)) {
@@ -23,6 +23,13 @@ abstract class Item {
             throw new LogicException("Attempted to get property $property which does not exist.");
         }
     }
+    
+    /** retrieveCard()
+     * retrieve's an items data from the DB.
+     * 
+     * @return boolean  returns true on success, false on failure.
+     */
+    abstract public function retrieve();
     
     /** dbConnect()
      * Makes a connection to the database
@@ -42,11 +49,4 @@ abstract class Item {
         
         return $mysqli;
     }
-    
-    /** retrieveCard()
-     * retrieve's an items data from the DB.
-     * 
-     * @return boolean  returns true on success, false on failure.
-     */
-    abstract protected function retrieve();
 }
