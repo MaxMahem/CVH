@@ -11,6 +11,20 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
     private $ajax;
     private $NSFW;
     private $unvalidated;
+    
+    private $navMenu = array(
+        'Settings' => '/CVH/settings/view.php',
+        'View' => array(
+            'Answers'   => '/CVH/view/card/answer/all',
+            'Questions' => '/CVH/view/card/questions/all',
+            'Sources'   => '/CVH/view/sources/all',
+        ),
+        'Votes' => array(
+            'Recent'    => '/CVH/view/vote/recent',
+            'Top'       => '/CVH/view/vote/top'
+        ),
+        'New' => '/CVH/new',
+    );
 
     /**
      * Constructor sets the title.
@@ -71,29 +85,45 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
     public function displayNav() {        
         $nav .= "<nav>" . PHP_EOL;
         $nav .= "<h2>Site Navigation</h2>" . PHP_EOL;
-        $nav .= "<ul>" . PHP_EOL;
-        $nav .= "<li><a href='/CVH/settings/view.php'>Settings</a>" . PHP_EOL;
-        $nav .= "<li>View" . PHP_EOL;
-        $nav .= "<ul>" . PHP_EOL;
-        $nav .= "<li><a href='/CVH/view/card/answer/all'>Answers</a>" . PHP_EOL;
-        $nav .= "<li><a href='/CVH/view/card/question/all'>Questions</a>" . PHP_EOL;
-        $nav .= "<li><a href='/CVH/view/source/all'>Sources</a>" . PHP_EOL;
-        $nav .= "</ul>" . PHP_EOL;
-        $nav .= "</li>" . PHP_EOL;
-        $nav .= "<li>Votes" . PHP_EOL;
-        $nav .= "<ul>" . PHP_EOL;
-        $nav .= "<li><a href='/CVH/vote/display/recent'>Recent</a>" . PHP_EOL;
-        $nav .= "<li><a href='/CVH/vote/display/top'>Top</a>" . PHP_EOL;
-        $nav .= "</ul>" . PHP_EOL;
-        $nav .= "</li>" . PHP_EOL;
-        $nav .= "<li><a href='/CVH/suggest'>New</a>" . PHP_EOL;
-        $nav .= "</ul>" . PHP_EOL;
+        $nav .= View::ulRecurseTree($this->navMenu) . PHP_EOL;
         $nav .= "</nav>" . PHP_EOL;
         
         return $nav;   
     }
     
-    /**
+    /** ulRecurseTree($ulTree)
+     * Generates a ul tree from an array
+     * 
+     * @param array $ulTree array to be turned into a ul tree
+     * @return string marked up ul tree.
+     */
+    private static function ulRecurseTree($ulTree) {
+        /* validate input */
+        if (!is_array($ulTree)) {
+            throw new InvalidArgumentException("Invalid argument thrown to View::ulRecurseTree. $ulTree given, array expected");
+        }
+        
+        $output = '<ul>' . PHP_EOL;
+        
+        foreach ($ulTree as $label => $data) {
+            /* chec for array */
+            if (is_array($data)) {
+                /* if we get an array, print the label and recurse */
+                $output .= "<li>$label" . PHP_EOL;
+                $output .= View::ulRecurseTree($data) . PHP_EOL;
+                $output .= "</li>" . PHP_EOL;
+            } else {
+                /* otherwise print the link */
+                $output .= "<li><a href=$data>$label</a></li>" . PHP_EOL;
+            }
+        }
+        
+        $output .= '</ul>' . PHP_EOL;
+        
+        return $output;
+    }
+
+        /**
      * Returns an appropriately formated html header
      * 
      * @return string
