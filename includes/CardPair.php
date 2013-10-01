@@ -92,6 +92,27 @@ class CardPair extends Item {
         $y = $answerId;
         return (($x + $y) * ($x + $y + 1)) / 2 + $y;
     }
+    
+    /** reverse($id)
+     * Returns a CardPair given an ID. Note that the cards data may not be 
+     * populated yet.
+     * 
+     * @param int $id id of cardpair
+     * @return CardPair pair of cards relating to that id.
+     */
+    public static function reverse($id) {
+        /* validate input */
+        if (!is_integer($id)) {
+            throw new InvalidArgumentException("Bad input given to CardPair::reverse $id given, integer expected");
+        }
+        
+        /* reverse the pair */
+        $temp = floor((-1 + sqrt(1 + 8 * $id))/2);
+        $questionId = $temp * ($temp + 3) / 2 - $id;
+        $answerId   = $id - $temp * ($temp + 1) / 2;
+        
+        return new CardPair($questionId, $answerId);
+    }
 }
 
 ?>
