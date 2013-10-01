@@ -63,26 +63,31 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
         return $header;
     }
     
+    /** displayNav()
+     * Returns an appropriately formated nav bar
+     * 
+     * @return string the navbar.
+     */
     public function displayNav() {        
         $nav .= "<nav>" . PHP_EOL;
-        $nav .= "   <h2>Site Navigation</h2>" . PHP_EOL;
-        $nav .= "   <ul>" . PHP_EOL;
-        $nav .= "       <li><a href='/CVH/settings/view.php'>Settings</a>" . PHP_EOL;
-        $nav .= "       <li>View" . PHP_EOL;
-        $nav .= "           <ul>" . PHP_EOL;
-        $nav .= "               <li><a href='/CVH/view/card/answer/all'>Answers</a>" . PHP_EOL;
-        $nav .= "               <li><a href='/CVH/view/card/question/all'>Questions</a>" . PHP_EOL;
-        $nav .= "               <li><a href='/CVH/view/source/all'>Sources</a>" . PHP_EOL;
-        $nav .= "           </ul>" . PHP_EOL;
-        $nav .= "       </li>" . PHP_EOL;
-        $nav .= "       <li>Votes" . PHP_EOL;
-        $nav .= "           <ul>" . PHP_EOL;
-        $nav .= "               <li><a href='/CVH/vote/display/recent'>Recent</a>" . PHP_EOL;
-        $nav .= "               <li><a href='/CVH/vote/display/top'>Top</a>" . PHP_EOL;
-        $nav .= "           </ul>" . PHP_EOL;
-        $nav .= "       </li>" . PHP_EOL;
-        $nav .= "       <li><a href='/CVH/suggest'>New</a>" . PHP_EOL;
-        $nav .= "   </ul>" . PHP_EOL;
+        $nav .= "<h2>Site Navigation</h2>" . PHP_EOL;
+        $nav .= "<ul>" . PHP_EOL;
+        $nav .= "<li><a href='/CVH/settings/view.php'>Settings</a>" . PHP_EOL;
+        $nav .= "<li>View" . PHP_EOL;
+        $nav .= "<ul>" . PHP_EOL;
+        $nav .= "<li><a href='/CVH/view/card/answer/all'>Answers</a>" . PHP_EOL;
+        $nav .= "<li><a href='/CVH/view/card/question/all'>Questions</a>" . PHP_EOL;
+        $nav .= "<li><a href='/CVH/view/source/all'>Sources</a>" . PHP_EOL;
+        $nav .= "</ul>" . PHP_EOL;
+        $nav .= "</li>" . PHP_EOL;
+        $nav .= "<li>Votes" . PHP_EOL;
+        $nav .= "<ul>" . PHP_EOL;
+        $nav .= "<li><a href='/CVH/vote/display/recent'>Recent</a>" . PHP_EOL;
+        $nav .= "<li><a href='/CVH/vote/display/top'>Top</a>" . PHP_EOL;
+        $nav .= "</ul>" . PHP_EOL;
+        $nav .= "</li>" . PHP_EOL;
+        $nav .= "<li><a href='/CVH/suggest'>New</a>" . PHP_EOL;
+        $nav .= "</ul>" . PHP_EOL;
         $nav .= "</nav>" . PHP_EOL;
         
         return $nav;   
@@ -130,6 +135,4 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
         
         return $footer;
     }
-    
-
  }
