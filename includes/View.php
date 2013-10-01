@@ -23,13 +23,10 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
         /* AJAX check  */
         $this->ajax = ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') ? TRUE : FALSE;
         
-        /* get Cookie settings */
-        $NSFWCookie        = filter_input(INPUT_COOKIE, 'NSFW');
-        $unvalidatedCookie = filter_input(INPUT_COOKIE, 'Unvalidated');
-        
-        /* set Cookie settings */
-        $this->unvalidated = ($unvalidatedCookie) ? TRUE : FALSE;               
-        $this->NSFW        = ($NSFWCookie)        ? TRUE : FALSE;
+        /* get session settings */
+        session_start();
+        $this->unvalidated = $_SESSION['unvalidated'];
+        $this->NSFW        = $_SESSION['NSFW'];
     }
     
     public function __get($property) {
