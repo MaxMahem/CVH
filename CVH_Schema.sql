@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `questions` (
 --
 
 CREATE TABLE IF NOT EXISTS `questions_answers_votes` (
-  `id` int(10) unsigned NOT NULL,
+  `id` int(10) unsigned NOT NULL COMMENT 'Carnot pair of questions_id & answers_id',
   `question_id` int(10) unsigned NOT NULL COMMENT 'FK questions.id',
   `answer_id` int(10) unsigned NOT NULL COMMENT 'FK answers.id',
   `vote_tally` int(10) unsigned NOT NULL DEFAULT '0',
