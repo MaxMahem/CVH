@@ -1,0 +1,16 @@
+# Document   : .htaccess
+# Created on : Dec 4, 2012, 8:37:44 PM
+# Author     : MaxMahem
+# Description:
+#
+# Rewrite requests in the CVH/Vote subdirectory as appropriate
+
+RewriteEngine On
+
+# Request: top|recent
+# Rewrite: display.php?type=TYPE
+RewriteRule (top)$    /CVH/view/vote/display.php?type=$1 [L]
+RewriteRule (recent)$ /CVH/view/vote/display.php?type=$1 [L]
+
+# Rewrite if the request is a php file
+RewriteCond %{REQUEST_FILENAME}\.php -f 

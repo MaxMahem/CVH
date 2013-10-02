@@ -1,0 +1,290 @@
+/* 
+    Document   : cvh
+    Created on : Aug 2, 2012, 8:37:44 PM
+    Author     : MaxMahem
+    Description:
+        Purpose of the stylesheet follows.
+		Stylesheet for Cards vs Humans
+*/
+
+/* CSS RESET */
+* { 
+    margin:0; 
+    padding:0;
+}
+
+/* a RESET */
+a {
+    font:            inherit;
+    color:           inherit;
+    text-decoration: inherit;
+}
+
+/* clear floats. Technicaly we should be able to do without this,
+   but this is an easy way to handle it */
+.clear {
+    clear: both;
+}
+
+body {
+    font:   normal bold x-large helvetica;
+}
+
+header, 
+footer {
+    background-color: black;
+    color:            white;
+    padding: .5em 1em;
+}
+
+/* we do not want to display most of the h1's, they are for 
+ * outline/accessability only */
+h2, h3 {
+    display: none;
+}
+
+header {
+    height: 2.1em;
+}
+
+header h1 {
+    display: block;
+    float:   left;
+    font:    bold xx-large helvetica;
+}
+
+header .NSFW {
+    float: left;
+    padding-left: .5em;
+}
+
+nav {
+    clear: left;
+    font-size: medium;
+}
+
+nav a:hover {
+    color: grey;
+}
+
+nav li,
+nav ul {
+    display: inline;
+}
+
+nav ul li {
+    float: left;
+    width: 5em;
+    padding: .1em .2em;
+    background: black;
+}
+
+nav ul li ul {
+    display: none;
+}
+
+nav ul li:hover ul {
+    display: block;
+}
+#main {
+    padding: .5em;
+}
+
+/* NSFW is a h2 or H4 element, so we need to ensure it's displayed */
+.NSFW {
+    color: red;
+    font: bold medium helvetica;
+    display: block;
+}
+
+.SFW {
+    color: white;
+}
+
+.cardbox {
+/*    float: left; */
+}
+
+.questions .arrow {
+    fill: black;
+}
+
+.answers .arrow {
+    fill: white;
+}
+
+.arrow {
+    stroke: black;
+    float: left;
+    height: 11.2em;
+    width: 3em;
+    padding: 1em 0;
+    margin: .5em;
+    font-size: x-large;
+    stroke-width: .75px;
+}
+
+.arrow svg {
+    height: inherit;
+}
+    
+.arrow:hover {
+    fill: grey;
+}
+    
+
+li {
+    display: block;
+}
+
+.card {
+    width:          8em;
+    height:        11.2em;
+    padding:        1em;
+    margin:        .5em;
+    border-radius: .5em;
+    border: solid 2px black;
+    position: relative;
+    float: left;
+}
+
+/* style the NSFW tag for the cards */
+.card .NSFW {
+    top:   .75em;
+    right: .75em;
+    position: absolute;
+    z-index: 1;
+}
+
+.card address {
+    font-size: medium;
+    font-style: normal;
+    position: absolute;
+    bottom: 1em;
+    left:   1em;
+    width: 13em;
+    z-index: 1;
+}
+
+/* styling for logos embeded in address */
+address img {
+    height:         2em;
+    width:          2em;
+    vertical-align: text-bottom;
+    padding-right: .2em;
+    border:         0;
+}
+
+/* there is currently a bug in IE which causes background color not to inherit
+ * properly, so we set it transparent instead */
+.card input {
+    font:       inherit;
+    color:      inherit;
+    background: transparent;
+    border: 0px; 
+}
+.card textarea {
+    font:       inherit;
+    color:      inherit;
+    background: transparent;
+    border:  0;
+    width:   9em;
+    height: 10em;
+    resize:   none;
+    /* IE again. If we don't set this, it displays scroll bars by default */
+    overflow: auto;
+}
+
+.card select {
+    font-size:  medium;
+    color:      inherit;
+    background: transparent;
+    border:  0;
+    
+}
+
+/* border is there to ensure exact spacing */
+.instructions {
+    font:    bold x-large helvetica;
+    float:   left;
+    text-align: center;
+    width: 22em;
+    border-left:  4px solid white;
+    border-right: 4px solid white;
+}
+
+.instructions p {
+    padding:  1em 2em 0 2em;
+    margin:  .5em;
+}
+
+/* votes section 6x normal size */
+.votes {
+    font-size: 6em;
+}
+
+.question {
+    color: white;
+    background-color: black;
+}
+
+/* Answers float left */
+.answer {
+    color: black;
+    background-color: white;
+}
+
+/* This anchor tag is absolutely positioned on top of the containing div
+   it is designed to sit on the bottom layer so that the source link can
+   which is also absolutely positioned can sit on top of it, allowing the
+   to links to effectively be nested, which is normally not allowed */
+.cardlink {
+    position: absolute;
+    left:     0;
+    top:      0;
+    width:    8em;
+    height:  11.2em;
+    padding:  1em;
+    z-index:  0;
+}
+
+/* vote cards actually do a javascript powered submit. We need to indicate the
+   div is clickable */
+.vote {
+    cursor: pointer;
+}
+
+/* turn grey on hover to indicate it's a link */
+.link:hover,
+.vote:hover  {
+    background-color: grey;
+}
+
+/* prevents our text from turning gray when we hover though */
+.link:hover a {
+    color: black;
+}
+
+/* prevent details from flooding over */
+details {
+    width: 100%;
+    clear: left;
+}
+
+input[type=submit] {
+    width:   10em;
+    padding:  0  1em;
+    margin:   0 .5em;
+    border-radius: .5em;
+    float: left;
+    font-size: x-large;
+}
+
+
+
+footer {
+    clear:      both;
+    font-size:  medium;
+    /*height:      1em;*/
+    /*margin-top: -2em;*/
+}
