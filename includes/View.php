@@ -1,6 +1,7 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Source.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/NavMenu.php');
 
 /**
  * view.php a contains common CVH View elements
@@ -12,19 +13,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
     private $NSFW;
     private $unvalidated;
     
-    private $navMenu = array(
-        'Settings' => '/CVH/settings/view.php',
-        'View' => array(
-            'Answers'   => '/CVH/view/card/answer/all',
-            'Questions' => '/CVH/view/card/questions/all',
-            'Sources'   => '/CVH/view/sources/all',
-        ),
-        'Votes' => array(
-            'Recent'    => '/CVH/view/vote/recent',
-            'Top'       => '/CVH/view/vote/top'
-        ),
-        'New' => '/CVH/new',
-    );
+    private $navMenu;
 
     /**
      * Constructor sets the title.
@@ -41,6 +30,21 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
         session_start();
         $this->unvalidated = (isset($_SESSION['unvalidated'])) ? $_SESSION['unvalidated'] : FALSE;
         $this->NSFW        = (isset($_SESSION['NSFW']))        ? $_SESSION['NSFW']        : FALSE;
+        
+        /* set navMenu */
+        $this->navMenu = new NavMenu(array(
+            'Settings' => '/CVH/settings/view.php',
+            'View' => array(
+                'Answers'   => '/CVH/view/card/answer/all',
+                'Questions' => '/CVH/view/card/questions/all',
+                'Sources'   => '/CVH/view/sources/all',
+            ),
+            'Votes' => array(
+                'Recent'    => '/CVH/view/vote/recent',
+                'Top'       => '/CVH/view/vote/top'
+            ),
+            'New' => '/CVH/new',
+        ));
     }
     
     public function __get($property) {
@@ -67,63 +71,18 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/CVH/includes/Card.php');
             $headerTitle = '';
         }
         
-        $header  = '<header>' . PHP_EOL;
-        $header .= ($this->NSFW) ? "<hgroup>"  . PHP_EOL : '';
-        $header .= "<h1><a href='/CVH'>Cards vs Humans</a>$headerTitle</h1>" . PHP_EOL;
-        $header .= ($this->NSFW) ? "<h4 class='NSFW'>NSFW</h2></hgroup>"  . PHP_EOL : '';
-        $header .= self::displayNav() . PHP_EOL;
-        $header .= '</header>' . PHP_EOL;
+        $headerArray[] = '<header>';
+        $headerArray[] = ($this->NSFW) ? "<hgroup>" : '';
+        $headerArray[] = "<h1><a href='/CVH'>Cards vs Humans</a>$headerTitle</h1>";
+        $headerArray[] = ($this->NSFW) ? "<h4 class='NSFW'>NSFW</h2></hgroup>" : '';
+        $headerArray[] = $this->navMenu->display();
+        $headerArray[] = '</header>';
+        $header = implode(PHP_EOL, $headerArray);
         
         return $header;
     }
     
-    /** displayNav()
-     * Returns an appropriately formated nav bar
-     * 
-     * @return string the navbar.
-     */
-    public function displayNav() {        
-        $nav .= "<nav>" . PHP_EOL;
-        $nav .= "<h2>Site Navigation</h2>" . PHP_EOL;
-        $nav .= View::ulRecurseTree($this->navMenu) . PHP_EOL;
-        $nav .= "</nav>" . PHP_EOL;
-        
-        return $nav;   
-    }
-    
-    /** ulRecurseTree($ulTree)
-     * Generates a ul tree from an array
-     * 
-     * @param array $ulTree array to be turned into a ul tree
-     * @return string marked up ul tree.
-     */
-    private static function ulRecurseTree($ulTree) {
-        /* validate input */
-        if (!is_array($ulTree)) {
-            throw new InvalidArgumentException("Invalid argument thrown to View::ulRecurseTree. $ulTree given, array expected");
-        }
-        
-        $output = '<ul>' . PHP_EOL;
-        
-        foreach ($ulTree as $label => $data) {
-            /* chec for array */
-            if (is_array($data)) {
-                /* if we get an array, print the label and recurse */
-                $output .= "<li>$label" . PHP_EOL;
-                $output .= View::ulRecurseTree($data) . PHP_EOL;
-                $output .= "</li>" . PHP_EOL;
-            } else {
-                /* otherwise print the link */
-                $output .= "<li><a href=$data>$label</a></li>" . PHP_EOL;
-            }
-        }
-        
-        $output .= '</ul>' . PHP_EOL;
-        
-        return $output;
-    }
-
-        /**
+    /**
      * Returns an appropriately formated html header
      * 
      * @return string
